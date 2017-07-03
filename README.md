@@ -14,7 +14,7 @@
 
 [![Build Status][travis_img]][travis_link] [![Maven Central][maven_img]][maven_link]
 
-# impsort-maven-plugin
+# ImpSort Maven Plugin
 
 View this plugin's documentation at:
 http://code.revelc.net/impsort-maven-plugin

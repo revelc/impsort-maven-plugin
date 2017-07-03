@@ -1,0 +1,74 @@
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+#set ($d = "$")
+
+Description
+-----------
+
+  This `impsort-maven-plugin` makes it possible to evaluate your project's
+  classes to ensure they are annotated as desired.
+
+  You can specify as many rules as you like, and each one will be evaluated in
+  order. The build will fail if any rule fails. By default, it runs at the
+  process-test-classes phase of the [Maven build lifecycle][1]. This is to
+  ensure it runs after all classes have been compiled, but before any tests are
+  run.
+
+  A rule is composed of a pattern for identifying the classes to evaluate, and
+  a pattern for the annotations one requires to be used.
+
+Getting Started
+---------------
+
+  To add this plugin to your project, configure the plugin similarly to:
+
+```xml
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+        <configuration>
+          <rules>
+            <!-- Example rule to ensure integration tests have a JUnit Category -->
+            <rule>
+              <!-- a pattern of classes for which to check annotations -->
+              <classPattern>.*IT</classPattern>
+              <!-- a pattern of annotations which are required for the specified classes -->
+              <classAnnotationPattern>org[.]junit[.]experimental[.]categories[.]Category</classAnnotationPattern>
+            </rule>
+          </rules>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sort-imports</id>
+            <goals>
+              <goal>check</goal><!-- runs at process-test-classes phase -->
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+```
+
+  and build your project, similarly to (it runs at the verify phase by default):
+
+```
+mvn verify
+```
+
+[1]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
