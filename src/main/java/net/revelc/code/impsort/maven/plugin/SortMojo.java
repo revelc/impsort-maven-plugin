@@ -14,8 +14,8 @@
 
 package net.revelc.code.impsort.maven.plugin;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import java.io.File;
+
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -24,7 +24,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 public class SortMojo extends AbstractImpSortMojo {
 
   @Override
-  public void impSortExec() throws MojoFailureException, MojoExecutionException {
+  public void processFile(File f) {
 
   }
 

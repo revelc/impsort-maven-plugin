@@ -15,8 +15,7 @@
 package net.revelc.code.impsort.maven.plugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -81,19 +80,19 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   protected boolean joinStaticWithNonStatic;
 
   /**
-   * Project's source directory as specified in the POM.
+   * Project's main source directory as specified in the POM. Used by default if <code>directories</code> is not set.
    *
    * @since 1.0.0
    */
-  @Parameter(alias = "sourceDirectory", property = "impsort.sourceDirectory", defaultValue = "${project.build.sourceDirectory}")
+  @Parameter(alias = "sourceDirectory", defaultValue = "${project.build.sourceDirectory}", readonly = true)
   private File sourceDirectory;
 
   /**
-   * Project's test source directory as specified in the POM.
+   * Project's test source directory as specified in the POM. Used by default if <code>directories</code> is not set.
    *
    * @since 1.0.0
    */
-  @Parameter(alias = "testSourceDirectory", property = "impsort.testSourceDirectory", defaultValue = "${project.build.testSourceDirectory}")
+  @Parameter(alias = "testSourceDirectory", defaultValue = "${project.build.testSourceDirectory}", readonly = true)
   private File testSourceDirectory;
 
   /**
@@ -122,61 +121,77 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(alias = "includes", property = "impsort.excludes")
   private String[] excludes;
 
+  abstract void processFile(File f) throws MojoFailureException;
+
   @Override
-  public void execute() throws MojoExecutionException, MojoFailureException {
+  public final void execute() throws MojoExecutionException, MojoFailureException {
     if (skip) {
       getLog().info("Skipping execution of impsort-maven-plugin");
       return;
     }
 
-    findMatchingFiles().forEach(System.out::println);
-    impSortExec();
+    // process all files, and aggregate any failures
+    MojoFailureException failure = findMatchingFiles().map(this::processWithAggregation).reduce(this::failureAggregator).orElse(null);
+    if (failure != null) {
+      throw failure;
+    }
   }
 
-  private List<File> findMatchingFiles() {
-    List<File> files = new ArrayList<>();
+  private MojoFailureException failureAggregator(MojoFailureException e1, MojoFailureException e2) {
+    e1.addSuppressed(e2);
+    return e1;
+  }
+
+  private MojoFailureException processWithAggregation(File f) {
+    try {
+      processFile(f);
+      return null;
+    } catch (MojoFailureException e) {
+      return e;
+    }
+  }
+
+  private Stream<File> findMatchingFiles() {
     if (directories != null && directories.length > 0) {
-      for (File directory : directories) {
-        if (directory.exists() && directory.isDirectory()) {
-          files.addAll(addCollectionFiles(directory));
-        } else {
-          getLog().warn("Directory does not exist or is not a directory: " + directory);
-        }
-      }
-    } else { // Using defaults of source main and test dirs
-      if (sourceDirectory != null && sourceDirectory.exists() && sourceDirectory.isDirectory()) {
-        files.addAll(addCollectionFiles(sourceDirectory));
-      }
-      if (testSourceDirectory != null && testSourceDirectory.exists() && testSourceDirectory.isDirectory()) {
-        files.addAll(addCollectionFiles(testSourceDirectory));
-      }
+      return Stream.of(directories).flatMap(this::searchDirWithWarn);
+    } else { // default to src/main/java and src/test/java
+      return Stream.of(sourceDirectory, testSourceDirectory).flatMap(this::searchDirNoWarn);
     }
-
-    return files;
   }
 
-  private List<File> addCollectionFiles(File newBasedir) {
-    getLog().debug("Adding directory " + newBasedir);
-    DirectoryScanner ds = new DirectoryScanner();
-    ds.setBasedir(newBasedir);
-    if (includes != null && includes.length > 0) {
-      ds.setIncludes(includes);
-    } else {
-      ds.setIncludes(DEFAULT_INCLUDES);
-    }
+  private Stream<File> searchDirNoWarn(File dir) {
+    return searchDir(dir, false);
+  }
 
+  private Stream<File> searchDirWithWarn(File dir) {
+    return searchDir(dir, true);
+  }
+
+  private Stream<File> searchDir(File dir, boolean warnOnBadDir) {
+    if (dir == null || !dir.exists() || !dir.isDirectory()) {
+      if (warnOnBadDir && dir != null) {
+        getLog().warn("Directory does not exist or is not a directory: " + dir);
+      }
+      return Stream.empty();
+    }
+    getLog().debug("Adding directory " + dir);
+    DirectoryScanner ds = new DirectoryScanner();
+    ds.setBasedir(dir);
+    ds.setIncludes(includes != null && includes.length > 0 ? includes : DEFAULT_INCLUDES);
     ds.setExcludes(excludes);
     ds.addDefaultExcludes();
     ds.setCaseSensitive(false);
     ds.setFollowSymlinks(false);
     ds.scan();
-
-    List<File> foundFiles = new ArrayList<>();
-    for (String filename : ds.getIncludedFiles()) {
-      foundFiles.add(new File(newBasedir, filename));
-    }
-    return foundFiles;
+    return Stream.of(ds.getIncludedFiles()).map(filename -> new File(dir, filename));
   }
 
-  abstract void impSortExec() throws MojoExecutionException, MojoFailureException;
+  protected void fail(String message) throws MojoFailureException {
+    throw new MojoFailureException(message);
+  }
+
+  protected void fail(String message, Throwable cause) throws MojoFailureException {
+    throw new MojoFailureException(message, cause);
+  }
+
 }
