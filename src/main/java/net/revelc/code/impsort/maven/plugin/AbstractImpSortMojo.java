@@ -15,6 +15,9 @@
 package net.revelc.code.impsort.maven.plugin;
 
 import java.io.File;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -118,7 +121,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    *
    * @since 1.0.0
    */
-  @Parameter(alias = "includes", property = "impsort.excludes")
+  @Parameter(alias = "excludes", property = "impsort.excludes")
   private String[] excludes;
 
   abstract void processFile(File f) throws MojoFailureException;
@@ -130,41 +133,36 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       return;
     }
 
-    // process all files, and aggregate any failures
-    MojoFailureException failure = findMatchingFiles().map(this::processWithAggregation).reduce(this::failureAggregator).orElse(null);
+    // find all matching files
+    Stream<File> files = null;
+    if (directories != null && directories.length > 0) {
+      // warn if a user-specified directory doesn't exist
+      files = Stream.of(directories).flatMap(d -> searchDir(d, true));
+    } else {
+      // default to src/main/java and src/test/java, without existence warnings
+      files = Stream.of(sourceDirectory, testSourceDirectory).flatMap(d -> searchDir(d, false));
+    }
+
+    // process all found files, and aggregate any failures
+    Function<File,MojoFailureException> visitor = f -> {
+      try {
+        processFile(f);
+        return null;
+      } catch (MojoFailureException e) {
+        return e;
+      }
+    };
+    Predicate<MojoFailureException> notNull = e -> e != null;
+    BinaryOperator<MojoFailureException> agg = (e1, e2) -> {
+      e1.addSuppressed(e2);
+      return e1;
+    };
+    MojoFailureException failure = files.map(visitor).filter(notNull).reduce(agg).orElse(null);
+
+    // check for failures during processing
     if (failure != null) {
       throw failure;
     }
-  }
-
-  private MojoFailureException failureAggregator(MojoFailureException e1, MojoFailureException e2) {
-    e1.addSuppressed(e2);
-    return e1;
-  }
-
-  private MojoFailureException processWithAggregation(File f) {
-    try {
-      processFile(f);
-      return null;
-    } catch (MojoFailureException e) {
-      return e;
-    }
-  }
-
-  private Stream<File> findMatchingFiles() {
-    if (directories != null && directories.length > 0) {
-      return Stream.of(directories).flatMap(this::searchDirWithWarn);
-    } else { // default to src/main/java and src/test/java
-      return Stream.of(sourceDirectory, testSourceDirectory).flatMap(this::searchDirNoWarn);
-    }
-  }
-
-  private Stream<File> searchDirNoWarn(File dir) {
-    return searchDir(dir, false);
-  }
-
-  private Stream<File> searchDirWithWarn(File dir) {
-    return searchDir(dir, true);
   }
 
   private Stream<File> searchDir(File dir, boolean warnOnBadDir) {
@@ -187,11 +185,11 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   }
 
   protected void fail(String message) throws MojoFailureException {
-    throw new MojoFailureException(message);
+    fail(message, null);
   }
 
   protected void fail(String message, Throwable cause) throws MojoFailureException {
-    throw new MojoFailureException(message, cause);
+    throw cause == null ? new MojoFailureException(message) : new MojoFailureException(message, cause);
   }
 
 }
