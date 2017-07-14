@@ -14,10 +14,12 @@
 
 package net.revelc.code.imp;
 
-import static org.junit.Assert.assertTrue;
+import   static   org.junit.Assert.assertTrue;   
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+   import   org.junit.Test ;  // some comment here
+ import org .junit.experimental.categories.Category   ;
+
+import java . lang . *; /* just for testing */
 
 @Category(java.lang.String.class)
 public class PluginIT {

@@ -38,34 +38,10 @@
         <groupId>@project.groupId@</groupId>
         <artifactId>@project.artifactId@</artifactId>
         <version>@project.version@</version>
-        <configuration>
-          <rules>
-            <rule>
-              <classPattern>.*</classPattern>
-              <classAnnotationPattern>org[.]junit[.]experimental[.]categories[.]Category</classAnnotationPattern>
-              <includeMainClasses>false</includeMainClasses>
-              <includeTestClasses>true</includeTestClasses>
-            </rule>
-            <rule>
-              <classPattern>net[.]revelc[.]code[.].*</classPattern>
-              <classAnnotationPattern>org[.]junit[.]experimental[.]categories[.]Category</classAnnotationPattern>
-            </rule>
-            <rule>
-              <classPattern>net[.]revelc[.]code[.].*IT</classPattern>
-              <classAnnotationPattern>org[.]junit[.]experimental[.]categories[.]Category</classAnnotationPattern>
-              <includeTestClasses>true</includeTestClasses>
-            </rule>
-            <rule>
-              <classPattern>.*</classPattern>
-              <classAnnotationPattern>org[.]junit[.]experimental[.]categories[.]Category</classAnnotationPattern>
-              <includeTestClasses>false</includeTestClasses>
-            </rule>
-          </rules>
-        </configuration>
         <executions>
           <execution>
             <goals>
-              <goal>check</goal>
+              <goal>sort</goal>
             </goals>
           </execution>
         </executions>
