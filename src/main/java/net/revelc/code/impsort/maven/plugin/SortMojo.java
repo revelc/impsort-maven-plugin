@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.maven.plugin.MojoFailureException;
@@ -31,34 +29,24 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 @Mojo(name = "sort", defaultPhase = LifecyclePhase.PROCESS_TEST_SOURCES, threadSafe = true, requiresDependencyResolution = ResolutionScope.NONE)
 public class SortMojo extends AbstractImpSortMojo {
-  private Pattern pattern = Pattern.compile("^\\s*(?<type>import(?:\\s+static)?)\\s+(?<item>\\w+(?:\\s*[.]\\s*\\w+)*(?:\\s*[.]\\s*[*])?)\\s*;(?<suffix>.*)$");
 
   @Override
   public void processFile(File f) throws MojoFailureException {
 
     ArrayList<String> before = new ArrayList<>();
-    TreeSet<String> imports = new TreeSet<>();
-    TreeSet<String> staticImports = new TreeSet<>();
+    ImportOrganizer imports = new ImportOrganizer(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
     ArrayList<String> after = new ArrayList<>();
 
     Path path = f.toPath();
-    getLog().warn("Reading file " + path);
+    getLog().debug("Reading file " + path);
     try (Stream<String> lines = Files.lines(path)) {
       lines.forEachOrdered(line -> {
-        Matcher m = pattern.matcher(line);
-        if (m.find()) {
-          String type = m.group("type").replaceAll("\\s+", " ");
-          String item = m.group("item").replaceAll("\\s+", "");
-          String suffix = m.group("suffix").replaceAll("\\s+$", "");
-          String imp = type + " " + item + ";" + suffix;
-
-          if (type.endsWith("static")) {
-            staticImports.add(imp);
-          } else {
-            imports.add(imp);
-          }
-          getLog().warn("Found import: " + imp); // should be debug, but leave warn for testing
-        } else if (imports.isEmpty() && staticImports.isEmpty()) {
+        Optional<Import> imp = Import.parse(line);
+        if (imp.isPresent()) {
+          Import i = imp.get();
+          imports.add(i);
+          getLog().debug("Found import: " + i);
+        } else if (imports.isEmpty()) {
           before.add(line);
         } else {
           after.add(line);
@@ -67,6 +55,22 @@ public class SortMojo extends AbstractImpSortMojo {
     } catch (IOException e) {
       fail("Error reading file " + f, e);
     }
+
+    sort(path, before, imports, after);
+  }
+
+  private void sort(Path path, ArrayList<String> before, ImportOrganizer imports, ArrayList<String> after) {
+
+    // remove trailing blank lines before imports
+    while (!before.isEmpty() && before.get(before.size() - 1).trim().isEmpty()) {
+      before.remove(before.size() - 1);
+    }
+
+    // remove leading blank lines after imports.
+    while (!after.isEmpty() && after.get(0).trim().isEmpty()) {
+      after.remove(0);
+    }
+
   }
 
 }
