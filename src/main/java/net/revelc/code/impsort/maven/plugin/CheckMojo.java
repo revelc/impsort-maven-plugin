@@ -14,19 +14,23 @@
 
 package net.revelc.code.impsort.maven.plugin;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-@Mojo(name = "check", defaultPhase = LifecyclePhase.PROCESS_TEST_SOURCES, threadSafe = true, requiresDependencyResolution = ResolutionScope.NONE)
+import net.revelc.code.impsort.Result;
+
+@Mojo(name = "check", defaultPhase = LifecyclePhase.PROCESS_SOURCES, threadSafe = true, requiresDependencyResolution = ResolutionScope.NONE)
 public class CheckMojo extends AbstractImpSortMojo {
 
   @Override
-  public void processFile(File f) throws MojoFailureException {
-    fail("check failure" + f);
+  public void processResult(Path path, Result results) throws MojoFailureException {
+    if (!results.isSorted()) {
+      fail("Imports are not sorted in " + path);
+    }
   }
 
 }

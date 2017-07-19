@@ -278,6 +278,7 @@
           <goals>
             <goal>-e</goal>
             <!-- goal>-X</goal -->
+            <goal>-X</goal>
             <goal>clean</goal>
             <goal>verify</goal>
             <goal>-Dimpsort.ignoreRuleFailures</goal>

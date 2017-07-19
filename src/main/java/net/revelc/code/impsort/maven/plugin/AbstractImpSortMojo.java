@@ -15,6 +15,8 @@
 package net.revelc.code.impsort.maven.plugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -27,6 +29,9 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
+
+import net.revelc.code.impsort.ImpSort;
+import net.revelc.code.impsort.Result;
 
 abstract class AbstractImpSortMojo extends AbstractMojo {
 
@@ -124,7 +129,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(alias = "excludes", property = "impsort.excludes")
   private String[] excludes;
 
-  abstract void processFile(File f) throws MojoFailureException;
+  abstract void processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
@@ -144,9 +149,20 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     }
 
     // process all found files, and aggregate any failures
+    ImpSort impSort = new ImpSort(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
+
     Function<File,MojoFailureException> visitor = f -> {
       try {
-        processFile(f);
+        Path path = f.toPath();
+        getLog().debug("Reading file " + path);
+
+        try {
+          Result result = impSort.parseFile(path);
+          result.getImports().forEach(imp -> getLog().debug("Found import: " + imp));
+          processResult(path, result);
+        } catch (IOException e) {
+          fail("Error reading file " + f, e);
+        }
         return null;
       } catch (MojoFailureException e) {
         return e;

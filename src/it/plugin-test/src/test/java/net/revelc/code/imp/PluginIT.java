@@ -12,14 +12,30 @@
  * limitations under the License.
  */
 
+
+    
+// some comment
+    
+   
+
+  // package comment
 package net.revelc.code.imp;
+// example prefix line 1
+  /* here */ import   org.junit.Test ;  // some comment here
 
-import   static   org.junit.Assert.assertTrue;   
+ /* example prefix line 2 */   import   static   org.junit.Assert.assertTrue;   
 
-   import   org.junit.Test ;  // some comment here
- import org .junit.experimental.categories.Category   ;
+ import org .junit.experimental.categories.Category   ;  import java.lang.String;
 
+ // more for testing
+ // more again
+   
+
+ // and again
 import java . lang . *; /* just for testing */
+   // another one
+
+import java.lang.String; // last
 
 @Category(java.lang.String.class)
 public class PluginIT {
