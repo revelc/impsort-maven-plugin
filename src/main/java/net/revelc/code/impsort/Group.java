@@ -14,11 +14,7 @@
 
 package net.revelc.code.impsort;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.ArrayList;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 class Group {
 
@@ -62,36 +58,6 @@ class Group {
     }
 
     return false;
-  }
-
-  static ArrayList<Group> parse(String groups) {
-    ArrayList<Group> parsedGroups = new ArrayList<>();
-    String[] array = requireNonNull(groups).replaceAll("\\s+", "").split(",");
-    Pattern validGroup = Pattern.compile("^(?:\\w+(?:[.]\\w+)*[.]?|[*])$");
-    // skip special case where the first element from split is empty and is the only element
-    if (array.length != 1 || !array[0].isEmpty()) {
-      for (String g : array) {
-        if (!validGroup.matcher(g).matches()) {
-          throw new IllegalArgumentException("Invalid group (" + g + ") in (" + groups + ")");
-        }
-        if (parsedGroups.stream().anyMatch(o -> g.contentEquals(o.getPrefix()))) {
-          throw new IllegalArgumentException("Duplicate group (" + g + ") in (" + groups + ")");
-        }
-
-        int encounterOrder = parsedGroups.size();
-        parsedGroups.add(new Group(g, encounterOrder));
-      }
-    }
-    // include the default group if not already included
-    if (parsedGroups.stream().noneMatch(o -> "*".contentEquals(o.getPrefix()))) {
-      parsedGroups.add(new Group("*", parsedGroups.size()));
-    }
-    parsedGroups.sort((a, b) -> {
-      // sort in reverse prefix length order first, then encounter order
-      int comp = Integer.compare(b.getPrefix().length(), a.getPrefix().length());
-      return comp != 0 ? comp : Integer.compare(a.getOrder(), a.getOrder());
-    });
-    return parsedGroups;
   }
 
 }

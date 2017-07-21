@@ -69,4 +69,28 @@ public class Import {
     return false;
   }
 
+  public boolean isDuplicatedBy(Import other) {
+    return isStatic() == other.isStatic() && getImport().contentEquals(other.getImport());
+  }
+
+  public Import combineWith(Import duplicate) {
+    String newPrefix;
+    String newSuffix;
+    if (getPrefix().isEmpty()) {
+      newPrefix = duplicate.getPrefix();
+    } else if (duplicate.getPrefix().isEmpty()) {
+      newPrefix = getPrefix();
+    } else {
+      newPrefix = getPrefix() + "\n" + duplicate.getPrefix();
+    }
+    if (getSuffix().isEmpty()) {
+      newSuffix = duplicate.getSuffix();
+    } else if (duplicate.getSuffix().isEmpty()) {
+      newSuffix = getSuffix();
+    } else {
+      newSuffix = getSuffix() + duplicate.getSuffix();
+    }
+    return new Import(isStatic(), getImport(), newPrefix, newSuffix);
+  }
+
 }

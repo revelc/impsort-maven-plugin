@@ -27,6 +27,14 @@ package net.revelc.code.imp;
 
  import org .junit.experimental.categories.Category   ;  import java.lang.String;
 
+/* some
+ * multiline
+ * comment
+ */
+ import java.lang.String;
+
+ import java.lang.String; // end of line
+
  // more for testing
  // more again
    
@@ -37,12 +45,14 @@ import java . lang . *; /* just for testing */
 
 import java.lang.String; // last
 
+
+
 @Category(java.lang.String.class)
 public class PluginIT {
 
   @Test
   public void testTautology() throws Exception {
-    assertTrue(true);
+                          assertTrue(true);
   }
 
 }

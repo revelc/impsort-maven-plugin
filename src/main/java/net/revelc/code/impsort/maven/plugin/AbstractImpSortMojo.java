@@ -17,6 +17,8 @@ package net.revelc.code.impsort.maven.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -30,6 +32,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 
+import net.revelc.code.impsort.Grouper;
 import net.revelc.code.impsort.ImpSort;
 import net.revelc.code.impsort.Result;
 
@@ -139,29 +142,37 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     }
 
     // find all matching files
-    Stream<File> files = null;
+    Stream<File> files;
     if (directories != null && directories.length > 0) {
       // warn if a user-specified directory doesn't exist
-      files = Stream.of(directories).flatMap(d -> searchDir(d, true));
+      files = Stream.of(directories).flatMap(d -> searchDir(d, true)).parallel();
     } else {
       // default to src/main/java and src/test/java, without existence warnings
-      files = Stream.of(sourceDirectory, testSourceDirectory).flatMap(d -> searchDir(d, false));
+      files = Stream.of(sourceDirectory, testSourceDirectory).flatMap(d -> searchDir(d, false)).parallel();
     }
+    Stream<Path> paths = files.map(File::toPath);
 
     // process all found files, and aggregate any failures
-    ImpSort impSort = new ImpSort(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
+    Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
+    ImpSort impSort = new ImpSort(grouper);
+    AtomicLong numAlreadySorted = new AtomicLong(0);
+    AtomicLong numProcessed = new AtomicLong(0);
 
-    Function<File,MojoFailureException> visitor = f -> {
+    Function<Path,MojoFailureException> visitor = path -> {
       try {
-        Path path = f.toPath();
         getLog().debug("Reading file " + path);
 
         try {
           Result result = impSort.parseFile(path);
           result.getImports().forEach(imp -> getLog().debug("Found import: " + imp));
+          if (result.isSorted()) {
+            numAlreadySorted.getAndIncrement();
+          } else {
+            numProcessed.getAndIncrement();
+          }
           processResult(path, result);
         } catch (IOException e) {
-          fail("Error reading file " + f, e);
+          fail("Error reading file " + path, e);
         }
         return null;
       } catch (MojoFailureException e) {
@@ -173,7 +184,19 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       e1.addSuppressed(e2);
       return e1;
     };
-    MojoFailureException failure = files.map(visitor).filter(notNull).reduce(agg).orElse(null);
+
+    long startTime = System.nanoTime();
+    MojoFailureException failure = paths.map(visitor).filter(notNull).reduce(agg).orElse(null);
+    Duration totalTime = Duration.ofNanos(System.nanoTime() - startTime);
+
+    long total = numAlreadySorted.get() + numProcessed.get();
+    long minutes = totalTime.getSeconds() / 60;
+    long seconds = totalTime.getSeconds() - minutes * 60;
+    long millis = totalTime.getNano() / 1_000_000;
+    String fmt = "%22s: %" + Long.toString(total).length() + "d";
+    getLog().info(String.format(fmt + " in %02d:%02d.%03d", "Total Files Processed", total, minutes, seconds, millis));
+    getLog().info(String.format(fmt, "Already Sorted", numAlreadySorted.get()));
+    getLog().info(String.format(fmt, "Needed Sorting", numProcessed.get()));
 
     // check for failures during processing
     if (failure != null) {
@@ -197,7 +220,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     ds.setCaseSensitive(false);
     ds.setFollowSymlinks(false);
     ds.scan();
-    return Stream.of(ds.getIncludedFiles()).map(filename -> new File(dir, filename));
+    return Stream.of(ds.getIncludedFiles()).map(filename -> new File(dir, filename)).parallel();
   }
 
   protected void fail(String message) throws MojoFailureException {

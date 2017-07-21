@@ -18,76 +18,152 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.Position;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.comments.Comment;
 
 public class ImpSort {
 
-  private static final Pattern PATTERN = Pattern.compile(
-      "^(?<prefix>.*?)\\s*\\b(?<type>import(?:\\s+static)?)\\s+(?<item>\\w+(?:\\s*[.]\\s*\\w+)*(?:\\s*[.]\\s*[*])?)\\s*;(?<suffix>[^\\n]*)",
-      Pattern.MULTILINE | Pattern.DOTALL);
-  private static final Pattern SPACES = Pattern.compile("\\s+");
-  private static final Pattern TRAILING_SPACES = Pattern.compile("\\s+$");
-  private static final Pattern LEADING_SPACES = Pattern.compile("^\\s+");
-  private static final Pattern BLANK_LINES = Pattern.compile("\\n\\s*\\n");
-  private static final Pattern UP_TO_LAST_BLANK_LINE = Pattern.compile(".*(?:\\n|^)\\s*(?:\\n|$)", Pattern.DOTALL);
-  private static final Pattern UP_TO_PACKAGE = Pattern.compile(".*(?:\\n|^)\\s*package\\s+.*?;.*?(?:\\n|$)", Pattern.DOTALL);
-  private static final Pattern AFTER_CLASS_START = Pattern.compile("\\b(?:class|interface|enum)\\b");
+  private static final Comparator<Node> BY_POSITION = (a, b) -> a.getBegin().get().compareTo(b.getBegin().get());
 
-  final ArrayList<Group> groups;
-  final ArrayList<Group> staticGroups;
-  final boolean staticAfter;
-  final boolean joinStaticWithNonStatic;
+  private final Grouper grouper;
 
-  public ImpSort(final String groups, final String staticGroups, final boolean staticAfter, final boolean joinStaticWithNonStatic) {
-    this.groups = Group.parse(groups);
-    this.staticGroups = Group.parse(staticGroups);
-    this.staticAfter = staticAfter;
-    this.joinStaticWithNonStatic = joinStaticWithNonStatic;
+  public ImpSort(final Grouper grouper) {
+    this.grouper = grouper;
   }
 
   public Result parseFile(final Path path) throws IOException {
-    final String fileContents = String.join("\n", Files.readAllLines(path));
-    Set<Import> allImports = new LinkedHashSet<>();
-    Matcher m = PATTERN.matcher(fileContents);
-    int firstMatch = -1;
-    int lastPosition = 0;
-    while (m.find()) {
-      String prefix = LEADING_SPACES.matcher(m.group("prefix")).replaceAll(""); // remove beginning whitespace from prefix
-
-      // deal with the first import specially
-      if (allImports.isEmpty()) {
-        firstMatch = m.start();
-        String prefixOriginal = prefix;
-        // cut off anything prior to the last blank line
-        prefix = UP_TO_LAST_BLANK_LINE.matcher(prefix).replaceAll("");
-        // remove everything up to and including package statement if it exists
-        prefix = UP_TO_PACKAGE.matcher(prefix).replaceAll("");
-        prefix = prefix.trim();
-        firstMatch += prefixOriginal.length() - prefix.length();
-      } else {
-        // remove blank lines in prefix
-        prefix = BLANK_LINES.matcher(prefix).replaceAll("\n").trim();
-      }
-      if (AFTER_CLASS_START.matcher(prefix).find()) {
-        // matches after class start are false-positives
-        break;
-      }
-
-      boolean isStatic = m.group("type").contains("static");
-      String imp = SPACES.matcher(m.group("item")).replaceAll(""); // remove spaces from class
-      String suffix = TRAILING_SPACES.matcher(m.group("suffix")).replaceAll(""); // remove trailing whitespace from suffix
-
-      allImports.add(new Import(isStatic, imp, prefix, suffix));
-      lastPosition = m.end();
+    List<String> fileLines = Files.readAllLines(path);
+    CompilationUnit unit = JavaParser.parse(String.join("\n", fileLines));
+    Position packagePosition = unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
+    NodeList<ImportDeclaration> importDeclarations = unit.getImports();
+    if (importDeclarations.isEmpty()) {
+      return new Result(path, fileLines, 0, fileLines.size(), "", "", Collections.emptyList());
     }
 
-    // DEBUG printing
-    // allImports.forEach(i -> System.out.print("---\n" + i + "\n---"));
-    // Stream.of(allImports.iterator().next()).forEach(i -> System.out.print("---\n" + i + "\n---"));
-    return new Result(this, fileContents, firstMatch, lastPosition, allImports);
+    // find orphaned comments before between package and last import
+    Position lastImportPosition = importDeclarations.stream().max(BY_POSITION).get().getBegin().get();
+    Stream<Comment> orphanedComments = unit.getOrphanComments().parallelStream().filter(c -> {
+      Position p = c.getBegin().get();
+      return p.isAfter(packagePosition) && p.isBefore(lastImportPosition);
+    });
+
+    // create entire import section (with interspersed comments)
+    List<Node> importSectionNodes = Stream.concat(orphanedComments, importDeclarations.stream()).collect(Collectors.toList());
+    importSectionNodes.sort(BY_POSITION);
+    // position line numbers start at 1, not 0
+    int start = importSectionNodes.get(0).getBegin().get().line - 1;
+    int stop = importSectionNodes.get(importSectionNodes.size() - 1).getEnd().get().line;
+    // get the original import section lines from the file
+    // include surrounding whitespace
+    while (start > 0 && fileLines.get(start - 1).trim().isEmpty()) {
+      --start;
+    }
+    while (stop < fileLines.size() && fileLines.get(stop).trim().isEmpty()) {
+      ++stop;
+    }
+    String originalSection = String.join("\n", fileLines.subList(start, stop)) + "\n";
+
+    Set<Import> allImports = convertImportSection(importSectionNodes);
+    String newSection = grouper.groupedImports(allImports);
+    if (start > 0) {
+      // add newline before imports, as long as imports not at start of file
+      newSection = "\n" + newSection;
+    }
+    if (stop < fileLines.size()) {
+      // add newline after imports, as long as there's more in file
+      newSection += "\n";
+    }
+
+    return new Result(path, fileLines, start, stop, originalSection, newSection, allImports);
+  }
+
+  // return imports, with associated comments, in order found in the file
+  private static Set<Import> convertImportSection(List<Node> importSectionNodes) {
+    List<Comment> recentComments = new ArrayList<>();
+    LinkedHashSet<Import> allImports = new LinkedHashSet<>(importSectionNodes.size() / 2);
+    for (Node node : importSectionNodes) {
+      if (node instanceof Comment) {
+        recentComments.add((Comment) node);
+      } else if (node instanceof ImportDeclaration) {
+        List<Node> thisImport = new ArrayList<>(2);
+        ImportDeclaration impDecl = (ImportDeclaration) node;
+        thisImport.addAll(recentComments);
+
+        Optional<Comment> impComment = impDecl.getComment();
+        if (impComment.isPresent()) {
+          Comment c = impComment.get();
+          if (c.getBegin().get().isBefore(impDecl.getBegin().get())) {
+            thisImport.add(c);
+            thisImport.add(impDecl);
+          } else {
+            thisImport.add(impDecl);
+            thisImport.add(c);
+          }
+        } else {
+          thisImport.add(impDecl);
+        }
+
+        recentComments.clear();
+        convertAndAddImport(allImports, thisImport);
+      } else {
+        throw new IllegalStateException("Unknown node: " + node);
+      }
+    }
+    if (!recentComments.isEmpty()) {
+      throw new IllegalStateException("Unexpectedly found more orphaned comments: " + recentComments);
+    }
+    return allImports;
+  }
+
+  private static void convertAndAddImport(LinkedHashSet<Import> allImports, List<Node> thisImport) {
+    boolean isStatic = false;
+    String importItem = null;
+    String prefix = "";
+    String suffix = "";
+    for (Node n : thisImport) {
+      if (n instanceof Comment) {
+        if (importItem == null) {
+          prefix += n.toString();
+        } else {
+          suffix += n.toString();
+        }
+      }
+      if (n instanceof ImportDeclaration) {
+        ImportDeclaration i = (ImportDeclaration) n;
+        isStatic = i.isStatic();
+        importItem = i.getName().asString() + (i.isAsterisk() ? ".*" : "");
+      }
+    }
+    suffix = suffix.trim();
+    if (!suffix.isEmpty()) {
+      suffix = " " + suffix;
+    }
+    Import imp = new Import(isStatic, importItem, prefix.trim(), suffix);
+    Iterator<Import> iter = allImports.iterator();
+    // this de-duplication can probably be made more efficient by doing it all at the end
+    while (iter.hasNext()) {
+      Import candidate = iter.next(); // potential duplicate
+      if (candidate.isDuplicatedBy(imp)) {
+        iter.remove();
+        imp = candidate.combineWith(imp);
+      }
+    }
+    allImports.add(imp);
   }
 
 }
