@@ -17,17 +17,8 @@
 Description
 -----------
 
-  This `impsort-maven-plugin` makes it possible to evaluate your project's
-  classes to ensure they are annotated as desired.
-
-  You can specify as many rules as you like, and each one will be evaluated in
-  order. The build will fail if any rule fails. By default, it runs at the
-  process-test-classes phase of the [Maven build lifecycle][1]. This is to
-  ensure it runs after all classes have been compiled, but before any tests are
-  run.
-
-  A rule is composed of a pattern for identifying the classes to evaluate, and
-  a pattern for the annotations one requires to be used.
+  This `impsort-maven-plugin` allows you to sort your Java source file's import
+  statements according to the rules you specify.
 
 Getting Started
 ---------------
@@ -42,21 +33,17 @@ Getting Started
         <artifactId>${project.artifactId}</artifactId>
         <version>${project.version}</version>
         <configuration>
-          <rules>
-            <!-- Example rule to ensure integration tests have a JUnit Category -->
-            <rule>
-              <!-- a pattern of classes for which to check annotations -->
-              <classPattern>.*IT</classPattern>
-              <!-- a pattern of annotations which are required for the specified classes -->
-              <classAnnotationPattern>org[.]junit[.]experimental[.]categories[.]Category</classAnnotationPattern>
-            </rule>
-          </rules>
+          <groups>java.,javax.,org.,com.</groups>
+          <staticGroups>java,*</staticGroups>
+          <excludes>
+            <exclude>**/thrift/*.java</exclude>
+          </excludes>
         </configuration>
         <executions>
           <execution>
             <id>sort-imports</id>
             <goals>
-              <goal>check</goal><!-- runs at process-test-classes phase -->
+              <goal>sort</goal><!-- runs at process-sources phase by default -->
             </goals>
           </execution>
         </executions>
@@ -65,10 +52,11 @@ Getting Started
   </build>
 ```
 
-  and build your project, similarly to (it runs at the verify phase by default):
+  and build your project, similarly to (it runs at the [process-sources][1]
+  phase by default):
 
 ```
-mvn verify
+mvn package
 ```
 
 [1]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
