@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20170720" />
+    <meta name="Date-Revision-yyyymmdd" content="20171027" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; impsort:sort</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2017-07-20
+                  <li id="publishDate">Last Published: 2017-10-27
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.0.0
+                  <li id="projectVersion">Version: 1.0.1
                       </li>
                       
               
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.0.0:sort</p>
+<p>net.revelc.code:impsort-maven-plugin:1.0.1:sort</p>
       
 <p><b>Description</b>:</p>
       
@@ -178,7 +178,7 @@
             
 <td><tt>File[]</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>Location of the Java source files to process. Defaults to source
 main and test directories if not set.<br /><b>User property is</b>: <tt>impsort.directories</tt>.<br /><b>Alias is</b>: <tt>directories</tt>.</td>
@@ -190,7 +190,7 @@ main and test directories if not set.<br /><b>User property is</b>: <tt>impsort.
             
 <td><tt>String[]</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>List of fileset patterns for Java source locations to exclude.
 Patterns are relative to the directories selected. When not
@@ -203,7 +203,7 @@ specified, there is no default exclude.<br /><b>User property is</b>: <tt>impsor
             
 <td><tt>String</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>Configures the grouping of non-static imports. Groups are defined
 with comma-separated package name prefixes. The special &quot;*&quot; group
@@ -218,7 +218,7 @@ prioritized over less specific ones. All groups are sorted.<br /><b>Default valu
             
 <td><tt>String[]</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>List of fileset patterns for Java source locations to include.
 Patterns are relative to the directories selected. When not
@@ -231,7 +231,7 @@ specified, the default include is <tt>**/*.java</tt><br /><b>User property is</b
             
 <td><tt>boolean</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>Allows omitting the blank line between the static and non-static
 sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.joinStaticWithNonStatic</tt>.<br /><b>Alias is</b>: <tt>joinStaticWithNonStatic</tt>.</td>
@@ -243,7 +243,7 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
             
 <td><tt>boolean</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>Allows skipping execution of this plugin.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.skip</tt>.<br /><b>Alias is</b>: <tt>skip</tt>.</td>
           </tr>
@@ -254,7 +254,7 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
             
 <td><tt>boolean</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>Configures whether static groups will appear after non-static
 groups.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.staticAfter</tt>.<br /><b>Alias is</b>: <tt>staticAfter</tt>.</td>
@@ -266,7 +266,7 @@ groups.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</
             
 <td><tt>String</tt></td>
             
-<td><tt>-</tt></td>
+<td><tt>1.0.0</tt></td>
             
 <td>Configures the grouping of static imports. Groups are defined with
 comma-separated package name prefixes. The special &quot;*&quot; group refers
@@ -289,6 +289,8 @@ main and test directories if not set.</div>
           
 <li><b>Type</b>: <tt>java.io.File[]</tt></li>
           
+<li><b>Since</b>: <tt>1.0.0</tt></li>
+          
 <li><b>Required</b>: <tt>No</tt></li>
           
 <li><b>User Property</b>: <tt>impsort.directories</tt></li>
@@ -304,6 +306,8 @@ specified, there is no default exclude.</div>
 <ul>
           
 <li><b>Type</b>: <tt>java.lang.String[]</tt></li>
+          
+<li><b>Since</b>: <tt>1.0.0</tt></li>
           
 <li><b>Required</b>: <tt>No</tt></li>
           
@@ -323,6 +327,8 @@ prioritized over less specific ones. All groups are sorted.</div>
           
 <li><b>Type</b>: <tt>java.lang.String</tt></li>
           
+<li><b>Since</b>: <tt>1.0.0</tt></li>
+          
 <li><b>Required</b>: <tt>No</tt></li>
           
 <li><b>User Property</b>: <tt>impsort.groups</tt></li>
@@ -341,6 +347,8 @@ specified, the default include is <tt>**/*.java</tt></div>
           
 <li><b>Type</b>: <tt>java.lang.String[]</tt></li>
           
+<li><b>Since</b>: <tt>1.0.0</tt></li>
+          
 <li><b>Required</b>: <tt>No</tt></li>
           
 <li><b>User Property</b>: <tt>impsort.includes</tt></li>
@@ -355,6 +363,8 @@ sections.</div>
 <ul>
           
 <li><b>Type</b>: <tt>boolean</tt></li>
+          
+<li><b>Since</b>: <tt>1.0.0</tt></li>
           
 <li><b>Required</b>: <tt>No</tt></li>
           
@@ -372,6 +382,8 @@ sections.</div>
           
 <li><b>Type</b>: <tt>boolean</tt></li>
           
+<li><b>Since</b>: <tt>1.0.0</tt></li>
+          
 <li><b>Required</b>: <tt>No</tt></li>
           
 <li><b>User Property</b>: <tt>impsort.skip</tt></li>
@@ -388,6 +400,8 @@ groups.</div>
 <ul>
           
 <li><b>Type</b>: <tt>boolean</tt></li>
+          
+<li><b>Since</b>: <tt>1.0.0</tt></li>
           
 <li><b>Required</b>: <tt>No</tt></li>
           
@@ -408,6 +422,8 @@ prioritized over less specific ones. All groups are sorted.</div>
 <ul>
           
 <li><b>Type</b>: <tt>java.lang.String</tt></li>
+          
+<li><b>Since</b>: <tt>1.0.0</tt></li>
           
 <li><b>Required</b>: <tt>No</tt></li>
           
