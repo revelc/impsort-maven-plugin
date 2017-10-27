@@ -47,7 +47,7 @@
     <mailingList />
   </mailingLists>
   <prerequisites>
-    <maven>${maven.min-version}</maven>
+    <maven>3.0.5</maven>
   </prerequisites>
   <scm>
     <connection>scm:git:https://github.com/revelc/impsort-maven-plugin.git</connection>
@@ -77,7 +77,6 @@
     <github.site.repositoryOwner>revelc</github.site.repositoryOwner>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.min-version>3.2.5</maven.min-version>
     <!-- skip standard site deployment, because site is deployed using github plugin instead -->
     <maven.site.deploy.skip>true</maven.site.deploy.skip>
     <maven.tools-version>3.2.5</maven.tools-version>
@@ -224,8 +223,11 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>[${maven.min-version},)</version>
+                  <version>[3.5.0,)</version>
                 </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[${maven.compiler.target},)</version>
+                </requireJavaVersion>
               </rules>
             </configuration>
           </execution>
