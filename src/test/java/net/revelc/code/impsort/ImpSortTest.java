@@ -15,11 +15,15 @@
 package net.revelc.code.impsort;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -31,7 +35,27 @@ public class ImpSortTest {
   public void testSort() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test",
         "java", "net", "revelc", "code", "imp", "PluginIT.java");
-    new ImpSort(eclipseDefaults).parseFile(p);
+    new ImpSort(eclipseDefaults, false).parseFile(p);
+  }
+
+  @Test
+  public void testUnused() throws IOException {
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
+    Result result = new ImpSort(eclipseDefaults, true).parseFile(p);
+    Set<String> imports = new HashSet<>();
+    for (Import i : result.getImports()) {
+      imports.add(i.getImport());
+    }
+    assertFalse(imports.contains("com.google.common.base.Predicates"));
+    assertTrue(imports.contains("com.google.common.collect.ImmutableMap"));
+    assertFalse(imports.contains("io.swagger.annotations.ApiOperation"));
+    assertFalse(imports.contains("java.util.ArrayList"));
+    assertTrue(imports.contains("java.util.List"));
+    assertFalse(imports.contains("org.springframework.beans.factory.annotation.Autowired"));
+    assertTrue(imports.contains("org.springframework.stereotype.Component"));
+    assertFalse(imports.contains("org.junit.Assert.assertEquals"));
+    assertTrue(imports.contains("org.junit.Assert.assertFalse"));
+    assertTrue(imports.contains("org.junit.Assert.*"));
   }
 
   @Test

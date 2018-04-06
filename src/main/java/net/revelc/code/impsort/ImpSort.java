@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,12 +30,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.javaparser.JavaParser;
+import com.github.javaparser.JavaToken;
 import com.github.javaparser.Position;
+import com.github.javaparser.TokenRange;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
+import com.github.javaparser.ast.modules.ModuleDeclaration;
 
 public class ImpSort {
 
@@ -42,9 +47,11 @@ public class ImpSort {
       (a, b) -> a.getBegin().get().compareTo(b.getBegin().get());
 
   private final Grouper grouper;
+  private final boolean removeUnused;
 
-  public ImpSort(final Grouper grouper) {
+  public ImpSort(final Grouper grouper, final boolean removeUnused) {
     this.grouper = grouper;
+    this.removeUnused = removeUnused;
   }
 
   public Result parseFile(final Path path) throws IOException {
@@ -83,6 +90,11 @@ public class ImpSort {
     String originalSection = String.join("\n", fileLines.subList(start, stop)) + "\n";
 
     Set<Import> allImports = convertImportSection(importSectionNodes);
+
+    if (removeUnused) {
+      removeUnusedImports(allImports, extractTokens(unit));
+    }
+
     String newSection = grouper.groupedImports(allImports);
     if (start > 0) {
       // add newline before imports, as long as imports not at start of file
@@ -171,4 +183,51 @@ public class ImpSort {
     allImports.add(imp);
   }
 
+  /*
+   * Extract all of the tokens from the main body of the file.
+   *
+   * This set of tokens represents all of the file's dependencies, and is used
+   * to figure out whether or not an import is unused.
+   */
+  private static Set<String> extractTokens(CompilationUnit unit) {
+    Set<String> tokens = new HashSet<String>();
+    NodeList<TypeDeclaration<?>> types = unit.getTypes();
+    types.forEach(node -> {
+      Optional<TokenRange> tokenRange = node.getTokenRange();
+      if (tokenRange.isPresent() && tokenRange.get() != TokenRange.INVALID) {
+        Iterator<JavaToken> iterator = tokenRange.get().iterator();
+        while (iterator.hasNext()) {
+          String token = iterator.next().asString();
+          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
+            tokens.add(token);
+          }
+        }
+      }
+    });
+
+    return tokens;
+  }
+
+  /*
+   * Remove unused imports.
+   *
+   * This algorithm only looks at the file itself, and evaluates whether or not
+   * a given import is unused, by checking if the last segment of the import path
+   * (typically a class name or a static function name) appears in the file.
+   *
+   * This means that it is not possible to remove import statements with wildcards.
+   */
+  private static void removeUnusedImports(Set<Import> imports, Set<String> tokens) {
+    imports.removeIf(i -> {
+      String[] segments = i.getImport().split("[.]");
+      if (segments.length == 0) {
+        throw new AssertionError("Parse tree includes invalid import statements");
+      }
+
+      String lastSegment = segments[segments.length - 1];
+      if (lastSegment.equals("*")) return false;
+
+      return !tokens.contains(lastSegment);
+    });
+  }
 }
