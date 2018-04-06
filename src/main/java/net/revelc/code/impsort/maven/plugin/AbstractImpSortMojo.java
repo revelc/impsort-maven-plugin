@@ -132,6 +132,14 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(alias = "excludes", property = "impsort.excludes")
   private String[] excludes;
 
+  /**
+   * Configures whether to remove unused imports.
+   *
+   * @since 1.0.2
+   */
+  @Parameter(alias = "removeUnused", property = "impsort.removeUnused")
+  private boolean removeUnused;
+
   abstract void processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
@@ -154,7 +162,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
 
     // process all found files, and aggregate any failures
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
-    ImpSort impSort = new ImpSort(grouper);
+    ImpSort impSort = new ImpSort(grouper, removeUnused);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 
