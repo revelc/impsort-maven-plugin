@@ -23,7 +23,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import net.revelc.code.impsort.Result;
 
-@Mojo(name = "check", defaultPhase = LifecyclePhase.PROCESS_SOURCES, threadSafe = true, requiresDependencyResolution = ResolutionScope.NONE)
+@Mojo(name = "check", defaultPhase = LifecyclePhase.PROCESS_SOURCES, threadSafe = true,
+    requiresDependencyResolution = ResolutionScope.NONE)
 public class CheckMojo extends AbstractImpSortMojo {
 
   @Override

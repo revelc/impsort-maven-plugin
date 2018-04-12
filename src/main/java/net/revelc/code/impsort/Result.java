@@ -35,7 +35,8 @@ public class Result {
   private final int start;
   private final int stop;
 
-  Result(Path path, List<String> fileLines, int start, int stop, String originalSection, String newSection, Collection<Import> allImports) {
+  Result(Path path, List<String> fileLines, int start, int stop, String originalSection,
+      String newSection, Collection<Import> allImports) {
     this.path = path;
     this.originalSection = originalSection;
     this.newSection = newSection;
@@ -70,7 +71,8 @@ public class Result {
     List<String> beforeImports = fileLines.subList(0, start);
     List<String> importLines = Arrays.asList(newSection.split("\\n"));
     List<String> afterImports = fileLines.subList(stop, fileLines.size());
-    List<String> allLines = new ArrayList<>(beforeImports.size() + importLines.size() + afterImports.size() + 1);
+    List<String> allLines =
+        new ArrayList<>(beforeImports.size() + importLines.size() + afterImports.size() + 1);
     allLines.addAll(beforeImports);
     allLines.addAll(importLines);
     if (afterImports.size() > 0) {

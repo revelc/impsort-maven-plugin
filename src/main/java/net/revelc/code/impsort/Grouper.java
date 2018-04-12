@@ -34,7 +34,8 @@ public class Grouper {
   private final boolean staticAfter;
   private final boolean joinStaticWithNonStatic;
 
-  public Grouper(String groups, String staticGroups, boolean staticAfter, boolean joinStaticWithNonStatic) {
+  public Grouper(String groups, String staticGroups, boolean staticAfter,
+      boolean joinStaticWithNonStatic) {
     this.groups = Collections.unmodifiableList(parse(groups));
     this.staticGroups = parse(staticGroups);
     this.staticAfter = staticAfter;
@@ -71,16 +72,17 @@ public class Grouper {
     return parsedGroups;
   }
 
-  public Map<Integer,ArrayList<Import>> groupNonStatic(Collection<Import> allImports) {
+  public Map<Integer, ArrayList<Import>> groupNonStatic(Collection<Import> allImports) {
     return group(allImports, groups, i -> !i.isStatic());
   }
 
-  public Map<Integer,ArrayList<Import>> groupStatic(Collection<Import> allImports) {
+  public Map<Integer, ArrayList<Import>> groupStatic(Collection<Import> allImports) {
     return group(allImports, staticGroups, i -> i.isStatic());
   }
 
-  private static Map<Integer,ArrayList<Import>> group(Collection<Import> allImports, List<Group> groups, Predicate<Import> filter) {
-    Map<Integer,ArrayList<Import>> map = new TreeMap<>();
+  private static Map<Integer, ArrayList<Import>> group(Collection<Import> allImports,
+      List<Group> groups, Predicate<Import> filter) {
+    Map<Integer, ArrayList<Import>> map = new TreeMap<>();
     allImports.stream().filter(filter).forEach(imp -> {
       for (Group group : groups) {
         if (group.matches(imp.getImport())) {
@@ -105,11 +107,11 @@ public class Grouper {
 
   public String groupedImports(Collection<Import> allImports) {
     StringBuilder sb = new StringBuilder();
-    Map<Integer,ArrayList<Import>> staticImports = groupStatic(allImports);
-    Map<Integer,ArrayList<Import>> nonStaticImports = groupNonStatic(allImports);
+    Map<Integer, ArrayList<Import>> staticImports = groupStatic(allImports);
+    Map<Integer, ArrayList<Import>> nonStaticImports = groupNonStatic(allImports);
 
-    Map<Integer,ArrayList<Import>> first = getStaticAfter() ? nonStaticImports : staticImports;
-    Map<Integer,ArrayList<Import>> second = getStaticAfter() ? staticImports : nonStaticImports;
+    Map<Integer, ArrayList<Import>> first = getStaticAfter() ? nonStaticImports : staticImports;
+    Map<Integer, ArrayList<Import>> second = getStaticAfter() ? staticImports : nonStaticImports;
 
     AtomicBoolean firstGroup = new AtomicBoolean(true);
     Consumer<ArrayList<Import>> consumer = grouping -> {

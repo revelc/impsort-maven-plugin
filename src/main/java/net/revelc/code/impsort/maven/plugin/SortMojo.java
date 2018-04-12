@@ -24,7 +24,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import net.revelc.code.impsort.Result;
 
-@Mojo(name = "sort", defaultPhase = LifecyclePhase.PROCESS_SOURCES, threadSafe = true, requiresDependencyResolution = ResolutionScope.NONE)
+@Mojo(name = "sort", defaultPhase = LifecyclePhase.PROCESS_SOURCES, threadSafe = true,
+    requiresDependencyResolution = ResolutionScope.NONE)
 public class SortMojo extends AbstractImpSortMojo {
 
   @Override

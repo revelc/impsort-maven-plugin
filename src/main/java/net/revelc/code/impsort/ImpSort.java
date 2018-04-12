@@ -38,7 +38,8 @@ import com.github.javaparser.ast.comments.Comment;
 
 public class ImpSort {
 
-  private static final Comparator<Node> BY_POSITION = (a, b) -> a.getBegin().get().compareTo(b.getBegin().get());
+  private static final Comparator<Node> BY_POSITION =
+      (a, b) -> a.getBegin().get().compareTo(b.getBegin().get());
 
   private final Grouper grouper;
 
@@ -49,21 +50,24 @@ public class ImpSort {
   public Result parseFile(final Path path) throws IOException {
     List<String> fileLines = Files.readAllLines(path);
     CompilationUnit unit = JavaParser.parse(String.join("\n", fileLines));
-    Position packagePosition = unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
+    Position packagePosition =
+        unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
     if (importDeclarations.isEmpty()) {
       return new Result(path, fileLines, 0, fileLines.size(), "", "", Collections.emptyList());
     }
 
     // find orphaned comments before between package and last import
-    Position lastImportPosition = importDeclarations.stream().max(BY_POSITION).get().getBegin().get();
+    Position lastImportPosition =
+        importDeclarations.stream().max(BY_POSITION).get().getBegin().get();
     Stream<Comment> orphanedComments = unit.getOrphanComments().parallelStream().filter(c -> {
       Position p = c.getBegin().get();
       return p.isAfter(packagePosition) && p.isBefore(lastImportPosition);
     });
 
     // create entire import section (with interspersed comments)
-    List<Node> importSectionNodes = Stream.concat(orphanedComments, importDeclarations.stream()).collect(Collectors.toList());
+    List<Node> importSectionNodes =
+        Stream.concat(orphanedComments, importDeclarations.stream()).collect(Collectors.toList());
     importSectionNodes.sort(BY_POSITION);
     // position line numbers start at 1, not 0
     int start = importSectionNodes.get(0).getBegin().get().line - 1;
@@ -125,7 +129,8 @@ public class ImpSort {
       }
     }
     if (!recentComments.isEmpty()) {
-      throw new IllegalStateException("Unexpectedly found more orphaned comments: " + recentComments);
+      throw new IllegalStateException(
+          "Unexpectedly found more orphaned comments: " + recentComments);
     }
     return allImports;
   }

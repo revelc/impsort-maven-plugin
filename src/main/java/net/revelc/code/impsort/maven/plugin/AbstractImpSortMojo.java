@@ -55,9 +55,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   private boolean skip;
 
   /**
-   * Configures the grouping of static imports. Groups are defined with comma-separated package name prefixes. The special "*" group refers to imports not
-   * matching any other group, and is implied after all other groups, if not specified. More specific groups are prioritized over less specific ones. All groups
-   * are sorted.
+   * Configures the grouping of static imports. Groups are defined with comma-separated package name
+   * prefixes. The special "*" group refers to imports not matching any other group, and is implied
+   * after all other groups, if not specified. More specific groups are prioritized over less
+   * specific ones. All groups are sorted.
    *
    * @since 1.0.0
    */
@@ -65,9 +66,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   protected String staticGroups;
 
   /**
-   * Configures the grouping of non-static imports. Groups are defined with comma-separated package name prefixes. The special "*" group refers to imports not
-   * matching any other group, and is implied after all other groups, if not specified. More specific groups are prioritized over less specific ones. All groups
-   * are sorted.
+   * Configures the grouping of non-static imports. Groups are defined with comma-separated package
+   * name prefixes. The special "*" group refers to imports not matching any other group, and is
+   * implied after all other groups, if not specified. More specific groups are prioritized over
+   * less specific ones. All groups are sorted.
    *
    * @since 1.0.0
    */
@@ -87,27 +89,33 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    *
    * @since 1.0.0
    */
-  @Parameter(alias = "joinStaticWithNonStatic", property = "impsort.joinStaticWithNonStatic", defaultValue = "false")
+  @Parameter(alias = "joinStaticWithNonStatic", property = "impsort.joinStaticWithNonStatic",
+      defaultValue = "false")
   protected boolean joinStaticWithNonStatic;
 
   /**
-   * Project's main source directory as specified in the POM. Used by default if <code>directories</code> is not set.
+   * Project's main source directory as specified in the POM. Used by default if
+   * <code>directories</code> is not set.
    *
    * @since 1.0.0
    */
-  @Parameter(alias = "sourceDirectory", defaultValue = "${project.build.sourceDirectory}", readonly = true)
+  @Parameter(alias = "sourceDirectory", defaultValue = "${project.build.sourceDirectory}",
+      readonly = true)
   private File sourceDirectory;
 
   /**
-   * Project's test source directory as specified in the POM. Used by default if <code>directories</code> is not set.
+   * Project's test source directory as specified in the POM. Used by default if
+   * <code>directories</code> is not set.
    *
    * @since 1.0.0
    */
-  @Parameter(alias = "testSourceDirectory", defaultValue = "${project.build.testSourceDirectory}", readonly = true)
+  @Parameter(alias = "testSourceDirectory", defaultValue = "${project.build.testSourceDirectory}",
+      readonly = true)
   private File testSourceDirectory;
 
   /**
-   * Location of the Java source files to process. Defaults to source main and test directories if not set.
+   * Location of the Java source files to process. Defaults to source main and test directories if
+   * not set.
    *
    * @since 1.0.0
    */
@@ -115,8 +123,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   private File[] directories;
 
   /**
-   * List of fileset patterns for Java source locations to include. Patterns are relative to the directories selected. When not specified, the default include
-   * is <code>**&#47;*.java</code>
+   * List of fileset patterns for Java source locations to include. Patterns are relative to the
+   * directories selected. When not specified, the default include is <code>**&#47;*.java</code>
    *
    * @since 1.0.0
    */
@@ -124,8 +132,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   private String[] includes;
 
   /**
-   * List of fileset patterns for Java source locations to exclude. Patterns are relative to the directories selected. When not specified, there is no default
-   * exclude.
+   * List of fileset patterns for Java source locations to exclude. Patterns are relative to the
+   * directories selected. When not specified, there is no default exclude.
    *
    * @since 1.0.0
    */
@@ -148,7 +156,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       files = Stream.of(directories).flatMap(d -> searchDir(d, true)).parallel();
     } else {
       // default to src/main/java and src/test/java, without existence warnings
-      files = Stream.of(sourceDirectory, testSourceDirectory).flatMap(d -> searchDir(d, false)).parallel();
+      files = Stream.of(sourceDirectory, testSourceDirectory).flatMap(d -> searchDir(d, false))
+          .parallel();
     }
     Stream<Path> paths = files.map(File::toPath);
 
@@ -158,7 +167,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 
-    Function<Path,MojoFailureException> visitor = path -> {
+    Function<Path, MojoFailureException> visitor = path -> {
       try {
         getLog().debug("Reading file " + path);
 
@@ -194,7 +203,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     long seconds = totalTime.getSeconds() - minutes * 60;
     long millis = totalTime.getNano() / 1_000_000;
     String fmt = "%22s: %" + Long.toString(total).length() + "d";
-    getLog().info(String.format(fmt + " in %02d:%02d.%03d", "Total Files Processed", total, minutes, seconds, millis));
+    getLog().info(String.format(fmt + " in %02d:%02d.%03d", "Total Files Processed", total, minutes,
+        seconds, millis));
     getLog().info(String.format(fmt, "Already Sorted", numAlreadySorted.get()));
     getLog().info(String.format(fmt, "Needed Sorting", numProcessed.get()));
 
@@ -228,7 +238,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   }
 
   protected void fail(String message, Throwable cause) throws MojoFailureException {
-    throw cause == null ? new MojoFailureException(message) : new MojoFailureException(message, cause);
+    throw cause == null ? new MojoFailureException(message)
+        : new MojoFailureException(message, cause);
   }
 
 }

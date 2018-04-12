@@ -48,7 +48,8 @@ public class Import {
 
   @Override
   public String toString() {
-    return prefix + (prefix.isEmpty() ? "" : "\n") + "import" + (isStatic() ? " static" : "") + " " + getImport() + ";" + suffix;
+    return prefix + (prefix.isEmpty() ? "" : "\n") + "import" + (isStatic() ? " static" : "") + " "
+        + getImport() + ";" + suffix;
   }
 
   @Override
@@ -64,7 +65,8 @@ public class Import {
 
     if (obj instanceof Import) {
       Import o2 = (Import) obj;
-      return isStatic == o2.isStatic && imp.contentEquals(o2.imp) && prefix.contentEquals(o2.prefix) && suffix.contentEquals(o2.suffix);
+      return isStatic == o2.isStatic && imp.contentEquals(o2.imp) && prefix.contentEquals(o2.prefix)
+          && suffix.contentEquals(o2.suffix);
     }
     return false;
   }

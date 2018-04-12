@@ -29,7 +29,8 @@ public class ImpSortTest {
 
   @Test
   public void testSort() throws IOException {
-    Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test", "java", "net", "revelc", "code", "imp", "PluginIT.java");
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test",
+        "java", "net", "revelc", "code", "imp", "PluginIT.java");
     new ImpSort(eclipseDefaults).parseFile(p);
   }
 
@@ -38,7 +39,9 @@ public class ImpSortTest {
     assertEquals(Arrays.asList(new Group("*", 0)), Grouper.parse("*"));
     assertEquals(Arrays.asList(new Group("*", 0)), Grouper.parse(""));
     assertEquals(Arrays.asList(new Group("a", 0), new Group("*", 1)), Grouper.parse("a"));
-    assertEquals(Arrays.asList(new Group("com.", 3), new Group("java", 4), new Group("ab", 2), new Group("b", 0), new Group("*", 1), new Group("a", 5)),
+    assertEquals(
+        Arrays.asList(new Group("com.", 3), new Group("java", 4), new Group("ab", 2),
+            new Group("b", 0), new Group("*", 1), new Group("a", 5)),
         Grouper.parse(" b , * , ab ,com., java , a"));
   }
 
