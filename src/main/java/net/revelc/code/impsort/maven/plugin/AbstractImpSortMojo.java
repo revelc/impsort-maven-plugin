@@ -135,7 +135,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   /**
    * Configures whether to remove unused imports.
    *
-   * @since 1.0.2
+   * @since 1.1.0
    */
   @Parameter(alias = "removeUnused", property = "impsort.removeUnused")
   private boolean removeUnused;

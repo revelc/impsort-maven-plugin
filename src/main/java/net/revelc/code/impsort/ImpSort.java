@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -185,16 +186,16 @@ public class ImpSort {
    * to figure out whether or not an import is unused.
    */
   private static Set<String> extractTokens(CompilationUnit unit) {
-    Set<String> tokens = new LinkedHashSet<String>();
+    Set<String> tokens = new HashSet<String>();
     NodeList<TypeDeclaration<?>> types = unit.getTypes();
-    types.forEach((Node node) -> {
+    types.forEach(node -> {
       Optional<TokenRange> tokenRange = node.getTokenRange();
       if (tokenRange.isPresent() && tokenRange.get() != TokenRange.INVALID) {
         JavaToken token = tokenRange.get().getBegin();
         while (token != null && token != JavaToken.INVALID) {
           String tokenString = token.toString();
           if (!tokenString.isEmpty() && Character.isLetter(tokenString.charAt(0))) {
-            tokens.add(token.toString());
+            tokens.add(tokenString);
           }
           Optional<JavaToken> next = token.getNextToken();
           if (next.isPresent()) {
@@ -220,7 +221,7 @@ public class ImpSort {
    */
   private static void removeUnusedImports(Set<Import> imports, Set<String> tokens) {
     imports.removeIf(i -> {
-      String[] segments = i.getImport().split("\\.");
+      String[] segments = i.getImport().split("[.]");
       if (segments.length == 0) return false;
 
       String lastSegment = segments[segments.length - 1];
