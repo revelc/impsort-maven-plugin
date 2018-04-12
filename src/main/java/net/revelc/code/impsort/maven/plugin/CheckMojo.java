@@ -21,13 +21,13 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import net.revelc.code.impsort.Result;
+import net.revelc.code.impsort.Grouper;
 
 @Mojo(name = "check", defaultPhase = LifecyclePhase.PROCESS_SOURCES, threadSafe = true, requiresDependencyResolution = ResolutionScope.NONE)
 public class CheckMojo extends AbstractImpSortMojo {
 
   @Override
-  public void processResult(Path path, Result results) throws MojoFailureException {
+  public void processResult(Path path, Grouper.Result results) throws MojoFailureException {
     if (!results.isSorted()) {
       fail("Imports are not sorted in " + path);
     }

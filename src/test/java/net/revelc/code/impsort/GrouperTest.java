@@ -15,31 +15,27 @@
 package net.revelc.code.impsort;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
-public class ImpSortTest {
+public class GrouperTest {
 
+  private static Parser parser = new Parser();
   private static Grouper eclipseDefaults = new Grouper("java.,javax.,org.,com.", "", false, false);
 
   @Test
   public void testSort() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test", "java", "net", "revelc", "code", "imp", "PluginIT.java");
-    new ImpSort(eclipseDefaults).parseFile(p);
-  }
-
-  @Test
-  public void parseGroups() {
-    assertEquals(Arrays.asList(new Group("*", 0)), Grouper.parse("*"));
-    assertEquals(Arrays.asList(new Group("*", 0)), Grouper.parse(""));
-    assertEquals(Arrays.asList(new Group("a", 0), new Group("*", 1)), Grouper.parse("a"));
-    assertEquals(Arrays.asList(new Group("com.", 3), new Group("java", 4), new Group("ab", 2), new Group("b", 0), new Group("*", 1), new Group("a", 5)),
-        Grouper.parse(" b , * , ab ,com., java , a"));
+    eclipseDefaults.groupedImports(parser.parseFile(p));
   }
 
 }
