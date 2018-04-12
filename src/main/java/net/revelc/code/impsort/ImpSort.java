@@ -89,7 +89,7 @@ public class ImpSort {
     Set<Import> allImports = convertImportSection(importSectionNodes);
 
     if (removeUnused) {
-        removeUnusedImports(allImports, extractTokens(unit));
+      removeUnusedImports(allImports, extractTokens(unit));
     }
 
     String newSection = grouper.groupedImports(allImports);
@@ -191,17 +191,11 @@ public class ImpSort {
     types.forEach(node -> {
       Optional<TokenRange> tokenRange = node.getTokenRange();
       if (tokenRange.isPresent() && tokenRange.get() != TokenRange.INVALID) {
-        JavaToken token = tokenRange.get().getBegin();
-        while (token != null && token != JavaToken.INVALID) {
-          String tokenString = token.toString();
-          if (!tokenString.isEmpty() && Character.isLetter(tokenString.charAt(0))) {
-            tokens.add(tokenString);
-          }
-          Optional<JavaToken> next = token.getNextToken();
-          if (next.isPresent()) {
-            token = next.get();
-          } else {
-            break;
+        Iterator<JavaToken> iterator = tokenRange.get().iterator();
+        while (iterator.hasNext()) {
+          String token = iterator.next().asString();
+          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
+            tokens.add(token);
           }
         }
       }
@@ -222,7 +216,9 @@ public class ImpSort {
   private static void removeUnusedImports(Set<Import> imports, Set<String> tokens) {
     imports.removeIf(i -> {
       String[] segments = i.getImport().split("[.]");
-      if (segments.length == 0) return false;
+      if (segments.length == 0) {
+        throw new AssertionError("Parse tree includes invalid import statements");
+      }
 
       String lastSegment = segments[segments.length - 1];
       if (lastSegment.equals("*")) return false;
