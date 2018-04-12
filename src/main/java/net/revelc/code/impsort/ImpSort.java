@@ -39,7 +39,6 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.modules.ModuleDeclaration;
 
 public class ImpSort {
 
@@ -186,8 +185,8 @@ public class ImpSort {
   /*
    * Extract all of the tokens from the main body of the file.
    *
-   * This set of tokens represents all of the file's dependencies, and is used
-   * to figure out whether or not an import is unused.
+   * This set of tokens represents all of the file's dependencies, and is used to figure out whether
+   * or not an import is unused.
    */
   private static Set<String> extractTokens(CompilationUnit unit) {
     Set<String> tokens = new HashSet<String>();
@@ -211,9 +210,9 @@ public class ImpSort {
   /*
    * Remove unused imports.
    *
-   * This algorithm only looks at the file itself, and evaluates whether or not
-   * a given import is unused, by checking if the last segment of the import path
-   * (typically a class name or a static function name) appears in the file.
+   * This algorithm only looks at the file itself, and evaluates whether or not a given import is
+   * unused, by checking if the last segment of the import path (typically a class name or a static
+   * function name) appears in the file.
    *
    * This means that it is not possible to remove import statements with wildcards.
    */
@@ -225,7 +224,8 @@ public class ImpSort {
       }
 
       String lastSegment = segments[segments.length - 1];
-      if (lastSegment.equals("*")) return false;
+      if (lastSegment.equals("*"))
+        return false;
 
       return !tokens.contains(lastSegment);
     });

@@ -40,7 +40,8 @@ public class ImpSortTest {
 
   @Test
   public void testUnused() throws IOException {
-    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
+    Path p =
+        Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
     Result result = new ImpSort(eclipseDefaults, true).parseFile(p);
     Set<String> imports = new HashSet<>();
     for (Import i : result.getImports()) {
