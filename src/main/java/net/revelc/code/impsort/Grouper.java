@@ -16,7 +16,12 @@ package net.revelc.code.impsort;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -103,10 +108,10 @@ public class Grouper {
     return joinStaticWithNonStatic;
   }
 
-  public String groupedImports(Collection<Import> allImports) {
+  public Result groupedImports(Parser.Result parseResult) {
     StringBuilder sb = new StringBuilder();
-    Map<Integer,ArrayList<Import>> staticImports = groupStatic(allImports);
-    Map<Integer,ArrayList<Import>> nonStaticImports = groupNonStatic(allImports);
+    Map<Integer,ArrayList<Import>> staticImports = groupStatic(parseResult.getImports());
+    Map<Integer,ArrayList<Import>> nonStaticImports = groupNonStatic(parseResult.getImports());
 
     Map<Integer,ArrayList<Import>> first = getStaticAfter() ? nonStaticImports : staticImports;
     Map<Integer,ArrayList<Import>> second = getStaticAfter() ? staticImports : nonStaticImports;
@@ -126,7 +131,61 @@ public class Grouper {
     second.values().forEach(consumer);
 
     // allImports.forEach(x -> System.out.print("-----\n" + x + "\n-----"));
-    return sb.toString();
+    String newSection = sb.toString();
+
+    if (parseResult.getStart() > 0) {
+      // add newline before imports, as long as imports not at start of file
+      newSection = "\n" + newSection;
+    }
+    if (parseResult.getStop() < parseResult.getFileLines().size()) {
+      // add newline after imports, as long as there's more in file
+      newSection += "\n";
+    }
+
+    return new Result(parseResult, newSection);
   }
 
+  public static class Result {
+    private Boolean isSorted;
+    private final Parser.Result parseResult;
+    private final String newSection;
+
+    Result(Parser.Result parseResult, String newSection) {
+      this.parseResult = parseResult;
+      this.newSection = newSection;
+    }
+
+    public boolean isSorted() {
+      if (isSorted == null) {
+        isSorted = parseResult.getOriginalSection().contentEquals(newSection);
+      }
+      return isSorted;
+    }
+
+    public void saveBackup(Path destination) throws IOException {
+      Files.copy(parseResult.getPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public void saveSorted(Path destination) throws IOException {
+      if (isSorted) {
+        if (!Files.isSameFile(parseResult.getPath(), destination)) {
+          saveBackup(destination);
+        }
+        return;
+      }
+      List<String> fileLines = parseResult.getFileLines();
+      List<String> beforeImports = fileLines.subList(0, parseResult.getStart());
+      List<String> importLines = Arrays.asList(newSection.split("\\n"));
+      List<String> afterImports = fileLines.subList(parseResult.getStop(), fileLines.size());
+      List<String> allLines = new ArrayList<>(beforeImports.size() + importLines.size() + afterImports.size() + 1);
+      allLines.addAll(beforeImports);
+      allLines.addAll(importLines);
+      if (afterImports.size() > 0) {
+        allLines.add(""); // restore blank line lost by split("\\n")
+      }
+      allLines.addAll(afterImports);
+      Files.write(destination, allLines);
+    }
+
+  }
 }

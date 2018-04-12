@@ -27,20 +27,16 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class ImpSortTest {
+public class ParserTest {
 
+  private static Parser parser = new Parser();
   private static Grouper eclipseDefaults = new Grouper("java.,javax.,org.,com.", "", false, false);
-
-  @Test
-  public void testSort() throws IOException {
-    Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test", "java", "net", "revelc", "code", "imp", "PluginIT.java");
-    new ImpSort(eclipseDefaults, false).parseFile(p);
-  }
 
   @Test
   public void testUnused() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
-    Result result = new ImpSort(eclipseDefaults, true).parseFile(p);
+    Parser.Result result = parser.parseFile(p);
+    result.removeUnusedImports();
     Set<String> imports = new HashSet<>();
     for (Import i : result.getImports()) {
       imports.add(i.getImport());

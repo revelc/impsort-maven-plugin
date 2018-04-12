@@ -33,8 +33,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 
 import net.revelc.code.impsort.Grouper;
-import net.revelc.code.impsort.ImpSort;
-import net.revelc.code.impsort.Result;
+import net.revelc.code.impsort.Parser;
 
 abstract class AbstractImpSortMojo extends AbstractMojo {
 
@@ -140,7 +139,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(alias = "removeUnused", property = "impsort.removeUnused")
   private boolean removeUnused;
 
-  abstract void processResult(Path path, Result results) throws MojoFailureException;
+  abstract void processResult(Path path, Grouper.Result results) throws MojoFailureException;
 
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
@@ -161,8 +160,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Stream<Path> paths = files.map(File::toPath);
 
     // process all found files, and aggregate any failures
+    Parser parser = new Parser();
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
-    ImpSort impSort = new ImpSort(grouper, removeUnused);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 
@@ -171,14 +170,18 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         getLog().debug("Reading file " + path);
 
         try {
-          Result result = impSort.parseFile(path);
-          result.getImports().forEach(imp -> getLog().debug("Found import: " + imp));
-          if (result.isSorted()) {
+          Parser.Result parseResult = parser.parseFile(path);
+          parseResult.getImports().forEach(imp -> getLog().debug("Found import: " + imp));
+          if (removeUnused) {
+            parseResult.removeUnusedImports();
+          }
+          Grouper.Result groupedResult = grouper.groupedImports(parseResult);
+          if (groupedResult.isSorted()) {
             numAlreadySorted.getAndIncrement();
           } else {
             numProcessed.getAndIncrement();
           }
-          processResult(path, result);
+          processResult(path, groupedResult);
         } catch (IOException e) {
           fail("Error reading file " + path, e);
         }
