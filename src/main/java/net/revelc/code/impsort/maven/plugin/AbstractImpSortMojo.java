@@ -16,6 +16,7 @@ package net.revelc.code.impsort.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -175,7 +176,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
 
     // process all found files, and aggregate any failures
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
-    ImpSort impSort = new ImpSort(sourceEncoding, grouper, removeUnused);
+    Charset encoding = Charset.forName(sourceEncoding);
+    ImpSort impSort = new ImpSort(encoding, grouper, removeUnused);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 

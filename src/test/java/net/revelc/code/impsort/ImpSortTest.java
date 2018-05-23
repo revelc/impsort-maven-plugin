@@ -14,12 +14,15 @@
 
 package net.revelc.code.impsort;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -36,14 +39,14 @@ public class ImpSortTest {
   public void testSort() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test",
         "java", "net", "revelc", "code", "imp", "PluginIT.java");
-    new ImpSort(StandardCharsets.UTF_8.name(), eclipseDefaults, false).parseFile(p);
+    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false).parseFile(p);
   }
 
   @Test
   public void testUnused() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
-    Result result = new ImpSort(StandardCharsets.UTF_8.name(), eclipseDefaults, true).parseFile(p);
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true).parseFile(p);
     Set<String> imports = new HashSet<>();
     for (Import i : result.getImports()) {
       imports.add(i.getImport());
@@ -75,8 +78,10 @@ public class ImpSortTest {
   public void testIso8859ForIssue3() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Iso8859File.java");
-    Result result =
-        new ImpSort(StandardCharsets.ISO_8859_1.name(), eclipseDefaults, true).parseFile(p);
+    Result result = new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true).parseFile(p);
     assertTrue(result.getImports().isEmpty());
+    Path output = File.createTempFile("impSort", null).toPath();
+    result.saveSorted(output);
+    assertArrayEquals(Files.readAllBytes(p), Files.readAllBytes(output));
   }
 }

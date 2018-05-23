@@ -46,24 +46,25 @@ public class ImpSort {
   private static final Comparator<Node> BY_POSITION =
       (a, b) -> a.getBegin().get().compareTo(b.getBegin().get());
 
-  private final String sourceEncoding;
+  private final Charset sourceEncoding;
   private final Grouper grouper;
   private final boolean removeUnused;
 
-  public ImpSort(final String sourceEncoding, final Grouper grouper, final boolean removeUnused) {
+  public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
   }
 
   public Result parseFile(final Path path) throws IOException {
-    List<String> fileLines = Files.readAllLines(path, Charset.forName(sourceEncoding));
+    List<String> fileLines = Files.readAllLines(path, sourceEncoding);
     CompilationUnit unit = JavaParser.parse(String.join("\n", fileLines));
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
     if (importDeclarations.isEmpty()) {
-      return new Result(path, fileLines, 0, fileLines.size(), "", "", Collections.emptyList());
+      return new Result(path, sourceEncoding, fileLines, 0, fileLines.size(), "", "",
+          Collections.emptyList());
     }
 
     // find orphaned comments before between package and last import
@@ -107,7 +108,8 @@ public class ImpSort {
       newSection += "\n";
     }
 
-    return new Result(path, fileLines, start, stop, originalSection, newSection, allImports);
+    return new Result(path, sourceEncoding, fileLines, start, stop, originalSection, newSection,
+        allImports);
   }
 
   // return imports, with associated comments, in order found in the file
