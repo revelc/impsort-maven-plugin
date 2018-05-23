@@ -31,6 +31,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.google.common.primitives.Bytes;
+
 public class ImpSortTest {
 
   private static Grouper eclipseDefaults = new Grouper("java.,javax.,org.,com.", "", false, false);
@@ -82,6 +84,10 @@ public class ImpSortTest {
     assertTrue(result.getImports().isEmpty());
     Path output = File.createTempFile("impSort", null).toPath();
     result.saveSorted(output);
-    assertArrayEquals(Files.readAllBytes(p), Files.readAllBytes(output));
+    byte[] testData = Files.readAllBytes(p);
+    // ensure expected ISO_8859_1 byte is present in test data, this defends against file being
+    // wrongly encoded if edited
+    assertTrue(Bytes.contains(testData, (byte) 0xe9));
+    assertArrayEquals(testData, Files.readAllBytes(output));
   }
 }
