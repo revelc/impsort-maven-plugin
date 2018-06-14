@@ -15,6 +15,7 @@
 package net.revelc.code.impsort;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -28,6 +29,7 @@ public class Result {
   private Boolean isSorted;
 
   private final Path path;
+  private final Charset sourceEncoding;
   private final String originalSection;
   private final String newSection;
   private final Collection<Import> allImports;
@@ -35,9 +37,10 @@ public class Result {
   private final int start;
   private final int stop;
 
-  Result(Path path, List<String> fileLines, int start, int stop, String originalSection,
-      String newSection, Collection<Import> allImports) {
+  Result(Path path, Charset sourceEncoding, List<String> fileLines, int start, int stop,
+      String originalSection, String newSection, Collection<Import> allImports) {
     this.path = path;
+    this.sourceEncoding = sourceEncoding;
     this.originalSection = originalSection;
     this.newSection = newSection;
     this.allImports = allImports;
@@ -62,7 +65,7 @@ public class Result {
   }
 
   public void saveSorted(Path destination) throws IOException {
-    if (isSorted) {
+    if (isSorted()) {
       if (!Files.isSameFile(path, destination)) {
         saveBackup(destination);
       }
@@ -79,7 +82,7 @@ public class Result {
       allLines.add(""); // restore blank line lost by split("\\n")
     }
     allLines.addAll(afterImports);
-    Files.write(destination, allLines);
+    Files.write(destination, allLines, sourceEncoding);
   }
 
 }
