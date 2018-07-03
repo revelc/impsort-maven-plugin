@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,6 +28,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.JavaToken;
@@ -38,15 +38,11 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.javadoc.Javadoc;
 import com.github.javaparser.javadoc.JavadocBlockTag;
 import com.github.javaparser.javadoc.description.JavadocDescription;
-import com.github.javaparser.javadoc.description.JavadocDescriptionElement;
 import com.github.javaparser.javadoc.description.JavadocInlineTag;
 import com.github.javaparser.javadoc.description.JavadocSnippet;
 
@@ -104,7 +100,7 @@ public class ImpSort {
     Set<Import> allImports = convertImportSection(importSectionNodes);
 
     if (removeUnused) {
-      removeUnusedImports(allImports, extractTokens(unit));
+      removeUnusedImports(allImports, tokensInUse(unit));
     }
 
     String newSection = grouper.groupedImports(allImports);
@@ -202,65 +198,45 @@ public class ImpSort {
    * This set of tokens represents all of the file's dependencies, and is used to figure out whether
    * or not an import is unused.
    */
-  private static Set<String> extractTokens(CompilationUnit unit) {
-    Set<String> tokens = new HashSet<String>();
+  private static Set<String> tokensInUse(CompilationUnit unit) {
 
     // Extract tokens from the java code:
-    NodeList<TypeDeclaration<?>> types = unit.getTypes();
-    types.forEach(node -> {
-      Optional<TokenRange> tokenRange = node.getTokenRange();
-      if (tokenRange.isPresent() && tokenRange.get() != TokenRange.INVALID) {
-        Iterator<JavaToken> iterator = tokenRange.get().iterator();
-        while (iterator.hasNext()) {
-          String token = iterator.next().asString();
-          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
-            tokens.add(token);
-          }
-        }
-      }
-    });
+    Stream<String> typesInCode =
+        unit.getTypes().stream().map(TypeDeclaration::getTokenRange).map(optional -> {
+          // ignore missing or invalid ranges
+          return optional.orElse(TokenRange.INVALID);
+        }).filter(r -> r != TokenRange.INVALID).flatMap(r -> {
+          // get all JavaTokens as strings from each range
+          return StreamSupport.stream(r.spliterator(), false);
+        }).map(JavaToken::asString);
 
-    // Extract referenced class names from javadoc comments:
-    for (Comment comment : unit.getComments()) {
-      if (!(comment instanceof JavadocComment)) {
-        continue;
-      }
+    // Extract referenced class names from parsed javadoc comments:
+    Stream<String> typesInJavadocs =
+        unit.getComments().stream().filter(c -> c instanceof JavadocComment)
+            .map(c -> ((JavadocComment) c).parse()).flatMap(c -> {
+              // parse both description and block tags content
+              Stream<JavadocDescription> a = Stream.of(c.getDescription());
+              Stream<JavadocDescription> b =
+                  c.getBlockTags().stream().map(JavadocBlockTag::getContent);
+              return Stream.concat(a, b);
+            }).flatMap(c -> c.getElements().stream()).map(element -> {
+              // get elements from both inline tags like {@link Foo} and snippets like @see Foo
+              if (element instanceof JavadocInlineTag) {
+                return ((JavadocInlineTag) element).getContent();
+              } else if (element instanceof JavadocSnippet) {
+                return element.toText();
+              } else {
+                // try to handle unknown elements as best we can
+                return element.toText();
+              }
+            }).flatMap(s -> {
+              // split into tokens to check for being a valid identifier
+              return Stream.of(s.split("\\W+"));
+            });
 
-      Javadoc javadoc = ((JavadocComment)comment).parse();
-      tokens.addAll(extractTokensFromJavadocDescription(javadoc.getDescription()));
-      for (JavadocBlockTag blockTag : javadoc.getBlockTags()) {
-        tokens.addAll(extractTokensFromJavadocDescription(blockTag.getContent()));
-      }
-    }
-
-    return tokens;
-  }
-
-  private static Set<String> extractTokensFromJavadocDescription(JavadocDescription description) {
-    Set<String> tokens = new HashSet<String>();
-
-    for (JavadocDescriptionElement element : description.getElements()) {
-      if (element instanceof JavadocInlineTag) {
-        // Inline tags are the javadoc tags that look like this: {@link Foo}
-        JavadocInlineTag inlineTag = (JavadocInlineTag) element;
-        for (String token : inlineTag.getContent().split("\\W+")) {
-          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
-            tokens.add(token);
-          }
-        }
-      } else if (element instanceof JavadocSnippet) {
-        // A snippet is anything that isn't an inline tag. "@see" elements become
-        // snippets, so we have to parse these too, even though they tend to contain
-        // a lot of irrelevant tokens.
-        for (String token : element.toText().split("\\W+")) {
-          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
-            tokens.add(token);
-          }
-        }
-      }
-    }
-
-    return tokens;
+    return Stream.concat(typesInCode, typesInJavadocs)
+        .filter(t -> t != null && !t.isEmpty() && Character.isJavaIdentifierStart(t.charAt(0)))
+        .collect(Collectors.toSet());
   }
 
   /*
@@ -272,7 +248,7 @@ public class ImpSort {
    *
    * This means that it is not possible to remove import statements with wildcards.
    */
-  private static void removeUnusedImports(Set<Import> imports, Set<String> tokens) {
+  private static void removeUnusedImports(Set<Import> imports, Set<String> tokensInUse) {
     imports.removeIf(i -> {
       String[] segments = i.getImport().split("[.]");
       if (segments.length == 0) {
@@ -283,7 +259,7 @@ public class ImpSort {
       if (lastSegment.equals("*"))
         return false;
 
-      return !tokens.contains(lastSegment);
+      return !tokensInUse.contains(lastSegment);
     });
   }
 }
