@@ -53,11 +53,25 @@ public class ImpSortTest {
     for (Import i : result.getImports()) {
       imports.add(i.getImport());
     }
+
+    assertTrue(imports.contains("com.foo.Type1"));
+    assertTrue(imports.contains("com.foo.Type2"));
+    assertTrue(imports.contains("com.foo.Type3"));
+    assertTrue(imports.contains("com.foo.Type4"));
+    assertTrue(imports.contains("com.foo.Type5"));
+    assertTrue(imports.contains("com.foo.Type6"));
+    assertTrue(imports.contains("com.foo.Type7"));
+    assertTrue(imports.contains("com.foo.Type8"));
+    assertTrue(imports.contains("com.foo.Type9"));
+    assertTrue(imports.contains("com.foo.Type10"));
+
     assertFalse(imports.contains("com.google.common.base.Predicates"));
     assertTrue(imports.contains("com.google.common.collect.ImmutableMap"));
     assertFalse(imports.contains("io.swagger.annotations.ApiOperation"));
     assertFalse(imports.contains("java.util.ArrayList"));
+    assertTrue(imports.contains("java.util.HashMap"));
     assertTrue(imports.contains("java.util.List"));
+    assertTrue(imports.contains("java.util.Map"));
     assertFalse(imports.contains("org.springframework.beans.factory.annotation.Autowired"));
     assertTrue(imports.contains("org.springframework.stereotype.Component"));
     assertFalse(imports.contains("org.junit.Assert.assertEquals"));

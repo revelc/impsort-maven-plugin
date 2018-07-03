@@ -38,8 +38,17 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
+import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.github.javaparser.javadoc.Javadoc;
+import com.github.javaparser.javadoc.JavadocBlockTag;
+import com.github.javaparser.javadoc.description.JavadocDescription;
+import com.github.javaparser.javadoc.description.JavadocDescriptionElement;
+import com.github.javaparser.javadoc.description.JavadocInlineTag;
+import com.github.javaparser.javadoc.description.JavadocSnippet;
 
 public class ImpSort {
 
@@ -195,6 +204,8 @@ public class ImpSort {
    */
   private static Set<String> extractTokens(CompilationUnit unit) {
     Set<String> tokens = new HashSet<String>();
+
+    // Extract tokens from the java code:
     NodeList<TypeDeclaration<?>> types = unit.getTypes();
     types.forEach(node -> {
       Optional<TokenRange> tokenRange = node.getTokenRange();
@@ -208,6 +219,46 @@ public class ImpSort {
         }
       }
     });
+
+    // Extract referenced class names from javadoc comments:
+    for (Comment comment : unit.getComments()) {
+      if (!(comment instanceof JavadocComment)) {
+        continue;
+      }
+
+      Javadoc javadoc = ((JavadocComment)comment).parse();
+      tokens.addAll(extractTokensFromJavadocDescription(javadoc.getDescription()));
+      for (JavadocBlockTag blockTag : javadoc.getBlockTags()) {
+        tokens.addAll(extractTokensFromJavadocDescription(blockTag.getContent()));
+      }
+    }
+
+    return tokens;
+  }
+
+  private static Set<String> extractTokensFromJavadocDescription(JavadocDescription description) {
+    Set<String> tokens = new HashSet<String>();
+
+    for (JavadocDescriptionElement element : description.getElements()) {
+      if (element instanceof JavadocInlineTag) {
+        // Inline tags are the javadoc tags that look like this: {@link Foo}
+        JavadocInlineTag inlineTag = (JavadocInlineTag) element;
+        for (String token : inlineTag.getContent().split("\\W+")) {
+          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
+            tokens.add(token);
+          }
+        }
+      } else if (element instanceof JavadocSnippet) {
+        // A snippet is anything that isn't an inline tag. "@see" elements become
+        // snippets, so we have to parse these too, even though they tend to contain
+        // a lot of irrelevant tokens.
+        for (String token : element.toText().split("\\W+")) {
+          if (!token.isEmpty() && Character.isJavaIdentifierStart(token.charAt(0))) {
+            tokens.add(token);
+          }
+        }
+      }
+    }
 
     return tokens;
   }
