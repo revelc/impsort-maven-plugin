@@ -38,6 +38,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
@@ -54,11 +55,14 @@ public class ImpSort {
   private final Charset sourceEncoding;
   private final Grouper grouper;
   private final boolean removeUnused;
+  private final boolean treatSamePackageAsUnused;
 
-  public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused) {
+  public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
+      final boolean treatSamePackageAsUnused) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
+    this.treatSamePackageAsUnused = treatSamePackageAsUnused;
   }
 
   public Result parseFile(final Path path) throws IOException {
@@ -101,6 +105,9 @@ public class ImpSort {
 
     if (removeUnused) {
       removeUnusedImports(allImports, tokensInUse(unit));
+      if (treatSamePackageAsUnused) {
+        removeSamePackageImports(allImports, unit.getPackageDeclaration());
+      }
     }
 
     String newSection = grouper.groupedImports(allImports);
@@ -262,4 +269,19 @@ public class ImpSort {
       return !tokensInUse.contains(lastSegment);
     });
   }
+
+
+  static void removeSamePackageImports(Set<Import> imports,
+      Optional<PackageDeclaration> packageDeclaration) {
+    String packageName = packageDeclaration.map(p -> p.getName().toString()).orElse("");
+    imports.removeIf(i -> {
+      String imp = i.getImport();
+      if (packageName.isEmpty()) {
+        return !imp.contains(".");
+      }
+      return imp.startsWith(packageName) && imp.lastIndexOf(".") <= packageName.length();
+    });
+
+  }
+
 }

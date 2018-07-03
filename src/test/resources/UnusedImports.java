@@ -24,6 +24,9 @@ import com.foo.Type7;
 import com.foo.Type8;
 import com.foo.Type9;
 import com.foo.Type10;
+import net.revelc.code.imp.Something;
+import net.revelc.code.imp.Something.Else;
+import net.revelc.code.imp.*;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;

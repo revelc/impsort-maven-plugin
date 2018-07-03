@@ -150,8 +150,18 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    *
    * @since 1.1.0
    */
-  @Parameter(alias = "removeUnused", property = "impsort.removeUnused")
+  @Parameter(alias = "removeUnused", property = "impsort.removeUnused", defaultValue = "false")
   private boolean removeUnused;
+
+  /**
+   * Configures whether to treat imports in the current package as unused and subject to removal
+   * along with other unused imports.
+   *
+   * @since 1.2.0
+   */
+  @Parameter(alias = "treatSamePackageAsUnused", property = "impsort.treatSamePackageAsUnused",
+      defaultValue = "true")
+  private boolean treatSamePackageAsUnused;
 
   abstract void processResult(Path path, Result results) throws MojoFailureException;
 
@@ -177,7 +187,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     // process all found files, and aggregate any failures
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
     Charset encoding = Charset.forName(sourceEncoding);
-    ImpSort impSort = new ImpSort(encoding, grouper, removeUnused);
+    ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 

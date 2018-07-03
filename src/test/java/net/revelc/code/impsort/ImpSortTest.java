@@ -27,10 +27,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.expr.Name;
 import com.google.common.primitives.Bytes;
 
 public class ImpSortTest {
@@ -41,14 +46,14 @@ public class ImpSortTest {
   public void testSort() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test",
         "java", "net", "revelc", "code", "imp", "PluginIT.java");
-    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false).parseFile(p);
+    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, true).parseFile(p);
   }
 
   @Test
   public void testUnused() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
-    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true).parseFile(p);
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true).parseFile(p);
     Set<String> imports = new HashSet<>();
     for (Import i : result.getImports()) {
       imports.add(i.getImport());
@@ -94,7 +99,8 @@ public class ImpSortTest {
   public void testIso8859ForIssue3() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Iso8859File.java");
-    Result result = new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true).parseFile(p);
+    Result result =
+        new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true, true).parseFile(p);
     assertTrue(result.getImports().isEmpty());
     Path output = File.createTempFile("impSort", null).toPath();
     result.saveSorted(output);
@@ -103,5 +109,37 @@ public class ImpSortTest {
     // wrongly encoded if edited
     assertTrue(Bytes.contains(testData, (byte) 0xe9));
     assertArrayEquals(testData, Files.readAllBytes(output));
+  }
+
+  @Test
+  public void testRemoveSamePackageImports() {
+    Set<Import> imports = Stream
+        .of(new Import(false, "abc.Blah", "", ""), new Import(false, "abcd.ef.Blah.Blah", "", ""),
+            new Import(false, "abcd.ef.Blah2", "", ""), new Import(false, "abcd.efg.Blah2", "", ""))
+        .collect(Collectors.toSet());
+    assertEquals(4, imports.size());
+    assertTrue(imports.stream().anyMatch(imp -> "abc.Blah".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah2".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah.Blah".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.efg.Blah2".equals(imp.getImport())));
+    ImpSort.removeSamePackageImports(imports, Optional.empty());
+    assertEquals(4, imports.size());
+    assertTrue(imports.stream().anyMatch(imp -> "abc.Blah".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah2".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah.Blah".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.efg.Blah2".equals(imp.getImport())));
+    ImpSort.removeSamePackageImports(imports,
+        Optional.of(new PackageDeclaration(new Name("abcd.ef"))));
+    assertEquals(3, imports.size());
+    assertTrue(imports.stream().anyMatch(imp -> "abc.Blah".equals(imp.getImport())));
+    assertFalse(imports.stream().anyMatch(imp -> "abcd.ef.Blah2".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah.Blah".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.efg.Blah2".equals(imp.getImport())));
+    ImpSort.removeSamePackageImports(imports, Optional.of(new PackageDeclaration(new Name("abc"))));
+    assertEquals(2, imports.size());
+    assertFalse(imports.stream().anyMatch(imp -> "abc.Blah".equals(imp.getImport())));
+    assertFalse(imports.stream().anyMatch(imp -> "abcd.ef.Blah2".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah.Blah".equals(imp.getImport())));
+    assertTrue(imports.stream().anyMatch(imp -> "abcd.efg.Blah2".equals(imp.getImport())));
   }
 }
