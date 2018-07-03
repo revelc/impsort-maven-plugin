@@ -76,6 +76,7 @@
     <formatterConfigFile>src/tools/modified-google-style.xml</formatterConfigFile>
     <github.site.repositoryName>impsort-maven-plugin</github.site.repositoryName>
     <github.site.repositoryOwner>revelc</github.site.repositoryOwner>
+    <javaparser.version>3.6.12</javaparser.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <!-- skip standard site deployment, because site is deployed using github plugin instead -->
@@ -91,7 +92,7 @@
       <dependency>
         <groupId>com.github.javaparser</groupId>
         <artifactId>javaparser-core</artifactId>
-        <version>3.6.8</version>
+        <version>${javaparser.version}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
