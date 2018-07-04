@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20180511" />
+    <meta name="Date-Revision-yyyymmdd" content="20180703" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; impsort:check</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2018-05-11
+                  <li id="publishDate">Last Published: 2018-07-03
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.1.0
+                  <li id="projectVersion">Version: 1.2.0
                       </li>
                       
               
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.1.0:check</p>
+<p>net.revelc.code:impsort-maven-plugin:1.2.0:check</p>
       
 <p><b>Description</b>:</p>
       
@@ -245,7 +245,7 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
             
 <td><tt>1.1.0</tt></td>
             
-<td>Configures whether to remove unused imports.<br /><b>User property is</b>: <tt>impsort.removeUnused</tt>.<br /><b>Alias is</b>: <tt>removeUnused</tt>.</td>
+<td>Configures whether to remove unused imports.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.removeUnused</tt>.<br /><b>Alias is</b>: <tt>removeUnused</tt>.</td>
           </tr>
           
 <tr class="b">
@@ -284,6 +284,18 @@ comma-separated package name prefixes. The special &quot;*&quot; group refers
 to imports not matching any other group, and is implied after all
 other groups, if not specified. More specific groups are
 prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <tt>*</tt>.<br /><b>User property is</b>: <tt>impsort.staticGroups</tt>.<br /><b>Alias is</b>: <tt>staticGroups</tt>.</td>
+          </tr>
+          
+<tr class="a">
+            
+<td><tt><a href="#treatSamePackageAsUnused">&lt;treatSamePackageAsUnused&gt;</a></tt></td>
+            
+<td><tt>boolean</tt></td>
+            
+<td><tt>1.2.0</tt></td>
+            
+<td>Configures whether to treat imports in the current package as
+unused and subject to removal along with other unused imports.<br /><b>Default value is</b>: <tt>true</tt>.<br /><b>User property is</b>: <tt>impsort.treatSamePackageAsUnused</tt>.<br /><b>Alias is</b>: <tt>treatSamePackageAsUnused</tt>.</td>
           </tr>
         </table>
       </div>
@@ -405,6 +417,8 @@ sections.</div>
           
 <li><b>User Property</b>: <tt>impsort.removeUnused</tt></li>
           
+<li><b>Default</b>: <tt>false</tt></li>
+          
 <li><b>Alias</b>: <tt>removeUnused</tt></li>
         </ul><hr /></div>
 <div class="section">
@@ -468,6 +482,26 @@ prioritized over less specific ones. All groups are sorted.</div>
 <li><b>Default</b>: <tt>*</tt></li>
           
 <li><b>Alias</b>: <tt>staticGroups</tt></li>
+        </ul><hr /></div>
+<div class="section">
+<h4><a name="a.3CtreatSamePackageAsUnused.3E"></a><b><a name="treatSamePackageAsUnused">&lt;treatSamePackageAsUnused&gt;</a></b></h4>
+        
+<div>Configures whether to treat imports in the current package as
+unused and subject to removal along with other unused imports.</div>
+        
+<ul>
+          
+<li><b>Type</b>: <tt>boolean</tt></li>
+          
+<li><b>Since</b>: <tt>1.2.0</tt></li>
+          
+<li><b>Required</b>: <tt>No</tt></li>
+          
+<li><b>User Property</b>: <tt>impsort.treatSamePackageAsUnused</tt></li>
+          
+<li><b>Default</b>: <tt>true</tt></li>
+          
+<li><b>Alias</b>: <tt>treatSamePackageAsUnused</tt></li>
         </ul>
       </div></div>
     </div>
