@@ -26,9 +26,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,7 +42,38 @@ import com.google.common.primitives.Bytes;
 
 public class ImpSortTest {
 
-  private static Grouper eclipseDefaults = new Grouper("java.,javax.,org.,com.", "", false, false);
+  private static Grouper eclipseDefaults =
+      new Grouper("java.,javax.,org.,com.", "", false, false, true);
+
+  private TreeSet<Import> addTestImportsForSort(Comparator<Import> comparator) {
+    TreeSet<Import> set = new TreeSet<>(comparator);
+    set.add(new Import(true, "p.MyClass.A", "", ""));
+    set.add(new Import(true, "p.MyClass.B.A", "", ""));
+    set.add(new Import(true, "p.MyClass.B.B", "", ""));
+    set.add(new Import(true, "p.MyClass.C.A.A", "", ""));
+    set.add(new Import(true, "p.MyClass.C.A.B", "", ""));
+    set.add(new Import(true, "p.MyClass.C.B", "", ""));
+    set.add(new Import(true, "p.MyClass.D", "", ""));
+    return set;
+  }
+
+  @Test
+  public void testDepthFirstComparator() {
+    TreeSet<Import> set = addTestImportsForSort(Grouper.depthFirstComparator);
+    assertArrayEquals(
+        new String[] {"p.MyClass.A", "p.MyClass.B.A", "p.MyClass.B.B", "p.MyClass.C.A.A",
+            "p.MyClass.C.A.B", "p.MyClass.C.B", "p.MyClass.D"},
+        set.stream().sequential().map(imp -> imp.getImport()).toArray());
+  }
+
+  @Test
+  public void testBreadthFirstComparator() {
+    TreeSet<Import> set = addTestImportsForSort(Grouper.breadthFirstComparator);
+    assertArrayEquals(
+        new String[] {"p.MyClass.A", "p.MyClass.D", "p.MyClass.B.A", "p.MyClass.B.B",
+            "p.MyClass.C.B", "p.MyClass.C.A.A", "p.MyClass.C.A.B"},
+        set.stream().sequential().map(imp -> imp.getImport()).toArray());
+  }
 
   @Test
   public void testSort() throws IOException {
