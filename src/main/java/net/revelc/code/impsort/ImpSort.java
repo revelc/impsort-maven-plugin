@@ -32,6 +32,7 @@ import java.util.stream.StreamSupport;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.JavaToken;
+import com.github.javaparser.ParseResult;
 import com.github.javaparser.Position;
 import com.github.javaparser.TokenRange;
 import com.github.javaparser.ast.CompilationUnit;
@@ -67,7 +68,9 @@ public class ImpSort {
 
   public Result parseFile(final Path path) throws IOException {
     List<String> fileLines = Files.readAllLines(path, sourceEncoding);
-    CompilationUnit unit = JavaParser.parse(String.join("\n", fileLines));
+    ParseResult<CompilationUnit> parseResult = new JavaParser().parse(String.join("\n", fileLines));
+    CompilationUnit unit =
+        parseResult.getResult().orElseThrow(() -> new IOException("Unable to parse " + path));
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
@@ -208,8 +211,8 @@ public class ImpSort {
   private static Set<String> tokensInUse(CompilationUnit unit) {
 
     // Extract tokens from the java code:
-    Stream<String> typesInCode =
-        unit.getTypes().stream().map(TypeDeclaration::getTokenRange).map(optional -> {
+    Stream<String> typesInCode = unit.getTypes().stream().map(TypeDeclaration::getTokenRange)
+        .map(optional -> {
           // ignore missing or invalid ranges
           return optional.orElse(TokenRange.INVALID);
         }).filter(r -> r != TokenRange.INVALID).flatMap(r -> {
@@ -263,13 +266,13 @@ public class ImpSort {
       }
 
       String lastSegment = segments[segments.length - 1];
-      if (lastSegment.equals("*"))
+      if (lastSegment.equals("*")) {
         return false;
+      }
 
       return !tokensInUse.contains(lastSegment);
     });
   }
-
 
   static void removeSamePackageImports(Set<Import> imports,
       Optional<PackageDeclaration> packageDeclaration) {
