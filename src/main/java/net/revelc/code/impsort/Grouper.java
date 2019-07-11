@@ -111,7 +111,7 @@ public class Grouper {
       }
     });
     for (ArrayList<Import> list : map.values()) {
-      list.sort((a, b) -> itemComparator.compare(a, b));
+      list.sort(itemComparator);
     }
     return map;
   }
