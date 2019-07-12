@@ -163,6 +163,17 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       defaultValue = "true")
   private boolean treatSamePackageAsUnused;
 
+  /**
+   * Configures whether to use a breadth first comparator for sorting static imports. This will
+   * ensure all static imports from one class are grouped together before any static imports from an
+   * inner-class.
+   *
+   * @since 1.3.0
+   */
+  @Parameter(alias = "breadthFirstComparator", property = "impsort.breadthFirstComparator",
+      defaultValue = "true")
+  private boolean breadthFirstComparator;
+
   abstract void processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
@@ -185,7 +196,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Stream<Path> paths = files.map(File::toPath);
 
     // process all found files, and aggregate any failures
-    Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic);
+    Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic,
+        breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused);
     AtomicLong numAlreadySorted = new AtomicLong(0);

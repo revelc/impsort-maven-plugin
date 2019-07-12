@@ -19,6 +19,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,13 +34,15 @@ public class Grouper {
   private final List<Group> staticGroups;
   private final boolean staticAfter;
   private final boolean joinStaticWithNonStatic;
+  private final boolean breadthFirstStatic;
 
   public Grouper(String groups, String staticGroups, boolean staticAfter,
-      boolean joinStaticWithNonStatic) {
+      boolean joinStaticWithNonStatic, boolean breadthFirstStatic) {
     this.groups = Collections.unmodifiableList(parse(groups));
     this.staticGroups = parse(staticGroups);
     this.staticAfter = staticAfter;
     this.joinStaticWithNonStatic = joinStaticWithNonStatic;
+    this.breadthFirstStatic = breadthFirstStatic;
   }
 
   static ArrayList<Group> parse(String groups) {
@@ -72,16 +75,32 @@ public class Grouper {
     return parsedGroups;
   }
 
+  static Comparator<Import> depthFirstComparator = (a, b) -> a.getImport().compareTo(b.getImport());
+  static Comparator<Import> breadthFirstComparator = (a, b) -> {
+    String first = a.getImport();
+    String second = b.getImport();
+    int firstLastDot = first.lastIndexOf(".");
+    int secondLastDot = second.lastIndexOf(".");
+    String firstContainingClass = first.substring(0, firstLastDot);
+    String secondContainingClass = second.substring(0, secondLastDot);
+    int comparison = firstContainingClass.compareTo(secondContainingClass);
+    if (comparison == 0) {
+      comparison = first.substring(firstLastDot).compareTo(second.substring(secondLastDot));
+    }
+    return comparison;
+  };
+
   public Map<Integer, ArrayList<Import>> groupNonStatic(Collection<Import> allImports) {
-    return group(allImports, groups, i -> !i.isStatic());
+    return group(allImports, groups, i -> !i.isStatic(), depthFirstComparator);
   }
 
   public Map<Integer, ArrayList<Import>> groupStatic(Collection<Import> allImports) {
-    return group(allImports, staticGroups, i -> i.isStatic());
+    return group(allImports, staticGroups, i -> i.isStatic(),
+        breadthFirstStatic ? breadthFirstComparator : depthFirstComparator);
   }
 
   private static Map<Integer, ArrayList<Import>> group(Collection<Import> allImports,
-      List<Group> groups, Predicate<Import> filter) {
+      List<Group> groups, Predicate<Import> filter, Comparator<Import> itemComparator) {
     Map<Integer, ArrayList<Import>> map = new TreeMap<>();
     allImports.stream().filter(filter).forEach(imp -> {
       for (Group group : groups) {
@@ -92,7 +111,7 @@ public class Grouper {
       }
     });
     for (ArrayList<Import> list : map.values()) {
-      list.sort((a, b) -> a.getImport().compareTo(b.getImport()));
+      list.sort(itemComparator);
     }
     return map;
   }
