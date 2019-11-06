@@ -76,7 +76,7 @@
     <formatterConfigFile>src/tools/modified-google-style.xml</formatterConfigFile>
     <github.site.repositoryName>impsort-maven-plugin</github.site.repositoryName>
     <github.site.repositoryOwner>revelc</github.site.repositoryOwner>
-    <javaparser.version>3.15.3</javaparser.version>
+    <javaparser.version>3.15.4</javaparser.version>
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>

@@ -118,6 +118,20 @@ public class ImpSortTest {
   }
 
   @Test
+  public void testEmptyJavadoc() throws IOException {
+    Path p =
+        Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "EmptyJavadoc.java");
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true).parseFile(p);
+    Set<String> imports = new HashSet<>();
+    for (Import i : result.getImports()) {
+      imports.add(i.getImport());
+    }
+
+    assertTrue(imports.contains("java.util.List"));
+    assertTrue(imports.contains("java.util.ArrayList"));
+  }
+
+  @Test
   public void parseGroups() {
     assertEquals(Arrays.asList(new Group("*", 0)), Grouper.parse("*"));
     assertEquals(Arrays.asList(new Group("*", 0)), Grouper.parse(""));
