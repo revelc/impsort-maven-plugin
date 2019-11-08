@@ -77,8 +77,8 @@ public class ImpSortTest {
 
   @Test
   public void testSort() throws IOException {
-    Path p = Paths.get(System.getProperty("user.dir"), "src", "it", "plugin-test", "src", "test",
-        "java", "net", "revelc", "code", "imp", "PluginIT.java");
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
+        "BasicPluginTests.java");
     new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, true).parseFile(p);
   }
 
@@ -102,6 +102,7 @@ public class ImpSortTest {
     assertTrue(imports.contains("com.foo.Type8"));
     assertTrue(imports.contains("com.foo.Type9"));
     assertTrue(imports.contains("com.foo.Type10"));
+    assertTrue(imports.contains("com.foo.Type11"));
 
     assertFalse(imports.contains("com.google.common.base.Predicates"));
     assertTrue(imports.contains("com.google.common.collect.ImmutableMap"));

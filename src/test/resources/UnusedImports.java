@@ -38,6 +38,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.foo.Type11;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -68,6 +70,7 @@ public class UnusedImports {
 	 * {@value Type7#field}
 	 * @see Type8#method()
 	 * @see Type9#method(Type10)
+	 * @throws Type11
 	 */
 	public void foo() {
 	}

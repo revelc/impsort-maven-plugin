@@ -48,7 +48,7 @@ import java.lang.String; // last
 
 
 @Category(java.lang.String.class)
-public class PluginIT {
+public class BasicPluginTests {
 
   @Test
   public void testTautology() throws Exception {
