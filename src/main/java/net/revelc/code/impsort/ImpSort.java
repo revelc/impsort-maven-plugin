@@ -228,7 +228,11 @@ public class ImpSort {
               Stream<JavadocDescription> a = Stream.of(c.getDescription());
               Stream<JavadocDescription> b =
                   c.getBlockTags().stream().map(JavadocBlockTag::getContent);
-              return Stream.concat(a, b);
+              // Parse block tags explicitly, as a workaround for
+              // https://github.com/javaparser/javaparser/issues/2408
+              Stream<JavadocDescription> d =
+                  c.getBlockTags().stream().map(tag -> JavadocDescription.parseText(tag.toText()));
+              return Stream.concat(Stream.concat(a, b), d);
             }).flatMap(c -> c.getElements().stream()).map(element -> {
               // get elements from both inline tags like {@link Foo} and snippets like @see Foo
               if (element instanceof JavadocInlineTag) {
