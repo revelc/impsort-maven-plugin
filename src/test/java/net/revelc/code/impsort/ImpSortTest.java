@@ -87,10 +87,10 @@ public class ImpSortTest {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
     Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true).parseFile(p);
-    Set<String> imports = new HashSet<>();
-    for (Import i : result.getImports()) {
-      imports.add(i.getImport());
-    }
+    Set<String> imports =
+        result.getImports().stream().map(Import::getImport).collect(Collectors.toSet());
+    assertEquals(20, imports.size());
+    assertEquals(20, result.getImports().size());
 
     assertTrue(imports.contains("com.foo.Type1"));
     assertTrue(imports.contains("com.foo.Type2"));
@@ -103,6 +103,8 @@ public class ImpSortTest {
     assertTrue(imports.contains("com.foo.Type9"));
     assertTrue(imports.contains("com.foo.Type10"));
     assertTrue(imports.contains("com.foo.Type11"));
+    assertTrue(imports.contains("com.foo.internal.Type12"));
+    assertTrue(imports.contains("com.foo.params.Type13"));
 
     assertFalse(imports.contains("com.google.common.base.Predicates"));
     assertTrue(imports.contains("com.google.common.collect.ImmutableMap"));

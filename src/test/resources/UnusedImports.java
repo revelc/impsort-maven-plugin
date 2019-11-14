@@ -39,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.foo.Type11;
+import com.foo.internal.Type12;
+import com.foo.params.Type13;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -56,9 +58,10 @@ public class UnusedImports {
     /**
      * The following should also not be removed:
      *
+     * @param blah when {@link Type13} blah
      * @see Map
      */
-    public List<Integer> getList() {
+    public List<Integer> getList(String blah) {
         assertFalse(false);
         return null;
     }
@@ -70,7 +73,7 @@ public class UnusedImports {
 	 * {@value Type7#field}
 	 * @see Type8#method()
 	 * @see Type9#method(Type10)
-	 * @throws Type11
+	 * @throws Type11 when {@link Type12} is seen
 	 */
 	public void foo() {
 	}

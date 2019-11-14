@@ -14,6 +14,9 @@
 
 package net.revelc.code.impsort;
 
+import static com.github.javaparser.javadoc.JavadocBlockTag.Type.EXCEPTION;
+import static com.github.javaparser.javadoc.JavadocBlockTag.Type.THROWS;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -21,6 +24,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,6 +47,7 @@ import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.javadoc.Javadoc;
 import com.github.javaparser.javadoc.JavadocBlockTag;
 import com.github.javaparser.javadoc.description.JavadocDescription;
 import com.github.javaparser.javadoc.description.JavadocInlineTag;
@@ -211,46 +216,59 @@ public class ImpSort {
   private static Set<String> tokensInUse(CompilationUnit unit) {
 
     // Extract tokens from the java code:
-    Stream<String> typesInCode = unit.getTypes().stream().map(TypeDeclaration::getTokenRange)
-        .map(optional -> {
-          // ignore missing or invalid ranges
-          return optional.orElse(TokenRange.INVALID);
-        }).filter(r -> r != TokenRange.INVALID).flatMap(r -> {
-          // get all JavaTokens as strings from each range
-          return StreamSupport.stream(r.spliterator(), false);
-        }).map(JavaToken::asString);
+    Stream<String> typesInCode =
+        unit.getTypes().stream().map(TypeDeclaration::getTokenRange).filter(Optional::isPresent)
+            .map(Optional::get).filter(r -> r != TokenRange.INVALID).flatMap(r -> {
+              // get all JavaTokens as strings from each range
+              return StreamSupport.stream(r.spliterator(), false);
+            }).map(JavaToken::asString);
 
     // Extract referenced class names from parsed javadoc comments:
-    Stream<String> typesInJavadocs =
-        unit.getComments().stream().filter(c -> c instanceof JavadocComment)
-            .map(c -> ((JavadocComment) c).parse()).flatMap(c -> {
-              // parse both description and block tags content
-              Stream<JavadocDescription> a = Stream.of(c.getDescription());
-              Stream<JavadocDescription> b =
-                  c.getBlockTags().stream().map(JavadocBlockTag::getContent);
-              // Parse block tags explicitly, as a workaround for
-              // https://github.com/javaparser/javaparser/issues/2408
-              Stream<JavadocDescription> d =
-                  c.getBlockTags().stream().map(tag -> JavadocDescription.parseText(tag.toText()));
-              return Stream.concat(Stream.concat(a, b), d);
-            }).flatMap(c -> c.getElements().stream()).map(element -> {
-              // get elements from both inline tags like {@link Foo} and snippets like @see Foo
-              if (element instanceof JavadocInlineTag) {
-                return ((JavadocInlineTag) element).getContent();
-              } else if (element instanceof JavadocSnippet) {
-                return element.toText();
-              } else {
-                // try to handle unknown elements as best we can
-                return element.toText();
-              }
-            }).flatMap(s -> {
-              // split into tokens to check for being a valid identifier
-              return Stream.of(s.split("\\W+"));
-            });
+    Stream<String> typesInJavadocs = unit.getComments().stream()
+        .filter(c -> c instanceof JavadocComment).map(JavadocComment.class::cast)
+        .map(JavadocComment::parse).flatMap(ImpSort::parseJavadoc);
 
     return Stream.concat(typesInCode, typesInJavadocs)
         .filter(t -> t != null && !t.isEmpty() && Character.isJavaIdentifierStart(t.charAt(0)))
         .collect(Collectors.toSet());
+  }
+
+  // parse both main doc description and any block tags
+  private static Stream<String> parseJavadoc(Javadoc javadoc) {
+    // parse main doc description
+    Stream<String> stringsFromJavadocDescription =
+        Stream.of(javadoc.getDescription()).flatMap(ImpSort::parseJavadocDescription);
+    // grab tag names and parsed descriptions for block tags
+    Stream<String> stringsFromBlockTags = javadoc.getBlockTags().stream().flatMap(tag -> {
+      // only @throws and @exception have names who are importable; @param and others don't
+      EnumSet<JavadocBlockTag.Type> blockTagTypesWithImportableNames =
+          EnumSet.of(THROWS, EXCEPTION);
+      Stream<String> importableTagNames = blockTagTypesWithImportableNames.contains(tag.getType())
+          ? Stream.of(tag.getName()).filter(Optional::isPresent).map(Optional::get)
+          : Stream.empty();
+      Stream<String> tagDescriptions =
+          Stream.of(tag.getContent()).flatMap(ImpSort::parseJavadocDescription);
+      return Stream.concat(importableTagNames, tagDescriptions);
+    });
+    return Stream.concat(stringsFromJavadocDescription, stringsFromBlockTags);
+  }
+
+  private static Stream<String> parseJavadocDescription(JavadocDescription description) {
+    return description.getElements().stream().map(element -> {
+      if (element instanceof JavadocInlineTag) {
+        // inline tags like {@link Foo}
+        return ((JavadocInlineTag) element).getContent();
+      } else if (element instanceof JavadocSnippet) {
+        // snippets like @see Foo
+        return element.toText();
+      } else {
+        // try to handle unknown elements as best we can
+        return element.toText();
+      }
+    }).flatMap(s -> {
+      // split text descriptions into word tokens
+      return Stream.of(s.split("\\W+"));
+    });
   }
 
   /*
