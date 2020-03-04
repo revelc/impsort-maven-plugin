@@ -317,7 +317,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       long cachedTimestamp = staleFilesCache.lastModified();
       Stream<File> files = directories != null && directories.length > 0 ? Stream.of(directories)
           : Stream.of(sourceDirectory, testSourceDirectory);
-      boolean uptodate = files.map(File::toPath).filter(Files::isDirectory)
+      boolean uptodate = files.parallel().map(File::toPath).filter(Files::isDirectory)
           .anyMatch(p -> isUptodate(p, cachedTimestamp));
       return uptodate;
     } catch (Exception e) {
