@@ -216,12 +216,17 @@ public class ImpSort {
   private static Set<String> tokensInUse(CompilationUnit unit) {
 
     // Extract tokens from the java code:
-    Stream<String> typesInCode =
-        unit.getTypes().stream().map(TypeDeclaration::getTokenRange).filter(Optional::isPresent)
-            .map(Optional::get).filter(r -> r != TokenRange.INVALID).flatMap(r -> {
-              // get all JavaTokens as strings from each range
-              return StreamSupport.stream(r.spliterator(), false);
-            }).map(JavaToken::asString);
+    Stream<Node> packageDecl =
+        unit.getPackageDeclaration().isPresent()
+            ? Stream.of(unit.getPackageDeclaration().get()).map(PackageDeclaration::getAnnotations)
+                .flatMap(NodeList::stream)
+            : Stream.empty();
+    Stream<String> typesInCode = Stream.concat(packageDecl, unit.getTypes().stream())
+        .map(Node::getTokenRange).filter(Optional::isPresent).map(Optional::get)
+        .filter(r -> r != TokenRange.INVALID).flatMap(r -> {
+          // get all JavaTokens as strings from each range
+          return StreamSupport.stream(r.spliterator(), false);
+        }).map(JavaToken::asString);
 
     // Extract referenced class names from parsed javadoc comments:
     Stream<String> typesInJavadocs = unit.getComments().stream()

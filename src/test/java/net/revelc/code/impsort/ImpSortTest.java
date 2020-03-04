@@ -121,6 +121,17 @@ public class ImpSortTest {
   }
 
   @Test
+  public void testUnused2() throws IOException {
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
+        "UnusedImports2.java");
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true).parseFile(p);
+    Set<String> imports =
+        result.getImports().stream().map(Import::getImport).collect(Collectors.toSet());
+    assertEquals(2, imports.size());
+    assertEquals(2, result.getImports().size());
+  }
+
+  @Test
   public void testEmptyJavadoc() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "EmptyJavadoc.java");
