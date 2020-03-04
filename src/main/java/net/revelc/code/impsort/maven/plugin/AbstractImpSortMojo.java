@@ -15,15 +15,19 @@
 package net.revelc.code.impsort.maven.plugin;
 
 import java.io.File;
+import java.io.IOError;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -174,12 +178,36 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       defaultValue = "true")
   private boolean breadthFirstComparator;
 
+  /**
+   * Configures whether to use a stale files detection in order to avoid parsing all the java files.
+   * If all source files are older than the stale mark file, the mojo execution will be skipped.
+   *
+   * @since 1.4.0
+   */
+  @Parameter(alias = "staleFilesDetection", property = "impsort.staleFilesDetection",
+      defaultValue = "false")
+  private boolean staleFilesDetection;
+
+  /**
+   * File for the timestamp cache.
+   *
+   * @since 1.4.0
+   */
+  @Parameter(defaultValue = "${project.build.directory}/impsort-maven-stalefilescache.properties",
+      required = true)
+  protected File staleFilesCache;
+
   abstract void processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
     if (skip) {
       getLog().info("Skipping execution of impsort-maven-plugin");
+      return;
+    }
+
+    if (staleFilesDetection && isUptodate()) {
+      getLog().debug("Skipping as all files are up-to-date.");
       return;
     }
 
@@ -233,6 +261,9 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     long startTime = System.nanoTime();
     MojoFailureException failure = paths.map(visitor).filter(notNull).reduce(agg).orElse(null);
     Duration totalTime = Duration.ofNanos(System.nanoTime() - startTime);
+    if (failure == null) {
+      storeCachedTimestamp();
+    }
 
     long total = numAlreadySorted.get() + numProcessed.get();
     long minutes = totalTime.getSeconds() / 60;
@@ -276,6 +307,51 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   protected void fail(String message, Throwable cause) throws MojoFailureException {
     throw cause == null ? new MojoFailureException(message)
         : new MojoFailureException(message, cause);
+  }
+
+  /**
+   * Check if all files are up-to-date.
+   */
+  protected boolean isUptodate() {
+    try {
+      long cachedTimestamp = staleFilesCache.lastModified();
+      Stream<File> files = directories != null && directories.length > 0 ? Stream.of(directories)
+          : Stream.of(sourceDirectory, testSourceDirectory);
+      boolean uptodate = files.map(File::toPath).filter(Files::isDirectory)
+          .anyMatch(p -> isUptodate(p, cachedTimestamp));
+      return uptodate;
+    } catch (Exception e) {
+      // ignore and process file
+    }
+    return false;
+  }
+
+  private boolean isUptodate(Path directory, long cachedTimestamp) {
+    try {
+      return !Files.find(directory, Integer.MAX_VALUE,
+          (p, a) -> a.lastModifiedTime().toMillis() > cachedTimestamp).findAny().isPresent();
+    } catch (IOException e) {
+      return true;
+    }
+  }
+
+  /**
+   * Store file hash cache.
+   */
+  protected void storeCachedTimestamp() {
+    if (staleFilesCache.getParentFile().mkdirs()) {
+      getLog().debug("Created directory: " + staleFilesCache.getParent());
+    }
+    try {
+      if (staleFilesCache.isFile() && !staleFilesCache.delete()) {
+        getLog().debug("Unable to delete stale files cache file");
+      }
+      if (!staleFilesCache.createNewFile()) {
+        getLog().warn("Unable to re-create stale files cache file");
+      }
+    } catch (IOException e) {
+      getLog().warn("Cannot store stale files cache file", e);
+    }
   }
 
 }
