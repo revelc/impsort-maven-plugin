@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -55,25 +56,34 @@ import com.github.javaparser.javadoc.description.JavadocSnippet;
 
 public class ImpSort {
 
-  private static final Comparator<Node> BY_POSITION =
-      (a, b) -> a.getBegin().get().compareTo(b.getBegin().get());
+  private static final Comparator<Node> BY_POSITION = Comparator.comparing(a -> a.getBegin().get());
 
   private final Charset sourceEncoding;
   private final Grouper grouper;
   private final boolean removeUnused;
   private final boolean treatSamePackageAsUnused;
+  private final LineEnding lineEnding;
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
-      final boolean treatSamePackageAsUnused) {
+      final boolean treatSamePackageAsUnused, final LineEnding lineEnding) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
     this.treatSamePackageAsUnused = treatSamePackageAsUnused;
+    this.lineEnding = lineEnding;
   }
 
   public Result parseFile(final Path path) throws IOException {
-    List<String> fileLines = Files.readAllLines(path, sourceEncoding);
-    ParseResult<CompilationUnit> parseResult = new JavaParser().parse(String.join("\n", fileLines));
+    String file = new String(Files.readAllBytes(path), sourceEncoding);
+    LineEnding fileLineEnding = LineEnding.determineLineEnding(file);
+    LineEnding impLineEnding;
+    if (lineEnding == LineEnding.KEEP) {
+      impLineEnding = fileLineEnding;
+    } else {
+      impLineEnding = lineEnding;
+    }
+    List<String> fileLines = Arrays.asList(file.split(fileLineEnding.getChars()));
+    ParseResult<CompilationUnit> parseResult = new JavaParser().parse(file);
     CompilationUnit unit =
         parseResult.getResult().orElseThrow(() -> new IOException("Unable to parse " + path));
     Position packagePosition =
@@ -81,7 +91,7 @@ public class ImpSort {
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
     if (importDeclarations.isEmpty()) {
       return new Result(path, sourceEncoding, fileLines, 0, fileLines.size(), "", "",
-          Collections.emptyList());
+          Collections.emptyList(), impLineEnding);
     }
 
     // find orphaned comments before between package and last import
@@ -107,9 +117,10 @@ public class ImpSort {
     while (stop < fileLines.size() && fileLines.get(stop).trim().isEmpty()) {
       ++stop;
     }
-    String originalSection = String.join("\n", fileLines.subList(start, stop)) + "\n";
+    String originalSection = String.join(impLineEnding.getChars(), fileLines.subList(start, stop))
+        + impLineEnding.getChars();
 
-    Set<Import> allImports = convertImportSection(importSectionNodes);
+    Set<Import> allImports = convertImportSection(importSectionNodes, impLineEnding.getChars());
 
     if (removeUnused) {
       removeUnusedImports(allImports, tokensInUse(unit));
@@ -118,22 +129,22 @@ public class ImpSort {
       }
     }
 
-    String newSection = grouper.groupedImports(allImports);
+    String newSection = grouper.groupedImports(allImports, impLineEnding.getChars());
     if (start > 0) {
       // add newline before imports, as long as imports not at start of file
-      newSection = "\n" + newSection;
+      newSection = impLineEnding.getChars() + newSection;
     }
     if (stop < fileLines.size()) {
       // add newline after imports, as long as there's more in file
-      newSection += "\n";
+      newSection += impLineEnding.getChars();
     }
 
     return new Result(path, sourceEncoding, fileLines, start, stop, originalSection, newSection,
-        allImports);
+        allImports, impLineEnding);
   }
 
   // return imports, with associated comments, in order found in the file
-  private static Set<Import> convertImportSection(List<Node> importSectionNodes) {
+  private static Set<Import> convertImportSection(List<Node> importSectionNodes, String eol) {
     List<Comment> recentComments = new ArrayList<>();
     LinkedHashSet<Import> allImports = new LinkedHashSet<>(importSectionNodes.size() / 2);
     for (Node node : importSectionNodes) {
@@ -159,7 +170,7 @@ public class ImpSort {
         }
 
         recentComments.clear();
-        convertAndAddImport(allImports, thisImport);
+        convertAndAddImport(allImports, thisImport, eol);
       } else {
         throw new IllegalStateException("Unknown node: " + node);
       }
@@ -171,7 +182,8 @@ public class ImpSort {
     return allImports;
   }
 
-  private static void convertAndAddImport(LinkedHashSet<Import> allImports, List<Node> thisImport) {
+  private static void convertAndAddImport(LinkedHashSet<Import> allImports, List<Node> thisImport,
+      String eol) {
     boolean isStatic = false;
     String importItem = null;
     String prefix = "";
@@ -194,7 +206,7 @@ public class ImpSort {
     if (!suffix.isEmpty()) {
       suffix = " " + suffix;
     }
-    Import imp = new Import(isStatic, importItem, prefix.trim(), suffix);
+    Import imp = new Import(isStatic, importItem, prefix.trim(), suffix, eol);
     Iterator<Import> iter = allImports.iterator();
     // this de-duplication can probably be made more efficient by doing it all at the end
     while (iter.hasNext()) {
