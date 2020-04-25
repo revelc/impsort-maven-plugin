@@ -187,7 +187,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    *
    * @since 1.4.0
    */
-  @Parameter(defaultValue = "AUTO", property = "lineending", required = true)
+  @Parameter(defaultValue = "AUTO", property = "impsort.lineending", required = true)
   private LineEnding lineEnding;
 
   abstract void processResult(Path path, Result results) throws MojoFailureException;
