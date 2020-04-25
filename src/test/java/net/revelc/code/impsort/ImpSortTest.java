@@ -91,8 +91,8 @@ public class ImpSortTest {
             .parseFile(p);
     Set<String> imports =
         result.getImports().stream().map(Import::getImport).collect(Collectors.toSet());
-    assertEquals(20, imports.size());
-    assertEquals(20, result.getImports().size());
+    assertEquals(22, imports.size());
+    assertEquals(22, result.getImports().size());
 
     assertTrue(imports.contains("com.foo.Type1"));
     assertTrue(imports.contains("com.foo.Type2"));
@@ -107,6 +107,8 @@ public class ImpSortTest {
     assertTrue(imports.contains("com.foo.Type11"));
     assertTrue(imports.contains("com.foo.internal.Type12"));
     assertTrue(imports.contains("com.foo.params.Type13"));
+    assertTrue(imports.contains("javax.xml.bind.annotation.XmlNs"));
+    assertTrue(imports.contains("javax.xml.bind.annotation.XmlSchema"));
 
     assertFalse(imports.contains("com.google.common.base.Predicates"));
     assertTrue(imports.contains("com.google.common.collect.ImmutableMap"));

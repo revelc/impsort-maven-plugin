@@ -12,6 +12,12 @@
  * limitations under the License.
  */
 
+@XmlSchema(
+		xmlns = {
+				@XmlNs(prefix = "order", namespaceURI = "http://www.camel.apache.org/jaxb/example/order/1"),
+				@XmlNs(prefix = "address", namespaceURI = "http://www.camel.apache.org/jaxb/example/address/1")
+		}
+)
 package net.revelc.code.imp;
 
 import com.foo.Type1;
@@ -41,6 +47,8 @@ import org.springframework.stereotype.Component;
 import com.foo.Type11;
 import com.foo.internal.Type12;
 import com.foo.params.Type13;
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlSchema;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
