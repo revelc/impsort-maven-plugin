@@ -124,7 +124,7 @@ public class Grouper {
     return joinStaticWithNonStatic;
   }
 
-  public String groupedImports(Collection<Import> allImports) {
+  public String groupedImports(Collection<Import> allImports, String eol) {
     StringBuilder sb = new StringBuilder();
     Map<Integer, ArrayList<Import>> staticImports = groupStatic(allImports);
     Map<Integer, ArrayList<Import>> nonStaticImports = groupNonStatic(allImports);
@@ -135,13 +135,13 @@ public class Grouper {
     AtomicBoolean firstGroup = new AtomicBoolean(true);
     Consumer<ArrayList<Import>> consumer = grouping -> {
       if (!firstGroup.getAndSet(false)) {
-        sb.append("\n");
+        sb.append(eol);
       }
-      grouping.forEach(imp -> sb.append(imp).append("\n"));
+      grouping.forEach(imp -> sb.append(imp).append(eol));
     };
     first.values().forEach(consumer);
     if (!getJoinStaticWithNonStatic() && !first.isEmpty() && !second.isEmpty()) {
-      sb.append("\n");
+      sb.append(eol);
     }
     firstGroup.set(true);
     second.values().forEach(consumer);

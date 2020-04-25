@@ -36,6 +36,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
 
 import net.revelc.code.impsort.Grouper;
 import net.revelc.code.impsort.ImpSort;
+import net.revelc.code.impsort.LineEnding;
 import net.revelc.code.impsort.Result;
 
 abstract class AbstractImpSortMojo extends AbstractMojo {
@@ -174,6 +175,21 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       defaultValue = "true")
   private boolean breadthFirstComparator;
 
+  /**
+   * Sets the line-ending of files after formatting. Valid values are:
+   * <ul>
+   * <li><b>"AUTO"</b> - Use line endings of current system</li>
+   * <li><b>"KEEP"</b> - Preserve line endings of files, default to AUTO if ambiguous</li>
+   * <li><b>"LF"</b> - Use Unix and Mac style line endings</li>
+   * <li><b>"CRLF"</b> - Use DOS and Windows style line endings</li>
+   * <li><b>"CR"</b> - Use early Mac style line endings</li>
+   * </ul>
+   *
+   * @since 1.4.0
+   */
+  @Parameter(defaultValue = "AUTO", property = "lineending", required = true)
+  private LineEnding lineEnding;
+
   abstract void processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
@@ -199,7 +215,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic,
         breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
-    ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused);
+    ImpSort impSort =
+        new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused, lineEnding);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 

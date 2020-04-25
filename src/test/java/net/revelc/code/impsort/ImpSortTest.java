@@ -47,13 +47,13 @@ public class ImpSortTest {
 
   private TreeSet<Import> addTestImportsForSort(Comparator<Import> comparator) {
     TreeSet<Import> set = new TreeSet<>(comparator);
-    set.add(new Import(true, "p.MyClass.A", "", ""));
-    set.add(new Import(true, "p.MyClass.B.A", "", ""));
-    set.add(new Import(true, "p.MyClass.B.B", "", ""));
-    set.add(new Import(true, "p.MyClass.C.A.A", "", ""));
-    set.add(new Import(true, "p.MyClass.C.A.B", "", ""));
-    set.add(new Import(true, "p.MyClass.C.B", "", ""));
-    set.add(new Import(true, "p.MyClass.D", "", ""));
+    set.add(new Import(true, "p.MyClass.A", "", "", LineEnding.AUTO.getChars()));
+    set.add(new Import(true, "p.MyClass.B.A", "", "", LineEnding.AUTO.getChars()));
+    set.add(new Import(true, "p.MyClass.B.B", "", "", LineEnding.AUTO.getChars()));
+    set.add(new Import(true, "p.MyClass.C.A.A", "", "", LineEnding.AUTO.getChars()));
+    set.add(new Import(true, "p.MyClass.C.A.B", "", "", LineEnding.AUTO.getChars()));
+    set.add(new Import(true, "p.MyClass.C.B", "", "", LineEnding.AUTO.getChars()));
+    set.add(new Import(true, "p.MyClass.D", "", "", LineEnding.AUTO.getChars()));
     return set;
   }
 
@@ -79,14 +79,16 @@ public class ImpSortTest {
   public void testSort() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
         "BasicPluginTests.java");
-    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, true).parseFile(p);
+    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, true, LineEnding.AUTO).parseFile(p);
   }
 
   @Test
   public void testUnused() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
-    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true).parseFile(p);
+    Result result =
+        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
+            .parseFile(p);
     Set<String> imports =
         result.getImports().stream().map(Import::getImport).collect(Collectors.toSet());
     assertEquals(20, imports.size());
@@ -124,7 +126,9 @@ public class ImpSortTest {
   public void testEmptyJavadoc() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "EmptyJavadoc.java");
-    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true).parseFile(p);
+    Result result =
+        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
+            .parseFile(p);
     Set<String> imports = new HashSet<>();
     for (Import i : result.getImports()) {
       imports.add(i.getImport());
@@ -150,7 +154,8 @@ public class ImpSortTest {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Iso8859File.java");
     Result result =
-        new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true, true).parseFile(p);
+        new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true, true, LineEnding.AUTO)
+            .parseFile(p);
     assertTrue(result.getImports().isEmpty());
     Path output = File.createTempFile("impSort", null).toPath();
     result.saveSorted(output);
@@ -164,8 +169,10 @@ public class ImpSortTest {
   @Test
   public void testRemoveSamePackageImports() {
     Set<Import> imports = Stream
-        .of(new Import(false, "abc.Blah", "", ""), new Import(false, "abcd.ef.Blah.Blah", "", ""),
-            new Import(false, "abcd.ef.Blah2", "", ""), new Import(false, "abcd.efg.Blah2", "", ""))
+        .of(new Import(false, "abc.Blah", "", "", LineEnding.AUTO.getChars()),
+            new Import(false, "abcd.ef.Blah.Blah", "", "", LineEnding.AUTO.getChars()),
+            new Import(false, "abcd.ef.Blah2", "", "", LineEnding.AUTO.getChars()),
+            new Import(false, "abcd.efg.Blah2", "", "", LineEnding.AUTO.getChars()))
         .collect(Collectors.toSet());
     assertEquals(4, imports.size());
     assertTrue(imports.stream().anyMatch(imp -> "abc.Blah".equals(imp.getImport())));

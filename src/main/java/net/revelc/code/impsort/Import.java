@@ -22,12 +22,15 @@ public class Import {
   private final String imp;
   private final String prefix;
   private final String suffix;
+  private final String eol;
 
-  Import(final boolean isStatic, final String imp, final String prefix, final String suffix) {
+  Import(final boolean isStatic, final String imp, final String prefix, final String suffix,
+      final String eol) {
     this.isStatic = isStatic;
     this.imp = Objects.requireNonNull(imp);
     this.prefix = Objects.requireNonNull(prefix);
     this.suffix = Objects.requireNonNull(suffix);
+    this.eol = eol;
   }
 
   public boolean isStatic() {
@@ -48,7 +51,7 @@ public class Import {
 
   @Override
   public String toString() {
-    return prefix + (prefix.isEmpty() ? "" : "\n") + "import" + (isStatic() ? " static" : "") + " "
+    return prefix + (prefix.isEmpty() ? "" : eol) + "import" + (isStatic() ? " static" : "") + " "
         + getImport() + ";" + suffix;
   }
 
@@ -83,7 +86,7 @@ public class Import {
     } else if (duplicate.getPrefix().isEmpty()) {
       newPrefix = getPrefix();
     } else {
-      newPrefix = getPrefix() + "\n" + duplicate.getPrefix();
+      newPrefix = getPrefix() + eol + duplicate.getPrefix();
     }
     if (getSuffix().isEmpty()) {
       newSuffix = duplicate.getSuffix();
@@ -92,7 +95,7 @@ public class Import {
     } else {
       newSuffix = getSuffix() + duplicate.getSuffix();
     }
-    return new Import(isStatic(), getImport(), newPrefix, newSuffix);
+    return new Import(isStatic(), getImport(), newPrefix, newSuffix, eol);
   }
 
 }
