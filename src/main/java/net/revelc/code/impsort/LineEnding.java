@@ -14,7 +14,7 @@
 package net.revelc.code.impsort;
 
 /**
- * @author marvin.froeder
+ * This file is taken from <a href="https://github.com/revelc/formatter-maven-plugin/blob/46b15ca42db50cb91e2edad79dd40882ccb2af4c/src/main/java/net/revelc/code/formatter/LineEnding.java">formatter-maven-plugin</a>.
  */
 public enum LineEnding {
 

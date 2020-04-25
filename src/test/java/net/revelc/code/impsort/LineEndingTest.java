@@ -14,14 +14,12 @@
 package net.revelc.code.impsort;
 
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 /**
  * Test class for {@link LineEnding}.
  *
- * @author Matt Blanchette
- * @author marvin.froeder
+ * This file is taken from <a href="https://github.com/revelc/formatter-maven-plugin/blob/1ff06fc6ba4062cb080915a9422fc0fb4ef1699a/src/test/java/net/revelc/code/formatter/LineEndingTest.java">formatter-maven-plugin</a>.
  */
 public class LineEndingTest {
 
