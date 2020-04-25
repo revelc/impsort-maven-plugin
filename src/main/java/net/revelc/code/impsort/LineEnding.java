@@ -14,7 +14,8 @@
 package net.revelc.code.impsort;
 
 /**
- * This file is taken from <a href="https://github.com/revelc/formatter-maven-plugin/blob/46b15ca42db50cb91e2edad79dd40882ccb2af4c/src/main/java/net/revelc/code/formatter/LineEnding.java">formatter-maven-plugin</a>.
+ * This file is taken from <a href=
+ * "https://github.com/revelc/formatter-maven-plugin/blob/46b15ca42db50cb91e2edad79dd40882ccb2af4c/src/main/java/net/revelc/code/formatter/LineEnding.java">formatter-maven-plugin</a>.
  */
 public enum LineEnding {
 
@@ -33,6 +34,9 @@ public enum LineEnding {
   /**
    * Returns the most occurring line-ending characters in the file text or null if no line-ending
    * occurs the most.
+   *
+   * @param fileDataString the raw file contents as a string
+   * @return the determined line-ending
    */
   public static LineEnding determineLineEnding(String fileDataString) {
     int lfCount = 0;

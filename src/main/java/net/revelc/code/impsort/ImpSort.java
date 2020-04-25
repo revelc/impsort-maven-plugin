@@ -236,7 +236,7 @@ public class ImpSort {
             }).map(JavaToken::asString);
 
     // Extract referenced class names from parsed javadoc comments:
-    Stream<String> typesInJavadocs = unit.getComments().stream()
+    Stream<String> typesInJavadocs = unit.getAllComments().stream()
         .filter(c -> c instanceof JavadocComment).map(JavadocComment.class::cast)
         .map(JavadocComment::parse).flatMap(ImpSort::parseJavadoc);
 
