@@ -51,7 +51,7 @@
                   <li id="publishDate">Last Published: 2020-04-25
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.4.0
+                  <li id="projectVersion">Version: 1.4.1
                       </li>
                       
               
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.4.0:check</p>
+<p>net.revelc.code:impsort-maven-plugin:1.4.1:check</p>
       
 <p><b>Description</b>:</p>
       
@@ -155,49 +155,6 @@
         
 <li>Binds by default to the <a class="externalLink" href="http://maven.apache.org/ref/current/maven-core/lifecycles.html">lifecycle phase</a>: <tt>process-sources</tt>.</li>
       </ul>
-      
-<div class="section">
-<h3><a name="Required_Parameters"></a>Required Parameters</h3>
-        
-<table class="table table-striped" border="0">
-          
-<tr class="a">
-            
-<th>Name</th>
-            
-<th>Type</th>
-            
-<th>Since</th>
-            
-<th>Description</th>
-          </tr>
-          
-<tr class="b">
-            
-<td><tt><a href="#lineEnding">&lt;lineEnding&gt;</a></tt></td>
-            
-<td><tt>LineEnding</tt></td>
-            
-<td><tt>1.4.0</tt></td>
-            
-<td>Sets the line-ending of files after formatting. Valid values are: 
-
-<ul>
-
-<li><b>&quot;AUTO&quot;</b> - Use line endings of current system</li>
-
-<li><b>&quot;KEEP&quot;</b> - Preserve line endings of files, default to AUTO
-if ambiguous</li>
-
-<li><b>&quot;LF&quot;</b> - Use Unix and Mac style line endings</li>
-
-<li><b>&quot;CRLF&quot;</b> - Use DOS and Windows style line endings</li>
-
-<li><b>&quot;CR&quot;</b> - Use early Mac style line endings</li>
-</ul><br /><b>Default value is</b>: <tt>AUTO</tt>.<br /><b>User property is</b>: <tt>impsort.lineending</tt>.<br /></td>
-          </tr>
-        </table>
-      </div>
       
 <div class="section">
 <h3><a name="Optional_Parameters"></a>Optional Parameters</h3>
@@ -295,6 +252,31 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
           
 <tr class="b">
             
+<td><tt><a href="#lineEnding">&lt;lineEnding&gt;</a></tt></td>
+            
+<td><tt>LineEnding</tt></td>
+            
+<td><tt>1.4.0</tt></td>
+            
+<td>Sets the line-ending of files after formatting. Valid values are: 
+
+<ul>
+
+<li><b>&quot;AUTO&quot;</b> - Use line endings of current system</li>
+
+<li><b>&quot;KEEP&quot;</b> - Preserve line endings of files, default to AUTO
+if ambiguous</li>
+
+<li><b>&quot;LF&quot;</b> - Use Unix and Mac style line endings</li>
+
+<li><b>&quot;CRLF&quot;</b> - Use DOS and Windows style line endings</li>
+
+<li><b>&quot;CR&quot;</b> - Use early Mac style line endings</li>
+</ul><br /><b>Default value is</b>: <tt>AUTO</tt>.<br /><b>User property is</b>: <tt>impsort.lineEnding</tt>.<br /><b>Alias is</b>: <tt>lineEnding</tt>.</td>
+          </tr>
+          
+<tr class="a">
+            
 <td><tt><a href="#removeUnused">&lt;removeUnused&gt;</a></tt></td>
             
 <td><tt>boolean</tt></td>
@@ -304,7 +286,7 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
 <td>Configures whether to remove unused imports.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.removeUnused</tt>.<br /><b>Alias is</b>: <tt>removeUnused</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#skip">&lt;skip&gt;</a></tt></td>
             
@@ -315,7 +297,7 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
 <td>Allows skipping execution of this plugin.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.skip</tt>.<br /><b>Alias is</b>: <tt>skip</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#staticAfter">&lt;staticAfter&gt;</a></tt></td>
             
@@ -327,7 +309,7 @@ sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is
 groups.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.staticAfter</tt>.<br /><b>Alias is</b>: <tt>staticAfter</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#staticGroups">&lt;staticGroups&gt;</a></tt></td>
             
@@ -342,7 +324,7 @@ other groups, if not specified. More specific groups are
 prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <tt>*</tt>.<br /><b>User property is</b>: <tt>impsort.staticGroups</tt>.<br /><b>Alias is</b>: <tt>staticGroups</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#treatSamePackageAsUnused">&lt;treatSamePackageAsUnused&gt;</a></tt></td>
             
@@ -504,11 +486,13 @@ if ambiguous</li>
           
 <li><b>Since</b>: <tt>1.4.0</tt></li>
           
-<li><b>Required</b>: <tt>Yes</tt></li>
+<li><b>Required</b>: <tt>No</tt></li>
           
-<li><b>User Property</b>: <tt>impsort.lineending</tt></li>
+<li><b>User Property</b>: <tt>impsort.lineEnding</tt></li>
           
 <li><b>Default</b>: <tt>AUTO</tt></li>
+          
+<li><b>Alias</b>: <tt>lineEnding</tt></li>
         </ul><hr /></div>
 <div class="section">
 <h4><a name="a.3CremoveUnused.3E"></a><b><a name="removeUnused">&lt;removeUnused&gt;</a></b></h4>
