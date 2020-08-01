@@ -15,3 +15,5 @@ language: java
 jdk:
   - openjdk11
 
+script:
+  - mvn -B -Dstyle.color=always clean verify
