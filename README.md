@@ -12,7 +12,7 @@
   limitations under the License.
 -->
 
-[![mvn verify][ci_img]][ci_link] [![Build Status][travis_img]][travis_link] [![Maven Central][maven_img]][maven_link]
+[![mvn verify][ci_img]][ci_link] [![Maven Central][maven_img]][maven_link]
 
 # ImpSort Maven Plugin
 
@@ -28,8 +28,6 @@ public API is the names of the goals and configuration options.
 [1]: http://semver.org/spec/v2.0.0.html
 [ci_link]: https://github.com/revelc/impsort-maven-plugin/actions
 [ci_img]: https://github.com/revelc/impsort-maven-plugin/workflows/mvn%20verify/badge.svg
-[travis_img]: https://travis-ci.org/revelc/impsort-maven-plugin.svg?branch=main
-[travis_link]: https://travis-ci.org/revelc/impsort-maven-plugin
 [maven_img]: https://maven-badges.herokuapp.com/maven-central/net.revelc.code/impsort-maven-plugin/badge.svg
 [maven_link]: https://maven-badges.herokuapp.com/maven-central/net.revelc.code/impsort-maven-plugin
 
