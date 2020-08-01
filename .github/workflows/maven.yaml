@@ -40,6 +40,6 @@ jobs:
       run: |
         mvn -version
         mvn -B -Dstyle.color=always verify
-    - env:
+      env:
         MAVEN_OPTS: -Djansi.force=true
 
