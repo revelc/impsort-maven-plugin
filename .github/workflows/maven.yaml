@@ -23,9 +23,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -39,5 +37,9 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
-      run: mvn -B -Dstyle.color=always verify
+      run: |
+        mvn -version
+        mvn -B -Dstyle.color=always verify
+    - env:
+        MAVEN_OPTS: -Djansi.force=true
 
