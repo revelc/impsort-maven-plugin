@@ -23,7 +23,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -34,12 +38,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        key: ${{ matrix.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ matrix.os }}-m2
     - name: Build with Maven
-      run: |
-        mvn -version
-        mvn -B -Dstyle.color=always verify
+      run: mvn -B -V -e -Dstyle.color=always verify
       env:
         MAVEN_OPTS: -Djansi.force=true
 
