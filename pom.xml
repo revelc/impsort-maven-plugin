@@ -59,6 +59,10 @@
     <system>GitHub</system>
     <url>https://github.com/revelc/impsort-maven-plugin/issues</url>
   </issueManagement>
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/revelc/impsort-maven-plugin/actions</url>
+  </ciManagement>
   <distributionManagement>
     <!-- https://issues.sonatype.org/browse/OSSRH-15142 -->
     <repository>
