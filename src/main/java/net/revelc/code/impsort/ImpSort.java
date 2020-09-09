@@ -53,6 +53,9 @@ import com.github.javaparser.javadoc.description.JavadocDescription;
 import com.github.javaparser.javadoc.description.JavadocInlineTag;
 import com.github.javaparser.javadoc.description.JavadocSnippet;
 
+import net.revelc.code.impsort.ex.ImpSortException;
+import net.revelc.code.impsort.ex.ImpSortException.Reason;
+
 public class ImpSort {
 
   private static final Comparator<Node> BY_POSITION = Comparator.comparing(a -> a.getBegin().get());
@@ -78,20 +81,16 @@ public class ImpSort {
    * @param path the path
    * @return the result
    * @throws IOException if the Java file denoted by this path can't be parsed
-   * @throws EmptyFileException if the Java file denoted by this path is empty (zero bytes)
-   * @throws UnknownLineEndingException if the Java file denoted by this path has an unknown line
-   *         ending
    */
-  public Result parseFile(final Path path)
-      throws IOException, EmptyFileException, UnknownLineEndingException {
+  public Result parseFile(final Path path) throws IOException {
     byte[] buf = Files.readAllBytes(path);
     if (buf.length == 0) {
-      throw new EmptyFileException(path);
+      throw new ImpSortException(path, Reason.EMPTY_FILE);
     }
     String file = new String(buf, sourceEncoding);
     LineEnding fileLineEnding = LineEnding.determineLineEnding(file);
     if (fileLineEnding == LineEnding.UNKNOWN) {
-      throw new UnknownLineEndingException(path);
+      throw new ImpSortException(path, Reason.UNKNOWN_LINE_ENDING);
     }
     LineEnding impLineEnding;
     if (lineEnding == LineEnding.KEEP) {
@@ -101,11 +100,11 @@ public class ImpSort {
     }
     List<String> fileLines = Arrays.asList(file.split(fileLineEnding.getChars()));
     ParseResult<CompilationUnit> parseResult = new JavaParser().parse(file);
-    Optional<CompilationUnit> unitOptional = parseResult.getResult();
-    if (!parseResult.isSuccessful() || !unitOptional.isPresent()) {
-      throw new IOException("Unable to parse " + path);
+    CompilationUnit unit = parseResult.getResult()
+        .orElseThrow(() -> new ImpSortException(path, Reason.UNABLE_TO_PARSE));
+    if (!parseResult.isSuccessful()) {
+      throw new ImpSortException(path, Reason.PARTIAL_PARSE);
     }
-    CompilationUnit unit = unitOptional.get();
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
