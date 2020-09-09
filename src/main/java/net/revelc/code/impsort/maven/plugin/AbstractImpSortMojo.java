@@ -34,10 +34,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 
+import net.revelc.code.impsort.EmptyFileException;
 import net.revelc.code.impsort.Grouper;
 import net.revelc.code.impsort.ImpSort;
 import net.revelc.code.impsort.LineEnding;
 import net.revelc.code.impsort.Result;
+import net.revelc.code.impsort.UnknownLineEndingException;
 
 abstract class AbstractImpSortMojo extends AbstractMojo {
 
@@ -233,6 +235,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
             numProcessed.getAndIncrement();
           }
           processResult(path, result);
+        } catch (EmptyFileException e) {
+          getLog().warn("Skipping empty file " + e.getPath());
+        } catch (UnknownLineEndingException e) {
+          getLog().warn("Skipping file with unknown line ending " + e.getPath());
         } catch (IOException e) {
           fail("Error reading file " + path, e);
         }

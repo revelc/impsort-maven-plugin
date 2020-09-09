@@ -45,7 +45,6 @@ import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.javadoc.Javadoc;
@@ -73,9 +72,27 @@ public class ImpSort {
     this.lineEnding = lineEnding;
   }
 
-  public Result parseFile(final Path path) throws IOException {
-    String file = new String(Files.readAllBytes(path), sourceEncoding);
+  /**
+   * Parses the file denoted by this path and returns the result.
+   *
+   * @param path the path
+   * @return the result
+   * @throws IOException if the Java file denoted by this path can't be parsed
+   * @throws EmptyFileException if the Java file denoted by this path is empty (zero bytes)
+   * @throws UnknownLineEndingException if the Java file denoted by this path has an unknown line
+   *         ending
+   */
+  public Result parseFile(final Path path)
+      throws IOException, EmptyFileException, UnknownLineEndingException {
+    byte[] buf = Files.readAllBytes(path);
+    if (buf.length == 0) {
+      throw new EmptyFileException(path);
+    }
+    String file = new String(buf, sourceEncoding);
     LineEnding fileLineEnding = LineEnding.determineLineEnding(file);
+    if (fileLineEnding == LineEnding.UNKNOWN) {
+      throw new UnknownLineEndingException(path);
+    }
     LineEnding impLineEnding;
     if (lineEnding == LineEnding.KEEP) {
       impLineEnding = fileLineEnding;
@@ -84,8 +101,11 @@ public class ImpSort {
     }
     List<String> fileLines = Arrays.asList(file.split(fileLineEnding.getChars()));
     ParseResult<CompilationUnit> parseResult = new JavaParser().parse(file);
-    CompilationUnit unit =
-        parseResult.getResult().orElseThrow(() -> new IOException("Unable to parse " + path));
+    Optional<CompilationUnit> unitOptional = parseResult.getResult();
+    if (!parseResult.isSuccessful() || !unitOptional.isPresent()) {
+      throw new IOException("Unable to parse " + path);
+    }
+    CompilationUnit unit = unitOptional.get();
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
