@@ -15,6 +15,7 @@ package net.revelc.code.impsort;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -50,25 +51,43 @@ public class LineEndingEdgeCasesTest {
   public void testEmptyFile() throws IOException {
     Path p = folder.newFile("EmptyFile.java").toPath();
     Files.write(p, new byte[0]);
-    ImpSortException e = assertThrows(ImpSortException.class,
-        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
-    assertTrue(e.getReason() == Reason.EMPTY_FILE);
-    assertEquals("file: " + p + "; reason: empty file", e.getMessage());
+    Result actual = new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p);
+    assertEquals(Result.EMPTY_FILE, actual);
+    assertTrue(actual.getImports().isEmpty());
+    assertTrue(actual.isSorted());
   }
 
   /**
-   * Test successfully parsing file without any line ending.
+   * Test successfully parsing file without any line ending, but line ending config set to KEEP.
    */
   @Test
-  public void testFileWithoutLineEnding() throws IOException {
+  public void testFileKeepWithoutLineEnding() throws IOException {
     String s =
         "import java.lang.System;public class FileWithoutNewline{public static void main(String[] args){System.out.println(\"Hello, world!\");}}";
     Path p = folder.newFile("FileWithoutLineEnding.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
     ImpSortException e = assertThrows(ImpSortException.class,
-        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
+        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.KEEP).parseFile(p));
     assertTrue(e.getReason() == Reason.UNKNOWN_LINE_ENDING);
     assertEquals("file: " + p + "; reason: unknown line ending", e.getMessage());
+  }
+
+  /**
+   * Test successfully parsing file without any line ending, and line ending config set to AUTO.
+   */
+  @Test
+  public void testFileAutoWithoutLineEnding() throws IOException {
+    String s =
+        "import java.lang.System;public class FileWithoutNewline{public static void main(String[] args){System.out.println(\"Hello, world!\");}}";
+    Path p = folder.newFile("FileWithoutLineEnding.java").toPath();
+    Files.write(p, s.getBytes(UTF_8));
+    Result result = new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p);
+    assertEquals(1, result.getImports().size());
+    assertEquals("java.lang.System", result.getImports().iterator().next().getImport());
+    assertTrue(result.getImports().iterator().next().getPrefix().isEmpty());
+    assertTrue(result.getImports().iterator().next().getSuffix().isEmpty());
+    assertFalse(result.getImports().iterator().next().isStatic());
+    assertFalse(result.isSorted());
   }
 
   /**

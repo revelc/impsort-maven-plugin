@@ -21,7 +21,6 @@ public class ImpSortException extends IOException {
 
   public enum Reason {
     // @formatter:off
-    EMPTY_FILE("empty file"),
     UNKNOWN_LINE_ENDING("unknown line ending"),
     UNABLE_TO_PARSE("unable to successfully parse the Java file"),
     PARTIAL_PARSE("the Java file contained parse errors")
