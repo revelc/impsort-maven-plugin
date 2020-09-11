@@ -27,6 +27,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Result {
@@ -42,6 +43,9 @@ public class Result {
   private final int start;
   private final int stop;
   private final LineEnding lineEnding;
+
+  public static final Result EMPTY_FILE =
+      new Result(null, null, null, 0, 0, "", "", Collections.emptyList(), null);
 
   Result(Path path, Charset sourceEncoding, List<String> fileLines, int start, int stop,
       String originalSection, String newSection, Collection<Import> allImports,

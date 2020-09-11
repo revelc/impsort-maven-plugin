@@ -22,7 +22,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -30,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -75,6 +75,16 @@ public class ImpSort {
     this.lineEnding = lineEnding;
   }
 
+  private static List<String> readAllLines(String str) {
+    List<String> result = new ArrayList<>();
+    try (Scanner s = new Scanner(str)) {
+      while (s.hasNextLine()) {
+        result.add(s.nextLine());
+      }
+    }
+    return result;
+  }
+
   /**
    * Parses the file denoted by this path and returns the result.
    *
@@ -85,20 +95,20 @@ public class ImpSort {
   public Result parseFile(final Path path) throws IOException {
     byte[] buf = Files.readAllBytes(path);
     if (buf.length == 0) {
-      throw new ImpSortException(path, Reason.EMPTY_FILE);
+      return Result.EMPTY_FILE;
     }
     String file = new String(buf, sourceEncoding);
     LineEnding fileLineEnding = LineEnding.determineLineEnding(file);
-    if (fileLineEnding == LineEnding.UNKNOWN) {
-      throw new ImpSortException(path, Reason.UNKNOWN_LINE_ENDING);
-    }
     LineEnding impLineEnding;
     if (lineEnding == LineEnding.KEEP) {
+      if (fileLineEnding == LineEnding.UNKNOWN) {
+        throw new ImpSortException(path, Reason.UNKNOWN_LINE_ENDING);
+      }
       impLineEnding = fileLineEnding;
     } else {
       impLineEnding = lineEnding;
     }
-    List<String> fileLines = Arrays.asList(file.split(fileLineEnding.getChars()));
+    List<String> fileLines = readAllLines(file);
     ParseResult<CompilationUnit> parseResult = new JavaParser().parse(file);
     CompilationUnit unit = parseResult.getResult()
         .orElseThrow(() -> new ImpSortException(path, Reason.UNABLE_TO_PARSE));
