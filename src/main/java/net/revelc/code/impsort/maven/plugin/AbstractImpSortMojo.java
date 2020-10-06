@@ -34,6 +34,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 
+import com.github.javaparser.ParserConfiguration.LanguageLevel;
+
 import net.revelc.code.impsort.Grouper;
 import net.revelc.code.impsort.ImpSort;
 import net.revelc.code.impsort.LineEnding;
@@ -190,6 +192,15 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(alias = "lineEnding", property = "impsort.lineEnding", defaultValue = "AUTO")
   private LineEnding lineEnding;
 
+  /**
+   * Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9, 11, etc.)
+   *
+   * @since 1.5.0
+   */
+  @Parameter(alias = "compliance", property = "impsort.compliance",
+      defaultValue = "${maven.compiler.release}")
+  private String compliance;
+
   abstract void processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
@@ -215,8 +226,11 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic,
         breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
-    ImpSort impSort =
-        new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused, lineEnding);
+
+    LanguageLevel langLevel = getLanguageLevel(compliance);
+    getLog().info("Using compiler compliance level: " + langLevel.toString());
+    ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
+        lineEnding, langLevel);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 
@@ -293,6 +307,22 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   protected void fail(String message, Throwable cause) throws MojoFailureException {
     throw cause == null ? new MojoFailureException(message)
         : new MojoFailureException(message, cause);
+  }
+
+  static LanguageLevel getLanguageLevel(String compliance) {
+    if (compliance == null || compliance.trim().isEmpty()) {
+      return LanguageLevel.POPULAR;
+    }
+    String langLevel = "";
+    String v = compliance.trim();
+    if (v.matches("^1[.][01234]$")) {
+      langLevel = "JAVA_" + v.replace(".", "_");
+    } else if (v.matches("^1[.][56789]$")) {
+      langLevel = "JAVA_" + v.replaceFirst("^.*[.]", "");
+    } else {
+      langLevel = "JAVA_" + v;
+    }
+    return LanguageLevel.valueOf(langLevel);
   }
 
 }

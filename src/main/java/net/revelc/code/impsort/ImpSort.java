@@ -38,8 +38,9 @@ import java.util.stream.StreamSupport;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.JavaToken;
 import com.github.javaparser.ParseResult;
+import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.github.javaparser.Position;
-import com.github.javaparser.Problem;
 import com.github.javaparser.TokenRange;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -66,14 +67,23 @@ public class ImpSort {
   private final boolean removeUnused;
   private final boolean treatSamePackageAsUnused;
   private final LineEnding lineEnding;
+  private final LanguageLevel languageLevel;
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
       final boolean treatSamePackageAsUnused, final LineEnding lineEnding) {
+    this(sourceEncoding, grouper, removeUnused, treatSamePackageAsUnused, lineEnding,
+        LanguageLevel.POPULAR);
+  }
+
+  public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
+      final boolean treatSamePackageAsUnused, final LineEnding lineEnding,
+      final LanguageLevel languageLevel) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
     this.treatSamePackageAsUnused = treatSamePackageAsUnused;
     this.lineEnding = lineEnding;
+    this.languageLevel = languageLevel;
   }
 
   private static List<String> readAllLines(String str) {
@@ -110,19 +120,13 @@ public class ImpSort {
       impLineEnding = lineEnding;
     }
     List<String> fileLines = readAllLines(file);
-    ParseResult<CompilationUnit> parseResult = new JavaParser().parse(file);
+    ParseResult<CompilationUnit> parseResult =
+        new JavaParser(new ParserConfiguration().setLanguageLevel(languageLevel)).parse(file);
     CompilationUnit unit = parseResult.getResult()
         .orElseThrow(() -> new ImpSortException(path, Reason.UNABLE_TO_PARSE));
     if (!parseResult.isSuccessful()) {
-      List<Problem> problems = parseResult.getProblems().stream().filter(
-          // workaround for javaparser/javaparser#2820
-          // https://github.com/javaparser/javaparser/issues/2820
-          p -> !p.getMessage().contains("Try with resources only supports variable declarations."))
-          .collect(Collectors.toList());
-      if (!problems.isEmpty()) {
-        problems.forEach(System.out::println);
-        throw new ImpSortException(path, Reason.PARTIAL_PARSE);
-      }
+      parseResult.getProblems().forEach(System.out::println);
+      throw new ImpSortException(path, Reason.PARTIAL_PARSE);
     }
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
