@@ -136,7 +136,9 @@ public class ImpSort {
         Stream.concat(orphanedComments, importDeclarations.stream()).collect(Collectors.toList());
     importSectionNodes.sort(BY_POSITION);
     // position line numbers start at 1, not 0
-    int start = importSectionNodes.get(0).getBegin().get().line - 1;
+    Node firstImport = importSectionNodes.get(0);
+    int start = firstImport.getComment().map(c -> c.getBegin().get())
+        .orElse(firstImport.getBegin().get()).line - 1;
     int stop = importSectionNodes.get(importSectionNodes.size() - 1).getEnd().get().line;
     // get the original import section lines from the file
     // include surrounding whitespace

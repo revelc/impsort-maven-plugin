@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -159,7 +160,7 @@ public class ImpSortTest {
         new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true, true, LineEnding.AUTO)
             .parseFile(p);
     assertTrue(result.getImports().isEmpty());
-    Path output = File.createTempFile("impSort", null).toPath();
+    Path output = File.createTempFile("impSortIso8859", null, new File("target")).toPath();
     result.saveSorted(output);
     byte[] testData = Files.readAllBytes(p);
     // ensure expected ISO_8859_1 byte is present in test data, this defends against file being
@@ -201,4 +202,20 @@ public class ImpSortTest {
     assertTrue(imports.stream().anyMatch(imp -> "abcd.ef.Blah.Blah".equals(imp.getImport())));
     assertTrue(imports.stream().anyMatch(imp -> "abcd.efg.Blah2".equals(imp.getImport())));
   }
+
+  @Test
+  public void testResultStartWithComment() throws IOException {
+    Path p =
+            Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "FirstImportComment.java");
+    Result result =
+            new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
+                    .parseFile(p);
+
+    Path output = File.createTempFile("impSortComment", null, new File("target")).toPath();
+    result.saveSorted(output);
+
+    List<String> lines = Files.readAllLines(output);
+    assertEquals(1, lines.stream().filter(line -> line.equals(" * Some comment")).count());
+  }
 }
+
