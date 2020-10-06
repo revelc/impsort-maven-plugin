@@ -205,11 +205,11 @@ public class ImpSortTest {
 
   @Test
   public void testResultStartWithComment() throws IOException {
-    Path p =
-            Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "FirstImportComment.java");
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
+        "FirstImportComment.java");
     Result result =
-            new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
-                    .parseFile(p);
+        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
+            .parseFile(p);
 
     Path output = File.createTempFile("impSortComment", null, new File("target")).toPath();
     result.saveSorted(output);

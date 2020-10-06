@@ -39,6 +39,7 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.JavaToken;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.Position;
+import com.github.javaparser.Problem;
 import com.github.javaparser.TokenRange;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -113,7 +114,15 @@ public class ImpSort {
     CompilationUnit unit = parseResult.getResult()
         .orElseThrow(() -> new ImpSortException(path, Reason.UNABLE_TO_PARSE));
     if (!parseResult.isSuccessful()) {
-      throw new ImpSortException(path, Reason.PARTIAL_PARSE);
+      List<Problem> problems = parseResult.getProblems().stream().filter(
+          // workaround for javaparser/javaparser#2820
+          // https://github.com/javaparser/javaparser/issues/2820
+          p -> !p.getMessage().contains("Try with resources only supports variable declarations."))
+          .collect(Collectors.toList());
+      if (!problems.isEmpty()) {
+        problems.forEach(System.out::println);
+        throw new ImpSortException(path, Reason.PARTIAL_PARSE);
+      }
     }
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
