@@ -80,7 +80,7 @@
     <formatterConfigFile>src/tools/modified-google-style.xml</formatterConfigFile>
     <github.site.repositoryName>impsort-maven-plugin</github.site.repositoryName>
     <github.site.repositoryOwner>revelc</github.site.repositoryOwner>
-    <javaparser.version>3.16.1</javaparser.version>
+    <javaparser.version>3.18.0</javaparser.version>
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -102,7 +102,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13</version>
+        <version>4.13.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
