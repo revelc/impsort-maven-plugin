@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20200425" />
+    <meta name="Date-Revision-yyyymmdd" content="20210129" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; impsort:sort</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2020-04-25
+                  <li id="publishDate">Last Published: 2021-01-29
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.4.1
+                  <li id="projectVersion">Version: 1.5.0
                       </li>
                       
               
@@ -81,7 +81,7 @@
         Goals</a>
             </li>
                               <li class="nav-header">Project Documentation</li>
-                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                          
       <li>
   
                           <a href="project-info.html" title="Project Information">
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.4.1:sort</p>
+<p>net.revelc.code:impsort-maven-plugin:1.5.0:sort</p>
       
 <p><b>Description</b>:</p>
       
@@ -187,6 +187,18 @@ are grouped together before any static imports from an inner-class.<br /><b>Defa
           
 <tr class="a">
             
+<td><tt><a href="#compliance">&lt;compliance&gt;</a></tt></td>
+            
+<td><tt>String</tt></td>
+            
+<td><tt>1.5.0</tt></td>
+            
+<td>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9,
+11, etc.)<br /><b>Default value is</b>: <tt>${maven.compiler.release}</tt>.<br /><b>User property is</b>: <tt>impsort.compliance</tt>.<br /><b>Alias is</b>: <tt>compliance</tt>.</td>
+          </tr>
+          
+<tr class="b">
+            
 <td><tt><a href="#directories">&lt;directories&gt;</a></tt></td>
             
 <td><tt>File[]</tt></td>
@@ -197,7 +209,7 @@ are grouped together before any static imports from an inner-class.<br /><b>Defa
 main and test directories if not set.<br /><b>User property is</b>: <tt>impsort.directories</tt>.<br /><b>Alias is</b>: <tt>directories</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#excludes">&lt;excludes&gt;</a></tt></td>
             
@@ -210,7 +222,7 @@ Patterns are relative to the directories selected. When not
 specified, there is no default exclude.<br /><b>User property is</b>: <tt>impsort.excludes</tt>.<br /><b>Alias is</b>: <tt>excludes</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#groups">&lt;groups&gt;</a></tt></td>
             
@@ -225,7 +237,7 @@ after all other groups, if not specified. More specific groups are
 prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <tt>*</tt>.<br /><b>User property is</b>: <tt>impsort.groups</tt>.<br /><b>Alias is</b>: <tt>groups</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#includes">&lt;includes&gt;</a></tt></td>
             
@@ -238,7 +250,7 @@ Patterns are relative to the directories selected. When not
 specified, the default include is <tt>**/*.java</tt><br /><b>User property is</b>: <tt>impsort.includes</tt>.<br /><b>Alias is</b>: <tt>includes</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#joinStaticWithNonStatic">&lt;joinStaticWithNonStatic&gt;</a></tt></td>
             
@@ -250,7 +262,7 @@ specified, the default include is <tt>**/*.java</tt><br /><b>User property is</b
 sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.joinStaticWithNonStatic</tt>.<br /><b>Alias is</b>: <tt>joinStaticWithNonStatic</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#lineEnding">&lt;lineEnding&gt;</a></tt></td>
             
@@ -275,7 +287,7 @@ if ambiguous</li>
 </ul><br /><b>Default value is</b>: <tt>AUTO</tt>.<br /><b>User property is</b>: <tt>impsort.lineEnding</tt>.<br /><b>Alias is</b>: <tt>lineEnding</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#removeUnused">&lt;removeUnused&gt;</a></tt></td>
             
@@ -286,7 +298,7 @@ if ambiguous</li>
 <td>Configures whether to remove unused imports.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.removeUnused</tt>.<br /><b>Alias is</b>: <tt>removeUnused</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#skip">&lt;skip&gt;</a></tt></td>
             
@@ -297,7 +309,7 @@ if ambiguous</li>
 <td>Allows skipping execution of this plugin.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.skip</tt>.<br /><b>Alias is</b>: <tt>skip</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#staticAfter">&lt;staticAfter&gt;</a></tt></td>
             
@@ -309,7 +321,7 @@ if ambiguous</li>
 groups.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.staticAfter</tt>.<br /><b>Alias is</b>: <tt>staticAfter</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#staticGroups">&lt;staticGroups&gt;</a></tt></td>
             
@@ -324,7 +336,7 @@ other groups, if not specified. More specific groups are
 prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <tt>*</tt>.<br /><b>User property is</b>: <tt>impsort.staticGroups</tt>.<br /><b>Alias is</b>: <tt>staticGroups</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#treatSamePackageAsUnused">&lt;treatSamePackageAsUnused&gt;</a></tt></td>
             
@@ -361,6 +373,26 @@ are grouped together before any static imports from an inner-class.</div>
 <li><b>Default</b>: <tt>true</tt></li>
           
 <li><b>Alias</b>: <tt>breadthFirstComparator</tt></li>
+        </ul><hr /></div>
+<div class="section">
+<h4><a name="a.3Ccompliance.3E"></a><b><a name="compliance">&lt;compliance&gt;</a></b></h4>
+        
+<div>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9,
+11, etc.)</div>
+        
+<ul>
+          
+<li><b>Type</b>: <tt>java.lang.String</tt></li>
+          
+<li><b>Since</b>: <tt>1.5.0</tt></li>
+          
+<li><b>Required</b>: <tt>No</tt></li>
+          
+<li><b>User Property</b>: <tt>impsort.compliance</tt></li>
+          
+<li><b>Default</b>: <tt>${maven.compiler.release}</tt></li>
+          
+<li><b>Alias</b>: <tt>compliance</tt></li>
         </ul><hr /></div>
 <div class="section">
 <h4><a name="a.3Cdirectories.3E"></a><b><a name="directories">&lt;directories&gt;</a></b></h4>
@@ -608,7 +640,7 @@ unused and subject to removal along with other unused imports.</div>
     <footer>
             <div class="container-fluid">
                       <div class="row-fluid">
-                                      <p >Copyright &copy;                    2017&#x2013;2020
+                                      <p >Copyright &copy;                    2017&#x2013;2021
                         <a href="https://github.com/revelc">Revelc</a>.
             All rights reserved.    
       </p>
