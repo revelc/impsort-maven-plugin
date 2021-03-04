@@ -14,12 +14,11 @@
 
 package net.revelc.code.impsort.maven.plugin;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -386,7 +385,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    */
   private void storeFileHashCache(Properties props) {
     File cacheFile = new File(this.cachedir, CACHE_PROPERTIES_FILENAME);
-    try (OutputStream out = new BufferedOutputStream(new FileOutputStream(cacheFile))) {
+    try (OutputStream out = new FileOutputStream(cacheFile)) {
       props.store(out, null);
     } catch (IOException e) {
       getLog().warn("Cannot store file hash cache properties file", e);
@@ -403,10 +402,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Log log = getLog();
     if (!this.cachedir.exists()) {
       if (!this.cachedir.mkdirs()) {
-        log.warn("Unable to create cache directory '" + this.cachedir.getPath() + "'.");
+        log.warn("Unable to create cache directory '" + this.cachedir + "'.");
       }
     } else if (!this.cachedir.isDirectory()) {
-      log.warn("Something strange here as the '" + this.cachedir.getPath()
+      log.warn("Something strange here as the '" + this.cachedir
           + "' supposedly cache directory is not a directory.");
       return props;
     }
@@ -416,7 +415,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       return props;
     }
 
-    try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(cacheFile))) {
+    try (InputStream stream = new FileInputStream(cacheFile)) {
       props.load(stream);
     } catch (IOException e) {
       log.warn("Cannot load file hash cache properties file", e);
