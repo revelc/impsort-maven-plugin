@@ -29,14 +29,15 @@ import net.revelc.code.impsort.Result;
 public class SortMojo extends AbstractImpSortMojo {
 
   @Override
-  public void processResult(Path path, Result results) throws MojoFailureException {
+  public byte[] processResult(Path path, Result results) throws MojoFailureException {
     if (results.isSorted()) {
-      return; // nothing to do
+      return null; // nothing to do
     }
     try {
-      results.saveSorted(path);
+      return results.saveSorted(path);
     } catch (IOException e) {
       fail("Error sorting imports for file " + path, e);
+      return null;
     }
   }
 

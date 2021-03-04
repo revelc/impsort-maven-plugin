@@ -238,7 +238,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}", property = "impsort.cachedir")
   private File cachedir;
 
-  abstract void processResult(Path path, Result results) throws MojoFailureException;
+  abstract byte[] processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
@@ -294,9 +294,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
             } else {
               numProcessed.getAndIncrement();
             }
-            processResult(path, result);
-            buf = Files.readAllBytes(path);
-            newHash = getHash(buf);
+            buf = processResult(path, result);
+            if (buf != null) {
+              newHash = getHash(buf);
+            }
             hashCache.setProperty(key, newHash);
             hashCacheModified.set(true);
           }
