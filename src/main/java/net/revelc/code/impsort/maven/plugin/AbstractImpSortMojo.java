@@ -135,12 +135,6 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   private File testSourceDirectory;
 
   /**
-   * Project's base directory.
-   */
-  @Parameter(defaultValue = ".", property = "project.basedir", readonly = true, required = true)
-  private File basedir;
-
-  /**
    * Location of the Java source files to process. Defaults to source main and test directories if
    * not set.
    *
@@ -260,7 +254,6 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Stream<Path> paths = files.map(File::toPath);
     Properties hashCache = readFileHashCacheFile();
     AtomicBoolean hashCacheModified = new AtomicBoolean();
-    Path baseDir = this.basedir.toPath();
 
     // process all found files, and aggregate any failures
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic,
@@ -281,7 +274,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         try {
           byte[] buf = Files.readAllBytes(path);
           String newHash = getHash(buf);
-          String key = baseDir.relativize(path).toString();
+          String key = path.toAbsolutePath().normalize().toString();
           String prvHash = hashCache.getProperty(key);
           if (prvHash != null && prvHash.equals(newHash)) {
             numAlreadySorted.getAndIncrement();
