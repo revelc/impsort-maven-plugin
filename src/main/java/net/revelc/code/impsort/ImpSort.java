@@ -105,7 +105,11 @@ public class ImpSort {
    */
   public Result parseFile(final Path path) throws IOException {
     byte[] buf = Files.readAllBytes(path);
-    if (buf.length == 0) {
+    return parseFile(path, buf);
+  }
+
+  public Result parseFile(final Path path, final byte[] buf) throws IOException {
+    if (buf == null || buf.length == 0) {
       return Result.EMPTY_FILE;
     }
     String file = new String(buf, sourceEncoding);
