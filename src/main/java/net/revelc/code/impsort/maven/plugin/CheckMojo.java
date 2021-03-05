@@ -28,10 +28,11 @@ import net.revelc.code.impsort.Result;
 public class CheckMojo extends AbstractImpSortMojo {
 
   @Override
-  public void processResult(Path path, Result results) throws MojoFailureException {
+  public byte[] processResult(Path path, Result results) throws MojoFailureException {
     if (!results.isSorted()) {
       fail("Imports are not sorted in " + path);
     }
+    return null;
   }
 
 }

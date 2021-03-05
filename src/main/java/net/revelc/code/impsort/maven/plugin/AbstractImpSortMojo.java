@@ -15,11 +15,18 @@
 package net.revelc.code.impsort.maven.plugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -30,11 +37,13 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 
 import com.github.javaparser.ParserConfiguration.LanguageLevel;
+import com.google.common.hash.Hashing;
 
 import net.revelc.code.impsort.Grouper;
 import net.revelc.code.impsort.ImpSort;
@@ -44,6 +53,9 @@ import net.revelc.code.impsort.Result;
 abstract class AbstractImpSortMojo extends AbstractMojo {
 
   private static final String[] DEFAULT_INCLUDES = new String[] {"**/*.java"};
+
+  /** The Constant CACHE_PROPERTIES_FILENAME. */
+  private static final String CACHE_PROPERTIES_FILENAME = "impsort-maven-cache.properties";
 
   @Parameter(defaultValue = "${project}", readonly = true)
   protected MavenProject project;
@@ -201,7 +213,25 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       defaultValue = "${maven.compiler.release}")
   private String compliance;
 
-  abstract void processResult(Path path, Result results) throws MojoFailureException;
+  /**
+   * Projects cache directory.
+   *
+   * <p>
+   * This file is a hash cache of the files in the project source. It can be preserved in source
+   * code such that it ensures builds are always fast by not unnecessarily writing files constantly.
+   * It can also be added to gitignore in case startup is not necessary. It further can be
+   * redirected to another location.
+   *
+   * <p>
+   * When stored in the repository, the cache if run on cross platforms will display the files
+   * multiple times due to line ending differences on the platform.
+   *
+   * @since 1.6.0
+   */
+  @Parameter(defaultValue = "${project.build.directory}", property = "impsort.cachedir")
+  private File cachedir;
+
+  abstract byte[] processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
@@ -221,6 +251,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
           .parallel();
     }
     Stream<Path> paths = files.map(File::toPath);
+    Properties hashCache = readFileHashCacheFile();
+    AtomicBoolean hashCacheModified = new AtomicBoolean();
 
     // process all found files, and aggregate any failures
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic,
@@ -239,14 +271,28 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         getLog().debug("Reading file " + path);
 
         try {
-          Result result = impSort.parseFile(path);
-          result.getImports().forEach(imp -> getLog().debug("Found import: " + imp));
-          if (result.isSorted()) {
+          byte[] buf = Files.readAllBytes(path);
+          String newHash = getHash(buf);
+          String key = path.toAbsolutePath().normalize().toString();
+          String prvHash = hashCache.getProperty(key);
+          if (prvHash != null && prvHash.equals(newHash)) {
             numAlreadySorted.getAndIncrement();
+            getLog().debug("Unchanged: " + path);
           } else {
-            numProcessed.getAndIncrement();
+            Result result = impSort.parseFile(path, buf);
+            result.getImports().forEach(imp -> getLog().debug("Found import: " + imp));
+            if (result.isSorted()) {
+              numAlreadySorted.getAndIncrement();
+            } else {
+              numProcessed.getAndIncrement();
+            }
+            buf = processResult(path, result);
+            if (buf != null) {
+              newHash = getHash(buf);
+            }
+            hashCache.setProperty(key, newHash);
+            hashCacheModified.set(true);
           }
-          processResult(path, result);
         } catch (IOException e) {
           fail("Error reading file " + path, e);
         }
@@ -279,6 +325,13 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     if (failure != null) {
       throw failure;
     }
+    if (hashCacheModified.get()) {
+      storeFileHashCache(hashCache);
+    }
+  }
+
+  private String getHash(byte[] buf) {
+    return Hashing.murmur3_128().hashBytes(buf).toString();
   }
 
   private Stream<File> searchDir(File dir, boolean warnOnBadDir) {
@@ -323,6 +376,51 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       langLevel = "JAVA_" + v;
     }
     return LanguageLevel.valueOf(langLevel);
+  }
+
+  /**
+   * Store file hash cache.
+   *
+   * @param props the props
+   */
+  private void storeFileHashCache(Properties props) {
+    File cacheFile = new File(this.cachedir, CACHE_PROPERTIES_FILENAME);
+    try (OutputStream out = new FileOutputStream(cacheFile)) {
+      props.store(out, null);
+    } catch (IOException e) {
+      getLog().warn("Cannot store file hash cache properties file", e);
+    }
+  }
+
+  /**
+   * Read file hash cache file.
+   *
+   * @return the properties
+   */
+  private Properties readFileHashCacheFile() {
+    Properties props = new Properties();
+    Log log = getLog();
+    if (!this.cachedir.exists()) {
+      if (!this.cachedir.mkdirs()) {
+        log.warn("Unable to create cache directory '" + this.cachedir + "'.");
+      }
+    } else if (!this.cachedir.isDirectory()) {
+      log.warn("Something strange here as the '" + this.cachedir
+          + "' supposedly cache directory is not a directory.");
+      return props;
+    }
+
+    File cacheFile = new File(this.cachedir, CACHE_PROPERTIES_FILENAME);
+    if (!cacheFile.exists()) {
+      return props;
+    }
+
+    try (InputStream stream = new FileInputStream(cacheFile)) {
+      props.load(stream);
+    } catch (IOException e) {
+      log.warn("Cannot load file hash cache properties file", e);
+    }
+    return props;
   }
 
 }

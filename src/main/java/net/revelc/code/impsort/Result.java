@@ -14,12 +14,10 @@
 
 package net.revelc.code.impsort;
 
-import static java.nio.file.Files.newOutputStream;
-
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,12 +74,12 @@ public class Result {
     Files.copy(path, destination, StandardCopyOption.REPLACE_EXISTING);
   }
 
-  public void saveSorted(Path destination) throws IOException {
+  public byte[] saveSorted(Path destination) throws IOException {
     if (isSorted()) {
       if (!Files.isSameFile(path, destination)) {
         saveBackup(destination);
       }
-      return;
+      return null;
     }
     List<String> beforeImports = fileLines.subList(0, start);
     List<String> importLines = Arrays.asList(newSection.split(lineEnding.getChars()));
@@ -94,20 +92,21 @@ public class Result {
       allLines.add(""); // restore blank line lost by split
     }
     allLines.addAll(afterImports);
-    writeLines(destination, allLines, sourceEncoding);
+    return writeLines(destination, allLines, sourceEncoding);
   }
 
-  private Path writeLines(Path destination, List<String> lines, Charset sourceEncoding)
+  private byte[] writeLines(Path destination, List<String> lines, Charset sourceEncoding)
       throws IOException {
-    try (OutputStream out = newOutputStream(destination);
-        BufferedWriter writer =
-            new BufferedWriter(new OutputStreamWriter(out, sourceEncoding.newEncoder()))) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try (Writer writer = new OutputStreamWriter(baos, sourceEncoding.newEncoder())) {
       for (String line : lines) {
         writer.write(line);
         writer.write(lineEnding.getChars());
       }
     }
-    return destination;
+    byte[] buf = baos.toByteArray();
+    Files.write(destination, buf);
+    return buf;
   }
 
 }
