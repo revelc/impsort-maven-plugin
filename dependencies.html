@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20210129" />
+    <meta name="Date-Revision-yyyymmdd" content="20210307" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; Project Dependencies</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2021-01-29
+                  <li id="publishDate">Last Published: 2021-03-07
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.5.0
+                  <li id="projectVersion">Version: 1.6.0
                       </li>
                       
               
@@ -248,9 +248,15 @@
 <tr class="b">
 <td>com.github.javaparser</td>
 <td><a class="externalLink" href="https://github.com/javaparser/javaparser-core">javaparser-core</a></td>
-<td>3.18.0</td>
+<td>3.19.0</td>
 <td>jar</td>
-<td><a class="externalLink" href="http://www.gnu.org/licenses/lgpl-3.0.html">GNU Lesser General Public License</a><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></td></tr></table></div><a name="Project_Dependencies_test"></a>
+<td><a class="externalLink" href="http://www.gnu.org/licenses/lgpl-3.0.html">GNU Lesser General Public License</a><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></td></tr>
+<tr class="a">
+<td>com.google.guava</td>
+<td><a class="externalLink" href="https://github.com/google/guava/guava">guava</a></td>
+<td>30.1-jre</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></td></tr></table></div><a name="Project_Dependencies_test"></a>
 <div class="section">
 <h3><a name="test"></a>test</h3>
 <p>The following is a list of test dependencies for this project. These dependencies are only required to compile and run unit tests for the application:</p>
@@ -264,7 +270,7 @@
 <tr class="b">
 <td>junit</td>
 <td><a class="externalLink" href="http://junit.org">junit</a></td>
-<td>4.13.1</td>
+<td>4.13.2</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License 1.0</a></td></tr></table></div><a name="Project_Dependencies_provided"></a>
 <div class="section">
@@ -303,7 +309,53 @@
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></td></tr></table></div></div><a name="Project_Transitive_Dependencies"></a>
 <div class="section">
 <h2><a name="Project_Transitive_Dependencies"></a>Project Transitive Dependencies</h2>
-<p>The following is a list of transitive dependencies for this project. Transitive dependencies are the dependencies of the project dependencies.</p><a name="Project_Transitive_Dependencies_test"></a>
+<p>The following is a list of transitive dependencies for this project. Transitive dependencies are the dependencies of the project dependencies.</p><a name="Project_Transitive_Dependencies_compile"></a>
+<div class="section">
+<h3><a name="compile"></a>compile</h3>
+<p>The following is a list of compile dependencies for this project. These dependencies are required to compile and run the application:</p>
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>GroupId</th>
+<th>ArtifactId</th>
+<th>Version</th>
+<th>Type</th>
+<th>Licenses</th></tr>
+<tr class="b">
+<td>com.google.code.findbugs</td>
+<td><a class="externalLink" href="http://findbugs.sourceforge.net/">jsr305</a></td>
+<td>3.0.2</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
+<tr class="a">
+<td>com.google.errorprone</td>
+<td><a class="externalLink" href="http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations">error_prone_annotations</a></td>
+<td>2.3.4</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0</a></td></tr>
+<tr class="b">
+<td>com.google.guava</td>
+<td><a class="externalLink" href="https://github.com/google/guava/failureaccess">failureaccess</a></td>
+<td>1.0.1</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
+<tr class="a">
+<td>com.google.guava</td>
+<td><a class="externalLink" href="https://github.com/google/guava/listenablefuture">listenablefuture</a></td>
+<td>9999.0-empty-to-avoid-conflict-with-guava</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
+<tr class="b">
+<td>com.google.j2objc</td>
+<td><a class="externalLink" href="https://github.com/google/j2objc/">j2objc-annotations</a></td>
+<td>1.3</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
+<tr class="a">
+<td>org.checkerframework</td>
+<td><a class="externalLink" href="https://checkerframework.org">checker-qual</a></td>
+<td>3.5.0</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://opensource.org/licenses/MIT">The MIT License</a></td></tr></table></div><a name="Project_Transitive_Dependencies_test"></a>
 <div class="section">
 <h3><a name="test"></a>test</h3>
 <p>The following is a list of test dependencies for this project. These dependencies are only required to compile and run unit tests for the application:</p>
@@ -339,38 +391,10 @@
 <td>jar</td>
 <td>Public Domain</td></tr>
 <tr class="a">
-<td>com.google.code.findbugs</td>
-<td><a class="externalLink" href="http://findbugs.sourceforge.net/">jsr305</a></td>
-<td>3.0.2</td>
-<td>-</td>
-<td>jar</td>
-<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
-<tr class="b">
-<td>com.google.errorprone</td>
-<td><a class="externalLink" href="http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations">error_prone_annotations</a></td>
-<td>2.1.3</td>
-<td>-</td>
-<td>jar</td>
-<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0</a></td></tr>
-<tr class="a">
-<td>com.google.guava</td>
-<td><a class="externalLink" href="https://github.com/google/guava/guava">guava</a></td>
-<td>25.1-android</td>
-<td>-</td>
-<td>jar</td>
-<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
-<tr class="b">
 <td>com.google.inject</td>
 <td><a class="externalLink" href="https://github.com/google/guice/guice">guice</a></td>
 <td>4.2.1</td>
 <td>no_aop</td>
-<td>jar</td>
-<td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
-<tr class="a">
-<td>com.google.j2objc</td>
-<td><a class="externalLink" href="https://github.com/google/j2objc/">j2objc-annotations</a></td>
-<td>1.1</td>
-<td>-</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></td></tr>
 <tr class="b">
@@ -500,20 +524,6 @@
 <td>jar</td>
 <td><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></td></tr>
 <tr class="b">
-<td>org.checkerframework</td>
-<td><a class="externalLink" href="http://checkerframework.org">checker-compat-qual</a></td>
-<td>2.0.0</td>
-<td>-</td>
-<td>jar</td>
-<td><a class="externalLink" href="http://www.gnu.org/software/classpath/license.html">GNU General Public License, version 2 (GPL2), with the classpath exception</a><a class="externalLink" href="http://opensource.org/licenses/MIT">The MIT License</a></td></tr>
-<tr class="a">
-<td>org.codehaus.mojo</td>
-<td><a class="externalLink" href="http://mojo.codehaus.org/animal-sniffer/animal-sniffer-annotations">animal-sniffer-annotations</a></td>
-<td>1.14</td>
-<td>-</td>
-<td>jar</td>
-<td><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT license</a></td></tr>
-<tr class="b">
 <td>org.codehaus.plexus</td>
 <td><a class="externalLink" href="http://codehaus-plexus.github.io/plexus-classworlds/">plexus-classworlds</a></td>
 <td>2.6.0</td>
@@ -594,7 +604,7 @@
 <div class="section">
 <h3><a name="Dependency_Tree"></a>Dependency Tree</h3>
 <ul>
-<li>net.revelc.code:impsort-maven-plugin:maven-plugin:1.5.0 <img id="_img1" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep0', '_img1' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep0" style="display:none">
+<li>net.revelc.code:impsort-maven-plugin:maven-plugin:1.6.0 <img id="_img1" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep0', '_img1' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep0" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>ImpSort Maven Plugin</th></tr>
@@ -604,7 +614,7 @@
 <p><b>URL: </b><a class="externalLink" href="http://code.revelc.net/impsort-maven-plugin">http://code.revelc.net/impsort-maven-plugin</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>com.github.javaparser:javaparser-core:jar:3.18.0 (compile) <img id="_img3" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep2', '_img3' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep2" style="display:none">
+<li>com.github.javaparser:javaparser-core:jar:3.19.0 (compile) <img id="_img3" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep2', '_img3' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep2" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>javaparser-core</th></tr>
@@ -613,7 +623,101 @@
 <p><b>Description: </b>The core parser functionality. This may be all you need.</p>
 <p><b>URL: </b><a class="externalLink" href="https://github.com/javaparser/javaparser-core">https://github.com/javaparser/javaparser-core</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.gnu.org/licenses/lgpl-3.0.html">GNU Lesser General Public License</a>, <a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-core:jar:3.6.3 (provided) <img id="_img5" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep4', '_img5' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep4" style="display:none">
+<li>com.google.guava:guava:jar:30.1-jre (compile) <img id="_img5" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep4', '_img5' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep4" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>Guava: Google Core Libraries for Java</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>Guava is a suite of core and expanded libraries that include
+    utility classes, Google's collections, I/O classes, and
+    much more.</p>
+<p><b>URL: </b><a class="externalLink" href="https://github.com/google/guava/guava">https://github.com/google/guava/guava</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div>
+<ul>
+<li>com.google.guava:failureaccess:jar:1.0.1 (compile) <img id="_img7" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep6', '_img7' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep6" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>Guava InternalFutureFailureAccess and InternalFutures</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>Contains
+    com.google.common.util.concurrent.internal.InternalFutureFailureAccess and
+    InternalFutures. Most users will never need to use this artifact. Its
+    classes is conceptually a part of Guava, but they're in this separate
+    artifact so that Android libraries can use them without pulling in all of
+    Guava (just as they can use ListenableFuture by depending on the
+    listenablefuture artifact).</p>
+<p><b>URL: </b><a class="externalLink" href="https://github.com/google/guava/failureaccess">https://github.com/google/guava/failureaccess</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
+<li>com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava (compile) <img id="_img9" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep8', '_img9' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep8" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>Guava ListenableFuture only</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>An empty artifact that Guava depends on to signal that it is providing
+    ListenableFuture -- but is also available in a second &quot;version&quot; that
+    contains com.google.common.util.concurrent.ListenableFuture class, without
+    any other Guava classes. The idea is:
+
+    - If users want only ListenableFuture, they depend on listenablefuture-1.0.
+
+    - If users want all of Guava, they depend on guava, which, as of Guava
+    27.0, depends on
+    listenablefuture-9999.0-empty-to-avoid-conflict-with-guava. The 9999.0-...
+    version number is enough for some build systems (notably, Gradle) to select
+    that empty artifact over the &quot;real&quot; listenablefuture-1.0 -- avoiding a
+    conflict with the copy of ListenableFuture in guava itself. If users are
+    using an older version of Guava or a build system other than Gradle, they
+    may see class conflicts. If so, they can solve them by manually excluding
+    the listenablefuture artifact or manually forcing their build systems to
+    use 9999.0-....</p>
+<p><b>URL: </b><a class="externalLink" href="https://github.com/google/guava/listenablefuture">https://github.com/google/guava/listenablefuture</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
+<li>com.google.code.findbugs:jsr305:jar:3.0.2 (compile) <img id="_img11" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep10', '_img11' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep10" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>FindBugs-jsr305</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>JSR305 Annotations for Findbugs</p>
+<p><b>URL: </b><a class="externalLink" href="http://findbugs.sourceforge.net/">http://findbugs.sourceforge.net/</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
+<li>org.checkerframework:checker-qual:jar:3.5.0 (compile) <img id="_img13" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep12', '_img13' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep12" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>Checker Qual</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>Checker Qual is the set of annotations (qualifiers) and supporting classes
+        used by the Checker Framework to type check Java source code.
+
+        Please
+        see artifact:
+        org.checkerframework:checker</p>
+<p><b>URL: </b><a class="externalLink" href="https://checkerframework.org">https://checkerframework.org</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://opensource.org/licenses/MIT">The MIT License</a></p></td></tr></table></div></li>
+<li>com.google.errorprone:error_prone_annotations:jar:2.3.4 (compile) <img id="_img15" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep14', '_img15' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep14" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>error-prone annotations</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>Sonatype helps open source projects to set up Maven repositories on https://oss.sonatype.org/</p>
+<p><b>URL: </b><a class="externalLink" href="http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations">http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0</a></p></td></tr></table></div></li>
+<li>com.google.j2objc:j2objc-annotations:jar:1.3 (compile) <img id="_img17" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep16', '_img17' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep16" style="display:none">
+<table border="0" class="table table-striped">
+<tr class="a">
+<th>J2ObjC Annotations</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>A set of annotations that provide additional information to the J2ObjC
+    translator to modify the result of translation.</p>
+<p><b>URL: </b><a class="externalLink" href="https://github.com/google/j2objc/">https://github.com/google/j2objc/</a></p>
+<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li></ul></li>
+<li>org.apache.maven:maven-core:jar:3.6.3 (provided) <img id="_img19" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep18', '_img19' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep18" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Core</th></tr>
@@ -623,7 +727,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-core/">https://maven.apache.org/ref/3.6.3/maven-core/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>org.apache.maven:maven-model:jar:3.6.3 (provided) <img id="_img7" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep6', '_img7' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep6" style="display:none">
+<li>org.apache.maven:maven-model:jar:3.6.3 (provided) <img id="_img21" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep20', '_img21' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep20" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Model</th></tr>
@@ -632,7 +736,7 @@
 <p><b>Description: </b>Model for Maven POM (Project Object Model)</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-model/">https://maven.apache.org/ref/3.6.3/maven-model/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-settings:jar:3.6.3 (provided) <img id="_img9" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep8', '_img9' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep8" style="display:none">
+<li>org.apache.maven:maven-settings:jar:3.6.3 (provided) <img id="_img23" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep22', '_img23' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep22" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Settings</th></tr>
@@ -641,7 +745,7 @@
 <p><b>Description: </b>Maven Settings model.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-settings/">https://maven.apache.org/ref/3.6.3/maven-settings/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-settings-builder:jar:3.6.3 (provided) <img id="_img11" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep10', '_img11' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep10" style="display:none">
+<li>org.apache.maven:maven-settings-builder:jar:3.6.3 (provided) <img id="_img25" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep24', '_img25' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep24" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Settings Builder</th></tr>
@@ -651,7 +755,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-settings-builder/">https://maven.apache.org/ref/3.6.3/maven-settings-builder/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>org.codehaus.plexus:plexus-interpolation:jar:1.25 (provided) <img id="_img13" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep12', '_img13' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep12" style="display:none">
+<li>org.codehaus.plexus:plexus-interpolation:jar:1.25 (provided) <img id="_img27" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep26', '_img27' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep26" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Plexus Interpolation API</th></tr>
@@ -660,7 +764,7 @@
 <p><b>Description: </b>The Plexus project provides a full software stack for creating and executing software projects.</p>
 <p><b>URL: </b><a class="externalLink" href="http://codehaus-plexus.github.io/plexus-interpolation/">http://codehaus-plexus.github.io/plexus-interpolation/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.sonatype.plexus:plexus-sec-dispatcher:jar:1.4 (provided) <img id="_img15" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep14', '_img15' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep14" style="display:none">
+<li>org.sonatype.plexus:plexus-sec-dispatcher:jar:1.4 (provided) <img id="_img29" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep28', '_img29' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep28" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Plexus Security Dispatcher Component</th></tr>
@@ -670,7 +774,7 @@
 <p><b>URL: </b><a class="externalLink" href="http://spice.sonatype.org/plexus-sec-dispatcher">http://spice.sonatype.org/plexus-sec-dispatcher</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0">Apache Public License 2.0</a></p></td></tr></table></div>
 <ul>
-<li>org.sonatype.plexus:plexus-cipher:jar:1.4 (provided) <img id="_img17" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep16', '_img17' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep16" style="display:none">
+<li>org.sonatype.plexus:plexus-cipher:jar:1.4 (provided) <img id="_img31" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep30', '_img31' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep30" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Plexus Cipher: encryption/decryption Component</th></tr>
@@ -679,7 +783,7 @@
 <p><b>Description: </b>There is currently no description associated with this project.</p>
 <p><b>URL: </b><a class="externalLink" href="http://spice.sonatype.org/plexus-cipher">http://spice.sonatype.org/plexus-cipher</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0">Apache Public License 2.0</a></p></td></tr></table></div></li></ul></li></ul></li>
-<li>org.apache.maven:maven-builder-support:jar:3.6.3 (provided) <img id="_img19" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep18', '_img19' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep18" style="display:none">
+<li>org.apache.maven:maven-builder-support:jar:3.6.3 (provided) <img id="_img33" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep32', '_img33' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep32" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Builder Support</th></tr>
@@ -688,7 +792,7 @@
 <p><b>Description: </b>Support for descriptor builders (model, setting, toolchains)</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-builder-support/">https://maven.apache.org/ref/3.6.3/maven-builder-support/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-repository-metadata:jar:3.6.3 (provided) <img id="_img21" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep20', '_img21' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep20" style="display:none">
+<li>org.apache.maven:maven-repository-metadata:jar:3.6.3 (provided) <img id="_img35" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep34', '_img35' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep34" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Repository Metadata Model</th></tr>
@@ -697,7 +801,7 @@
 <p><b>Description: </b>Per-directory local and remote repository metadata.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-repository-metadata/">https://maven.apache.org/ref/3.6.3/maven-repository-metadata/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-artifact:jar:3.6.3 (provided) <img id="_img23" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep22', '_img23' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep22" style="display:none">
+<li>org.apache.maven:maven-artifact:jar:3.6.3 (provided) <img id="_img37" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep36', '_img37' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep36" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Artifact</th></tr>
@@ -712,7 +816,7 @@
     process.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-artifact/">https://maven.apache.org/ref/3.6.3/maven-artifact/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-model-builder:jar:3.6.3 (provided) <img id="_img25" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep24', '_img25' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep24" style="display:none">
+<li>org.apache.maven:maven-model-builder:jar:3.6.3 (provided) <img id="_img39" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep38', '_img39' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep38" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Model Builder</th></tr>
@@ -721,7 +825,7 @@
 <p><b>Description: </b>The effective model builder, with inheritance, profile activation, interpolation, ...</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-model-builder/">https://maven.apache.org/ref/3.6.3/maven-model-builder/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven:maven-resolver-provider:jar:3.6.3 (provided) <img id="_img27" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep26', '_img27' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep26" style="display:none">
+<li>org.apache.maven:maven-resolver-provider:jar:3.6.3 (provided) <img id="_img41" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep40', '_img41' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep40" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Artifact Resolver Provider</th></tr>
@@ -731,7 +835,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-resolver-provider/">https://maven.apache.org/ref/3.6.3/maven-resolver-provider/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>org.slf4j:slf4j-api:jar:1.7.29 (provided) <img id="_img29" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep28', '_img29' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep28" style="display:none">
+<li>org.slf4j:slf4j-api:jar:1.7.29 (provided) <img id="_img43" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep42', '_img43' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep42" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>SLF4J API Module</th></tr>
@@ -740,7 +844,7 @@
 <p><b>Description: </b>The slf4j API</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.slf4j.org">http://www.slf4j.org</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p></td></tr></table></div></li></ul></li>
-<li>org.apache.maven.resolver:maven-resolver-impl:jar:1.4.1 (provided) <img id="_img31" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep30', '_img31' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep30" style="display:none">
+<li>org.apache.maven.resolver:maven-resolver-impl:jar:1.4.1 (provided) <img id="_img45" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep44', '_img45' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep44" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Artifact Resolver Implementation</th></tr>
@@ -749,7 +853,7 @@
 <p><b>Description: </b>An implementation of the repository system.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/resolver/maven-resolver-impl/">https://maven.apache.org/resolver/maven-resolver-impl/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven.resolver:maven-resolver-api:jar:1.4.1 (provided) <img id="_img33" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep32', '_img33' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep32" style="display:none">
+<li>org.apache.maven.resolver:maven-resolver-api:jar:1.4.1 (provided) <img id="_img47" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep46', '_img47' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep46" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Artifact Resolver API</th></tr>
@@ -758,7 +862,7 @@
 <p><b>Description: </b>The application programming interface for the repository system.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/resolver/maven-resolver-api/">https://maven.apache.org/resolver/maven-resolver-api/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven.resolver:maven-resolver-spi:jar:1.4.1 (provided) <img id="_img35" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep34', '_img35' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep34" style="display:none">
+<li>org.apache.maven.resolver:maven-resolver-spi:jar:1.4.1 (provided) <img id="_img49" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep48', '_img49' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep48" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Artifact Resolver SPI</th></tr>
@@ -767,7 +871,7 @@
 <p><b>Description: </b>The service provider interface for repository system implementations and repository connectors.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/resolver/maven-resolver-spi/">https://maven.apache.org/resolver/maven-resolver-spi/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven.resolver:maven-resolver-util:jar:1.4.1 (provided) <img id="_img37" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep36', '_img37' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep36" style="display:none">
+<li>org.apache.maven.resolver:maven-resolver-util:jar:1.4.1 (provided) <img id="_img51" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep50', '_img51' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep50" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Artifact Resolver Utilities</th></tr>
@@ -776,7 +880,7 @@
 <p><b>Description: </b>A collection of utility classes to ease usage of the repository system.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/resolver/maven-resolver-util/">https://maven.apache.org/resolver/maven-resolver-util/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven.shared:maven-shared-utils:jar:3.2.1 (provided) <img id="_img39" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep38', '_img39' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep38" style="display:none">
+<li>org.apache.maven.shared:maven-shared-utils:jar:3.2.1 (provided) <img id="_img53" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep52', '_img53' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep52" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Apache Maven Shared Utils</th></tr>
@@ -786,7 +890,7 @@
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/shared/maven-shared-utils/">https://maven.apache.org/shared/maven-shared-utils/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>commons-io:commons-io:jar:2.5 (provided) <img id="_img41" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep40', '_img41' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep40" style="display:none">
+<li>commons-io:commons-io:jar:2.5 (provided) <img id="_img55" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep54', '_img55' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep54" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Apache Commons IO</th></tr>
@@ -796,7 +900,7 @@
 file comparators, endian transformation classes, and much more.</p>
 <p><b>URL: </b><a class="externalLink" href="http://commons.apache.org/proper/commons-io/">http://commons.apache.org/proper/commons-io/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li></ul></li>
-<li>org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.3.4 (provided) <img id="_img43" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep42', '_img43' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep42" style="display:none">
+<li>org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.3.4 (provided) <img id="_img57" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep56', '_img57' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep56" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>org.eclipse.sisu.plexus</th></tr>
@@ -806,7 +910,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.eclipse.org/sisu/org.eclipse.sisu.plexus/">http://www.eclipse.org/sisu/org.eclipse.sisu.plexus/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License, Version 1.0</a></p></td></tr></table></div>
 <ul>
-<li>javax.enterprise:cdi-api:jar:1.0 (provided) <img id="_img45" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep44', '_img45' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep44" style="display:none">
+<li>javax.enterprise:cdi-api:jar:1.0 (provided) <img id="_img59" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep58', '_img59' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep58" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>CDI APIs</th></tr>
@@ -816,7 +920,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.seamframework.org/Weld/cdi-api">http://www.seamframework.org/Weld/cdi-api</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>javax.annotation:jsr250-api:jar:1.0 (provided) <img id="_img47" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep46', '_img47' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep46" style="display:none">
+<li>javax.annotation:jsr250-api:jar:1.0 (provided) <img id="_img61" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep60', '_img61' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep60" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>JSR-250 Common Annotations for the JavaTM Platform</th></tr>
@@ -825,7 +929,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>JSR-250 Reference Implementation by Glassfish</p>
 <p><b>URL: </b><a class="externalLink" href="http://jcp.org/aboutJava/communityprocess/final/jsr250/index.html">http://jcp.org/aboutJava/communityprocess/final/jsr250/index.html</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://glassfish.dev.java.net/public/CDDLv1.0.html">COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0</a></p></td></tr></table></div></li></ul></li></ul></li>
-<li>org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.4 (provided) <img id="_img49" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep48', '_img49' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep48" style="display:none">
+<li>org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.4 (provided) <img id="_img63" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep62', '_img63' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep62" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>org.eclipse.sisu.inject</th></tr>
@@ -834,7 +938,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>JSR330-based container; supports classpath scanning, auto-binding, and dynamic auto-wiring</p>
 <p><b>URL: </b><a class="externalLink" href="http://www.eclipse.org/sisu/org.eclipse.sisu.inject/">http://www.eclipse.org/sisu/org.eclipse.sisu.inject/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License, Version 1.0</a></p></td></tr></table></div></li>
-<li>com.google.inject:guice:jar:no_aop:4.2.1 (provided) <img id="_img51" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep50', '_img51' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep50" style="display:none">
+<li>com.google.inject:guice:jar:no_aop:4.2.1 (provided) <img id="_img65" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep64', '_img65' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep64" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Google Guice - Core Library</th></tr>
@@ -844,7 +948,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>URL: </b><a class="externalLink" href="https://github.com/google/guice/guice">https://github.com/google/guice/guice</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>aopalliance:aopalliance:jar:1.0 (provided) <img id="_img53" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep52', '_img53' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep52" style="display:none">
+<li>aopalliance:aopalliance:jar:1.0 (provided) <img id="_img67" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep66', '_img67' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep66" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>AOP alliance</th></tr>
@@ -852,69 +956,8 @@ file comparators, endian transformation classes, and much more.</p>
 <td>
 <p><b>Description: </b>AOP Alliance</p>
 <p><b>URL: </b><a class="externalLink" href="http://aopalliance.sourceforge.net">http://aopalliance.sourceforge.net</a></p>
-<p><b>Project Licenses: </b>Public Domain</p></td></tr></table></div></li>
-<li>com.google.guava:guava:jar:25.1-android (provided) <img id="_img55" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep54', '_img55' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep54" style="display:none">
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>Guava: Google Core Libraries for Java</th></tr>
-<tr class="b">
-<td>
-<p><b>Description: </b>Guava is a suite of core and expanded libraries that include
-    utility classes, google's collections, io classes, and much
-    much more.</p>
-<p><b>URL: </b><a class="externalLink" href="https://github.com/google/guava/guava">https://github.com/google/guava/guava</a></p>
-<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div>
-<ul>
-<li>com.google.code.findbugs:jsr305:jar:3.0.2 (provided) <img id="_img57" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep56', '_img57' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep56" style="display:none">
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>FindBugs-jsr305</th></tr>
-<tr class="b">
-<td>
-<p><b>Description: </b>JSR305 Annotations for Findbugs</p>
-<p><b>URL: </b><a class="externalLink" href="http://findbugs.sourceforge.net/">http://findbugs.sourceforge.net/</a></p>
-<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.checkerframework:checker-compat-qual:jar:2.0.0 (provided) <img id="_img59" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep58', '_img59' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep58" style="display:none">
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>Checker Qual</th></tr>
-<tr class="b">
-<td>
-<p><b>Description: </b>Checker Qual is the set of annotations (qualifiers) and supporting classes
-        used by the Checker Framework to type check Java source code.  Please
-        see artifact:
-        org.checkerframework:checker</p>
-<p><b>URL: </b><a class="externalLink" href="http://checkerframework.org">http://checkerframework.org</a></p>
-<p><b>Project Licenses: </b><a class="externalLink" href="http://www.gnu.org/software/classpath/license.html">GNU General Public License, version 2 (GPL2), with the classpath exception</a>, <a class="externalLink" href="http://opensource.org/licenses/MIT">The MIT License</a></p></td></tr></table></div></li>
-<li>com.google.errorprone:error_prone_annotations:jar:2.1.3 (provided) <img id="_img61" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep60', '_img61' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep60" style="display:none">
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>error-prone annotations</th></tr>
-<tr class="b">
-<td>
-<p><b>Description: </b>Sonatype helps open source projects to set up Maven repositories on https://oss.sonatype.org/</p>
-<p><b>URL: </b><a class="externalLink" href="http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations">http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations</a></p>
-<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache 2.0</a></p></td></tr></table></div></li>
-<li>com.google.j2objc:j2objc-annotations:jar:1.1 (provided) <img id="_img63" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep62', '_img63' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep62" style="display:none">
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>J2ObjC Annotations</th></tr>
-<tr class="b">
-<td>
-<p><b>Description: </b>A set of annotations that provide additional information to the J2ObjC
-    translator to modify the result of translation.</p>
-<p><b>URL: </b><a class="externalLink" href="https://github.com/google/j2objc/">https://github.com/google/j2objc/</a></p>
-<p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.codehaus.mojo:animal-sniffer-annotations:jar:1.14 (provided) <img id="_img65" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep64', '_img65' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep64" style="display:none">
-<table border="0" class="table table-striped">
-<tr class="a">
-<th>Animal Sniffer Annotations</th></tr>
-<tr class="b">
-<td>
-<p><b>Description: </b>Animal Sniffer Parent project.</p>
-<p><b>URL: </b><a class="externalLink" href="http://mojo.codehaus.org/animal-sniffer/animal-sniffer-annotations">http://mojo.codehaus.org/animal-sniffer/animal-sniffer-annotations</a></p>
-<p><b>Project Licenses: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT license</a></p></td></tr></table></div></li></ul></li></ul></li>
-<li>javax.inject:javax.inject:jar:1 (provided) <img id="_img67" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep66', '_img67' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep66" style="display:none">
+<p><b>Project Licenses: </b>Public Domain</p></td></tr></table></div></li></ul></li>
+<li>javax.inject:javax.inject:jar:1 (provided) <img id="_img69" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep68', '_img69' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep68" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>javax.inject</th></tr>
@@ -923,7 +966,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>The javax.inject API</p>
 <p><b>URL: </b><a class="externalLink" href="http://code.google.com/p/atinject/">http://code.google.com/p/atinject/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.codehaus.plexus:plexus-classworlds:jar:2.6.0 (provided) <img id="_img69" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep68', '_img69' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep68" style="display:none">
+<li>org.codehaus.plexus:plexus-classworlds:jar:2.6.0 (provided) <img id="_img71" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep70', '_img71' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep70" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Plexus Classworlds</th></tr>
@@ -932,7 +975,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>A class loader framework</p>
 <p><b>URL: </b><a class="externalLink" href="http://codehaus-plexus.github.io/plexus-classworlds/">http://codehaus-plexus.github.io/plexus-classworlds/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.codehaus.plexus:plexus-component-annotations:jar:2.1.0 (provided) <img id="_img71" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep70', '_img71' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep70" style="display:none">
+<li>org.codehaus.plexus:plexus-component-annotations:jar:2.1.0 (provided) <img id="_img73" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep72', '_img73' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep72" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Plexus :: Component Annotations</th></tr>
@@ -942,7 +985,7 @@ file comparators, endian transformation classes, and much more.</p>
     standard annotations instead of javadoc annotations.</p>
 <p><b>URL: </b><a class="externalLink" href="http://codehaus-plexus.github.io/plexus-containers/plexus-component-annotations/">http://codehaus-plexus.github.io/plexus-containers/plexus-component-annotations/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.commons:commons-lang3:jar:3.8.1 (provided) <img id="_img73" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep72', '_img73' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep72" style="display:none">
+<li>org.apache.commons:commons-lang3:jar:3.8.1 (provided) <img id="_img75" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep74', '_img75' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep74" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Apache Commons Lang</th></tr>
@@ -953,7 +996,7 @@ file comparators, endian transformation classes, and much more.</p>
   standard as to justify existence in java.lang.</p>
 <p><b>URL: </b><a class="externalLink" href="http://commons.apache.org/proper/commons-lang/">http://commons.apache.org/proper/commons-lang/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li></ul></li>
-<li>org.apache.maven:maven-plugin-api:jar:3.6.3 (provided) <img id="_img75" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep74', '_img75' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep74" style="display:none">
+<li>org.apache.maven:maven-plugin-api:jar:3.6.3 (provided) <img id="_img77" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep76', '_img77' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep76" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Plugin API</th></tr>
@@ -962,7 +1005,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>The API for plugins - Mojos - development.</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/ref/3.6.3/maven-plugin-api/">https://maven.apache.org/ref/3.6.3/maven-plugin-api/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.6.0 (provided) <img id="_img77" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep76', '_img77' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep76" style="display:none">
+<li>org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.6.0 (provided) <img id="_img79" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep78', '_img79' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep78" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Maven Plugin Tools Java Annotations</th></tr>
@@ -971,7 +1014,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Description: </b>Java annotations to use in Mojos</p>
 <p><b>URL: </b><a class="externalLink" href="https://maven.apache.org/plugin-tools/maven-plugin-annotations">https://maven.apache.org/plugin-tools/maven-plugin-annotations</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.codehaus.plexus:plexus-utils:jar:3.3.0 (provided) <img id="_img79" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep78', '_img79' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep78" style="display:none">
+<li>org.codehaus.plexus:plexus-utils:jar:3.3.0 (provided) <img id="_img81" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep80', '_img81' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep80" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Plexus Common Utilities</th></tr>
@@ -981,7 +1024,7 @@ file comparators, endian transformation classes, and much more.</p>
     more.</p>
 <p><b>URL: </b><a class="externalLink" href="http://codehaus-plexus.github.io/plexus-utils/">http://codehaus-plexus.github.io/plexus-utils/</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>junit:junit:jar:4.13.1 (test) <img id="_img81" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep80', '_img81' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep80" style="display:none">
+<li>junit:junit:jar:4.13.2 (test) <img id="_img83" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep82', '_img83' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep82" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>JUnit</th></tr>
@@ -991,7 +1034,7 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>URL: </b><a class="externalLink" href="http://junit.org">http://junit.org</a></p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License 1.0</a></p></td></tr></table></div>
 <ul>
-<li>org.hamcrest:hamcrest-core:jar:1.3 (test) <img id="_img83" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep82', '_img83' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep82" style="display:none">
+<li>org.hamcrest:hamcrest-core:jar:1.3 (test) <img id="_img85" src="./images/icon_info_sml.gif" alt="[Information]" onclick="toggleDependencyDetails( '_dep84', '_img85' );" style="cursor: pointer; vertical-align: text-bottom;"></img><div id="_dep84" style="display:none">
 <table border="0" class="table table-striped">
 <tr class="a">
 <th>Hamcrest Core</th></tr>
@@ -1002,20 +1045,18 @@ file comparators, endian transformation classes, and much more.</p>
 <p><b>Project Licenses: </b><a class="externalLink" href="http://www.opensource.org/licenses/bsd-license.php">New BSD License</a></p></td></tr></table></div></li></ul></li></ul></li></ul></div></div><a name="Licenses"></a>
 <div class="section">
 <h2><a name="Licenses"></a>Licenses</h2>
+<p><b>Eclipse Public License, Version 1.0: </b>org.eclipse.sisu.inject, org.eclipse.sisu.plexus</p>
 <p><b>Apache Public License 2.0: </b>Plexus Cipher: encryption/decryption Component, Plexus Security Dispatcher Component</p>
 <p><b>Apache 2.0: </b>error-prone annotations</p>
 <p><b>Eclipse Public License 1.0: </b>JUnit</p>
+<p><b>The MIT License: </b>Checker Qual</p>
 <p><b>MIT License: </b>SLF4J API Module</p>
+<p><b>Apache License, Version 2.0: </b>Apache Commons IO, Apache Commons Lang, Apache Maven Shared Utils, CDI APIs, Guava: Google Core Libraries for Java, ImpSort Maven Plugin, Maven Artifact, Maven Artifact Resolver API, Maven Artifact Resolver Implementation, Maven Artifact Resolver Provider, Maven Artifact Resolver SPI, Maven Artifact Resolver Utilities, Maven Builder Support, Maven Core, Maven Model, Maven Model Builder, Maven Plugin API, Maven Plugin Tools Java Annotations, Maven Repository Metadata Model, Maven Settings, Maven Settings Builder, Plexus :: Component Annotations, Plexus Classworlds, Plexus Common Utilities, Plexus Interpolation API, javaparser-core</p>
+<p><b>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0: </b>JSR-250 Common Annotations for the JavaTM Platform</p>
 <p><b>Public Domain: </b>AOP alliance</p>
 <p><b>GNU Lesser General Public License: </b>javaparser-core</p>
 <p><b>New BSD License: </b>Hamcrest Core</p>
-<p><b>Eclipse Public License, Version 1.0: </b>org.eclipse.sisu.inject, org.eclipse.sisu.plexus</p>
-<p><b>The MIT License: </b>Checker Qual</p>
-<p><b>Apache License, Version 2.0: </b>Apache Commons IO, Apache Commons Lang, Apache Maven Shared Utils, CDI APIs, ImpSort Maven Plugin, Maven Artifact, Maven Artifact Resolver API, Maven Artifact Resolver Implementation, Maven Artifact Resolver Provider, Maven Artifact Resolver SPI, Maven Artifact Resolver Utilities, Maven Builder Support, Maven Core, Maven Model, Maven Model Builder, Maven Plugin API, Maven Plugin Tools Java Annotations, Maven Repository Metadata Model, Maven Settings, Maven Settings Builder, Plexus :: Component Annotations, Plexus Classworlds, Plexus Common Utilities, Plexus Interpolation API, javaparser-core</p>
-<p><b>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0: </b>JSR-250 Common Annotations for the JavaTM Platform</p>
-<p><b>GNU General Public License, version 2 (GPL2), with the classpath exception: </b>Checker Qual</p>
-<p><b>MIT license: </b>Animal Sniffer Annotations</p>
-<p><b>The Apache Software License, Version 2.0: </b>FindBugs-jsr305, Google Guice - Core Library, Guava: Google Core Libraries for Java, J2ObjC Annotations, javax.inject</p></div><a name="Dependency_File_Details"></a>
+<p><b>The Apache Software License, Version 2.0: </b>FindBugs-jsr305, Google Guice - Core Library, Guava InternalFutureFailureAccess and InternalFutures, Guava ListenableFuture only, J2ObjC Annotations, javax.inject</p></div><a name="Dependency_File_Details"></a>
 <div class="section">
 <h2><a name="Dependency_File_Details"></a>Dependency File Details</h2>
 <table border="0" class="table table-striped">
@@ -1036,11 +1077,11 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1.3</td>
 <td>Yes</td></tr>
 <tr class="a">
-<td>javaparser-core-3.18.0.jar</td>
-<td>1.2 MB</td>
-<td>623</td>
-<td>587</td>
-<td>27</td>
+<td>javaparser-core-3.19.0.jar</td>
+<td>1.3 MB</td>
+<td>636</td>
+<td>598</td>
+<td>29</td>
 <td>1.8</td>
 <td>Yes</td></tr>
 <tr class="b">
@@ -1052,21 +1093,37 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1.5</td>
 <td>Yes</td></tr>
 <tr class="a">
-<td>error_prone_annotations-2.1.3.jar</td>
-<td>13.7 kB</td>
+<td>error_prone_annotations-2.3.4.jar</td>
+<td>13.9 kB</td>
 <td>34</td>
 <td>22</td>
 <td>2</td>
 <td>1.7</td>
 <td>No</td></tr>
 <tr class="b">
-<td>guava-25.1-android.jar</td>
-<td>2.6 MB</td>
-<td>1905</td>
-<td>1875</td>
-<td>18</td>
+<td>failureaccess-1.0.1.jar</td>
+<td>4.6 kB</td>
+<td>15</td>
+<td>2</td>
+<td>1</td>
 <td>1.7</td>
 <td>Yes</td></tr>
+<tr class="a">
+<td>guava-30.1-jre.jar</td>
+<td>2.9 MB</td>
+<td>2059</td>
+<td>2029</td>
+<td>18</td>
+<td>1.8</td>
+<td>Yes</td></tr>
+<tr class="b">
+<td>listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar</td>
+<td>2.2 kB</td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>-</td>
+<td>No</td></tr>
 <tr class="a">
 <td>guice-4.2.1-no_aop.jar</td>
 <td>520.7 kB</td>
@@ -1076,7 +1133,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1.7</td>
 <td>Yes</td></tr>
 <tr class="b">
-<td>j2objc-annotations-1.1.jar</td>
+<td>j2objc-annotations-1.3.jar</td>
 <td>8.8 kB</td>
 <td>23</td>
 <td>12</td>
@@ -1116,10 +1173,10 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1.5</td>
 <td>No</td></tr>
 <tr class="a">
-<td>junit-4.13.1.jar</td>
-<td>382.7 kB</td>
-<td>387</td>
-<td>348</td>
+<td>junit-4.13.2.jar</td>
+<td>384.6 kB</td>
+<td>389</td>
+<td>350</td>
 <td>32</td>
 <td>1.5</td>
 <td>Yes</td></tr>
@@ -1260,22 +1317,14 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1.6</td>
 <td>Yes</td></tr>
 <tr class="a">
-<td>checker-compat-qual-2.0.0.jar</td>
-<td>31.5 kB</td>
-<td>47</td>
-<td>28</td>
-<td>10</td>
-<td>1.7</td>
+<td>checker-qual-3.5.0.jar</td>
+<td>214.4 kB</td>
+<td>382</td>
+<td>321</td>
+<td>33</td>
+<td>1.8</td>
 <td>Yes</td></tr>
 <tr class="b">
-<td>animal-sniffer-annotations-1.14.jar</td>
-<td>3.5 kB</td>
-<td>12</td>
-<td>1</td>
-<td>1</td>
-<td>1.5</td>
-<td>No</td></tr>
-<tr class="a">
 <td>plexus-classworlds-2.6.0.jar</td>
 <td>52.9 kB</td>
 <td>52</td>
@@ -1283,7 +1332,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>5</td>
 <td>1.7</td>
 <td>Yes</td></tr>
-<tr class="b">
+<tr class="a">
 <td>plexus-component-annotations-2.1.0.jar</td>
 <td>4.2 kB</td>
 <td>15</td>
@@ -1291,7 +1340,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1</td>
 <td>1.6</td>
 <td>No</td></tr>
-<tr class="a">
+<tr class="b">
 <td>plexus-interpolation-1.25.jar</td>
 <td>85.3 kB</td>
 <td>79</td>
@@ -1299,7 +1348,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>7</td>
 <td>1.6</td>
 <td>Yes</td></tr>
-<tr class="b">
+<tr class="a">
 <td>plexus-utils-3.3.0.jar</td>
 <td>263.3 kB</td>
 <td>130</td>
@@ -1307,7 +1356,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>9</td>
 <td>1.6</td>
 <td>Yes</td></tr>
-<tr class="a">
+<tr class="b">
 <td>org.eclipse.sisu.inject-0.3.4.jar</td>
 <td>379.2 kB</td>
 <td>289</td>
@@ -1315,7 +1364,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>9</td>
 <td>1.6</td>
 <td>Yes</td></tr>
-<tr class="b">
+<tr class="a">
 <td>org.eclipse.sisu.plexus-0.3.4.jar</td>
 <td>205.3 kB</td>
 <td>196</td>
@@ -1323,7 +1372,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>20</td>
 <td>1.6</td>
 <td>Yes</td></tr>
-<tr class="a">
+<tr class="b">
 <td>hamcrest-core-1.3.jar</td>
 <td>45 kB</td>
 <td>52</td>
@@ -1331,7 +1380,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>3</td>
 <td>1.5</td>
 <td>Yes</td></tr>
-<tr class="b">
+<tr class="a">
 <td>slf4j-api-1.7.29.jar</td>
 <td>41.4 kB</td>
 <td>46</td>
@@ -1339,7 +1388,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>4</td>
 <td>1.5</td>
 <td>Yes</td></tr>
-<tr class="a">
+<tr class="b">
 <td>plexus-cipher-1.4.jar</td>
 <td>13.5 kB</td>
 <td>20</td>
@@ -1347,7 +1396,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>1</td>
 <td>1.4</td>
 <td>Yes</td></tr>
-<tr class="b">
+<tr class="a">
 <td>plexus-sec-dispatcher-1.4.jar</td>
 <td>27.7 kB</td>
 <td>31</td>
@@ -1355,7 +1404,7 @@ file comparators, endian transformation classes, and much more.</p>
 <td>3</td>
 <td>1.4</td>
 <td>Yes</td></tr>
-<tr class="a">
+<tr class="b">
 <th>Total</th>
 <th>Size</th>
 <th>Entries</th>
@@ -1363,38 +1412,38 @@ file comparators, endian transformation classes, and much more.</p>
 <th>Packages</th>
 <th>Java Version</th>
 <th>Debug Information</th></tr>
-<tr class="b">
-<td>41</td>
-<td>8.7 MB</td>
-<td>6583</td>
-<td>5751</td>
-<td>349</td>
-<td>1.8</td>
-<td>37</td></tr>
 <tr class="a">
-<td>compile: 1</td>
-<td>compile: 1.2 MB</td>
-<td>compile: 623</td>
-<td>compile: 587</td>
-<td>compile: 27</td>
-<td>-</td>
-<td>compile: 1</td></tr>
+<td>42</td>
+<td>9.2 MB</td>
+<td>7097</td>
+<td>6212</td>
+<td>374</td>
+<td>1.8</td>
+<td>38</td></tr>
 <tr class="b">
+<td>compile: 8</td>
+<td>compile: 4.4 MB</td>
+<td>compile: 3202</td>
+<td>compile: 3019</td>
+<td>compile: 87</td>
+<td>-</td>
+<td>compile: 6</td></tr>
+<tr class="a">
 <td>test: 2</td>
-<td>test: 427.7 kB</td>
-<td>test: 439</td>
-<td>test: 393</td>
+<td>test: 429.6 kB</td>
+<td>test: 441</td>
+<td>test: 395</td>
 <td>test: 35</td>
 <td>-</td>
 <td>test: 2</td></tr>
-<tr class="a">
-<td>provided: 38</td>
-<td>provided: 7.1 MB</td>
-<td>provided: 5521</td>
-<td>provided: 4771</td>
-<td>provided: 287</td>
+<tr class="b">
+<td>provided: 32</td>
+<td>provided: 4.4 MB</td>
+<td>provided: 3454</td>
+<td>provided: 2798</td>
+<td>provided: 252</td>
 <td>-</td>
-<td>provided: 34</td></tr></table></div>
+<td>provided: 30</td></tr></table></div>
                   </div>
             </div>
           </div>

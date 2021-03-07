@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20210129" />
+    <meta name="Date-Revision-yyyymmdd" content="20210307" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; impsort:check</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2021-01-29
+                  <li id="publishDate">Last Published: 2021-03-07
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.5.0
+                  <li id="projectVersion">Version: 1.6.0
                       </li>
                       
               
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.5.0:check</p>
+<p>net.revelc.code:impsort-maven-plugin:1.6.0:check</p>
       
 <p><b>Description</b>:</p>
       
@@ -187,6 +187,27 @@ are grouped together before any static imports from an inner-class.<br /><b>Defa
           
 <tr class="a">
             
+<td><tt><a href="#cachedir">&lt;cachedir&gt;</a></tt></td>
+            
+<td><tt>File</tt></td>
+            
+<td><tt>1.6.0</tt></td>
+            
+<td>Projects cache directory. 
+
+<p>This file is a hash cache of the files in the project source. It
+can be preserved in source code such that it ensures builds are
+always fast by not unnecessarily writing files constantly. It can
+also be added to gitignore in case startup is not necessary. It
+further can be redirected to another location.</p>
+
+<p>When stored in the repository, the cache if run on cross
+platforms will display the files multiple times due to line ending
+differences on the platform.</p><br /><b>Default value is</b>: <tt>${project.build.directory}</tt>.<br /><b>User property is</b>: <tt>impsort.cachedir</tt>.<br /></td>
+          </tr>
+          
+<tr class="b">
+            
 <td><tt><a href="#compliance">&lt;compliance&gt;</a></tt></td>
             
 <td><tt>String</tt></td>
@@ -197,7 +218,7 @@ are grouped together before any static imports from an inner-class.<br /><b>Defa
 11, etc.)<br /><b>Default value is</b>: <tt>${maven.compiler.release}</tt>.<br /><b>User property is</b>: <tt>impsort.compliance</tt>.<br /><b>Alias is</b>: <tt>compliance</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#directories">&lt;directories&gt;</a></tt></td>
             
@@ -209,7 +230,7 @@ are grouped together before any static imports from an inner-class.<br /><b>Defa
 main and test directories if not set.<br /><b>User property is</b>: <tt>impsort.directories</tt>.<br /><b>Alias is</b>: <tt>directories</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#excludes">&lt;excludes&gt;</a></tt></td>
             
@@ -222,7 +243,7 @@ Patterns are relative to the directories selected. When not
 specified, there is no default exclude.<br /><b>User property is</b>: <tt>impsort.excludes</tt>.<br /><b>Alias is</b>: <tt>excludes</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#groups">&lt;groups&gt;</a></tt></td>
             
@@ -237,7 +258,7 @@ after all other groups, if not specified. More specific groups are
 prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <tt>*</tt>.<br /><b>User property is</b>: <tt>impsort.groups</tt>.<br /><b>Alias is</b>: <tt>groups</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#includes">&lt;includes&gt;</a></tt></td>
             
@@ -250,7 +271,7 @@ Patterns are relative to the directories selected. When not
 specified, the default include is <tt>**/*.java</tt><br /><b>User property is</b>: <tt>impsort.includes</tt>.<br /><b>Alias is</b>: <tt>includes</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#joinStaticWithNonStatic">&lt;joinStaticWithNonStatic&gt;</a></tt></td>
             
@@ -262,7 +283,7 @@ specified, the default include is <tt>**/*.java</tt><br /><b>User property is</b
 sections.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.joinStaticWithNonStatic</tt>.<br /><b>Alias is</b>: <tt>joinStaticWithNonStatic</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#lineEnding">&lt;lineEnding&gt;</a></tt></td>
             
@@ -287,7 +308,7 @@ if ambiguous</li>
 </ul><br /><b>Default value is</b>: <tt>AUTO</tt>.<br /><b>User property is</b>: <tt>impsort.lineEnding</tt>.<br /><b>Alias is</b>: <tt>lineEnding</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#removeUnused">&lt;removeUnused&gt;</a></tt></td>
             
@@ -298,7 +319,7 @@ if ambiguous</li>
 <td>Configures whether to remove unused imports.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.removeUnused</tt>.<br /><b>Alias is</b>: <tt>removeUnused</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#skip">&lt;skip&gt;</a></tt></td>
             
@@ -309,7 +330,7 @@ if ambiguous</li>
 <td>Allows skipping execution of this plugin.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.skip</tt>.<br /><b>Alias is</b>: <tt>skip</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#staticAfter">&lt;staticAfter&gt;</a></tt></td>
             
@@ -321,7 +342,7 @@ if ambiguous</li>
 groups.<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>impsort.staticAfter</tt>.<br /><b>Alias is</b>: <tt>staticAfter</tt>.</td>
           </tr>
           
-<tr class="a">
+<tr class="b">
             
 <td><tt><a href="#staticGroups">&lt;staticGroups&gt;</a></tt></td>
             
@@ -336,7 +357,7 @@ other groups, if not specified. More specific groups are
 prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <tt>*</tt>.<br /><b>User property is</b>: <tt>impsort.staticGroups</tt>.<br /><b>Alias is</b>: <tt>staticGroups</tt>.</td>
           </tr>
           
-<tr class="b">
+<tr class="a">
             
 <td><tt><a href="#treatSamePackageAsUnused">&lt;treatSamePackageAsUnused&gt;</a></tt></td>
             
@@ -373,6 +394,33 @@ are grouped together before any static imports from an inner-class.</div>
 <li><b>Default</b>: <tt>true</tt></li>
           
 <li><b>Alias</b>: <tt>breadthFirstComparator</tt></li>
+        </ul><hr /></div>
+<div class="section">
+<h4><a name="a.3Ccachedir.3E"></a><b><a name="cachedir">&lt;cachedir&gt;</a></b></h4>
+        
+<div>Projects cache directory. 
+
+<p>This file is a hash cache of the files in the project source. It
+can be preserved in source code such that it ensures builds are
+always fast by not unnecessarily writing files constantly. It can
+also be added to gitignore in case startup is not necessary. It
+further can be redirected to another location.</p>
+
+<p>When stored in the repository, the cache if run on cross
+platforms will display the files multiple times due to line ending
+differences on the platform.</p></div>
+        
+<ul>
+          
+<li><b>Type</b>: <tt>java.io.File</tt></li>
+          
+<li><b>Since</b>: <tt>1.6.0</tt></li>
+          
+<li><b>Required</b>: <tt>No</tt></li>
+          
+<li><b>User Property</b>: <tt>impsort.cachedir</tt></li>
+          
+<li><b>Default</b>: <tt>${project.build.directory}</tt></li>
         </ul><hr /></div>
 <div class="section">
 <h4><a name="a.3Ccompliance.3E"></a><b><a name="compliance">&lt;compliance&gt;</a></b></h4>
