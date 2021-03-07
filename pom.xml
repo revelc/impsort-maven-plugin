@@ -80,7 +80,7 @@
     <formatterConfigFile>src/tools/modified-google-style.xml</formatterConfigFile>
     <github.site.repositoryName>impsort-maven-plugin</github.site.repositoryName>
     <github.site.repositoryOwner>revelc</github.site.repositoryOwner>
-    <javaparser.version>3.18.0</javaparser.version>
+    <javaparser.version>3.19.0</javaparser.version>
     <maven.compiler.release>8</maven.compiler.release>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -107,7 +107,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13.1</version>
+        <version>4.13.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
@@ -191,7 +191,7 @@
         <plugin>
           <groupId>com.github.ekryd.sortpom</groupId>
           <artifactId>sortpom-maven-plugin</artifactId>
-          <version>2.12.0</version>
+          <version>2.13.1</version>
           <configuration>
             <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
             <createBackupFile>false</createBackupFile>
@@ -263,7 +263,7 @@
         <plugin>
           <groupId>net.revelc.code</groupId>
           <artifactId>impsort-maven-plugin</artifactId>
-          <version>1.4.1</version>
+          <version>1.5.0</version>
           <configuration>
             <groups>java.,javax.,org.,com.</groups>
           </configuration>
@@ -271,12 +271,19 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>8.41</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.0.4</version>
+          <version>4.2.0</version>
           <configuration>
             <xmlOutput>true</xmlOutput>
             <effort>Max</effort>
