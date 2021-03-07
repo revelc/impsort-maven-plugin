@@ -260,7 +260,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Charset encoding = Charset.forName(sourceEncoding);
 
     LanguageLevel langLevel = getLanguageLevel(compliance);
-    getLog().info("Using compiler compliance level: " + langLevel.toString());
+    getLog().debug("Using compiler compliance level: " + langLevel.toString());
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
         lineEnding, langLevel);
     AtomicLong numAlreadySorted = new AtomicLong(0);
@@ -315,11 +315,9 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     long minutes = totalTime.getSeconds() / 60;
     long seconds = totalTime.getSeconds() - minutes * 60;
     long millis = totalTime.getNano() / 1_000_000;
-    String fmt = "%22s: %" + Long.toString(total).length() + "d";
-    getLog().info(String.format(fmt + " in %02d:%02d.%03d", "Total Files Processed", total, minutes,
-        seconds, millis));
-    getLog().info(String.format(fmt, "Already Sorted", numAlreadySorted.get()));
-    getLog().info(String.format(fmt, "Needed Sorting", numProcessed.get()));
+    getLog().info(String.format(
+        "Processed %d files in %02d:%02d.%03d (Already Sorted: %d, Needed Sorting: %d)", total,
+        minutes, seconds, millis, numAlreadySorted.get(), numProcessed.get()));
 
     // check for failures during processing
     if (failure != null) {
