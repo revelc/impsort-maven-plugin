@@ -207,6 +207,11 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   /**
    * Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9, 11, etc.)
    *
+   * <p>
+   * To enable support a specific Java version, set the version here. If you require the use of
+   * preview features, append <code>_PREVIEW</code> to the version. For example, to use Java 14,
+   * with preview features, set this to <code>14_PREVIEW</code>.
+   *
    * @since 1.5.0
    */
   @Parameter(alias = "compliance", property = "impsort.compliance",
@@ -365,7 +370,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       return LanguageLevel.POPULAR;
     }
     String langLevel = "";
-    String v = compliance.trim();
+    String v = compliance.toUpperCase().trim(); // upper case for "PREVIEW" language levels
     if (v.matches("^1[.][01234]$")) {
       langLevel = "JAVA_" + v.replace(".", "_");
     } else if (v.matches("^1[.][56789]$")) {

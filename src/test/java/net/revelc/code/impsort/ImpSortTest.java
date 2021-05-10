@@ -37,6 +37,7 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.expr.Name;
 import com.google.common.primitives.Bytes;
@@ -217,5 +218,24 @@ public class ImpSortTest {
     List<String> lines = Files.readAllLines(output);
     assertEquals(1, lines.stream().filter(line -> line.equals(" * Some comment")).count());
   }
+
+  @Test
+  public void testJava13PreviewFeatures() throws IOException {
+    Path p =
+        Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Java13Preview.java");
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
+        LineEnding.AUTO, LanguageLevel.JAVA_13_PREVIEW).parseFile(p);
+
+    Path output = File.createTempFile("java13preview", null, new File("target")).toPath();
+    result.saveSorted(output);
+
+    List<String> lines = Files.readAllLines(output);
+    // check that text block was parsed and hasn't been mangled
+    assertEquals(2, lines.stream().filter(line -> line.contains("\"\"\"")).count());
+    // check that record text was parsed and hasn't been mangled
+    assertEquals(1,
+        lines.stream().filter(line -> line.contains("public static record Person")).count());
+  }
+
 }
 
