@@ -53,6 +53,9 @@ public class AbstractImpSortMojoTest {
     assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.12"));
     assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.13"));
     assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.14"));
+    // make sure preview works
+    assertSame(LanguageLevel.JAVA_14_PREVIEW, getLanguageLevel("14_PREVIEW"));
+    assertSame(LanguageLevel.JAVA_16_PREVIEW, getLanguageLevel("16_PREVIEW"));
   }
 
 }
