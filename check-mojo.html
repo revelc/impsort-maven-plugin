@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20210307" />
+    <meta name="Date-Revision-yyyymmdd" content="20210512" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; impsort:check</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2021-03-07
+                  <li id="publishDate">Last Published: 2021-05-12
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.6.0
+                  <li id="projectVersion">Version: 1.6.1
                       </li>
                       
               
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.6.0:check</p>
+<p>net.revelc.code:impsort-maven-plugin:1.6.1:check</p>
       
 <p><b>Description</b>:</p>
       
@@ -215,7 +215,12 @@ differences on the platform.</p><br /><b>Default value is</b>: <tt>${project.bui
 <td><tt>1.5.0</tt></td>
             
 <td>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9,
-11, etc.)<br /><b>Default value is</b>: <tt>${maven.compiler.release}</tt>.<br /><b>User property is</b>: <tt>impsort.compliance</tt>.<br /><b>Alias is</b>: <tt>compliance</tt>.</td>
+11, etc.) 
+
+<p>To enable support a specific Java version, set the version here.
+If you require the use of preview features, append
+<tt>_PREVIEW</tt> to the version. For example, to use Java 14,
+with preview features, set this to <tt>14_PREVIEW</tt>.</p><br /><b>Default value is</b>: <tt>${maven.compiler.release}</tt>.<br /><b>User property is</b>: <tt>impsort.compliance</tt>.<br /><b>Alias is</b>: <tt>compliance</tt>.</td>
           </tr>
           
 <tr class="a">
@@ -426,7 +431,12 @@ differences on the platform.</p></div>
 <h4><a name="a.3Ccompliance.3E"></a><b><a name="compliance">&lt;compliance&gt;</a></b></h4>
         
 <div>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9,
-11, etc.)</div>
+11, etc.) 
+
+<p>To enable support a specific Java version, set the version here.
+If you require the use of preview features, append
+<tt>_PREVIEW</tt> to the version. For example, to use Java 14,
+with preview features, set this to <tt>14_PREVIEW</tt>.</p></div>
         
 <ul>
           
