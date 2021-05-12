@@ -12,14 +12,13 @@
  * limitations under the License.
  */
 
-public class Java13Preview {
+// records are a Java 14 preview feature
+public record Java14Preview(String name) {
 
-  public void hello() {
-    String s = """
-        hello world
-        """;
-  }
+	// TextBlocks are a Java 13 preview feature
+	public static final String sampleString = """
+			Test string
+			Multiline
+			""";
 
-  public static record Person(String name, String occupation) {
-  }
 }

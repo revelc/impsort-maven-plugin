@@ -220,13 +220,13 @@ public class ImpSortTest {
   }
 
   @Test
-  public void testJava13PreviewFeatures() throws IOException {
+  public void testJava14PreviewFeatures() throws IOException {
     Path p =
-        Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Java13Preview.java");
+        Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Java14Preview.java");
     Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
-        LineEnding.AUTO, LanguageLevel.JAVA_13_PREVIEW).parseFile(p);
+        LineEnding.AUTO, LanguageLevel.JAVA_14_PREVIEW).parseFile(p);
 
-    Path output = File.createTempFile("java13preview", null, new File("target")).toPath();
+    Path output = File.createTempFile("java14preview", null, new File("target")).toPath();
     result.saveSorted(output);
 
     List<String> lines = Files.readAllLines(output);
@@ -234,7 +234,7 @@ public class ImpSortTest {
     assertEquals(2, lines.stream().filter(line -> line.contains("\"\"\"")).count());
     // check that record text was parsed and hasn't been mangled
     assertEquals(1,
-        lines.stream().filter(line -> line.contains("public static record Person")).count());
+        lines.stream().filter(line -> line.contains("public record Java14Preview")).count());
   }
 
 }
