@@ -18,6 +18,7 @@
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
     <version>23</version>
+    <relativePath />
   </parent>
   <groupId>net.revelc.code</groupId>
   <artifactId>impsort-maven-plugin</artifactId>
