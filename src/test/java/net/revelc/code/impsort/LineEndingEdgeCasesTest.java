@@ -14,10 +14,10 @@
 package net.revelc.code.impsort;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import net.revelc.code.impsort.ex.ImpSortException;
 import net.revelc.code.impsort.ex.ImpSortException.Reason;
@@ -40,16 +39,15 @@ public class LineEndingEdgeCasesTest {
   private static Grouper eclipseDefaults =
       new Grouper("java.,javax.,org.,com.", "", false, false, true);
 
-  @Rule
-  public TemporaryFolder folder =
-      new TemporaryFolder(new File(System.getProperty("user.dir"), "target"));
+  @TempDir
+  public File folder;
 
   /**
    * Test successfully parsing empty file (zero bytes).
    */
   @Test
   public void testEmptyFile() throws IOException {
-    Path p = folder.newFile("EmptyFile.java").toPath();
+    Path p = new File(folder, "EmptyFile.java").toPath();
     Files.write(p, new byte[0]);
     Result actual = new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p);
     assertEquals(Result.EMPTY_FILE, actual);
@@ -64,7 +62,7 @@ public class LineEndingEdgeCasesTest {
   public void testFileKeepWithoutLineEnding() throws IOException {
     String s =
         "import java.lang.System;public class FileWithoutNewline{public static void main(String[] args){System.out.println(\"Hello, world!\");}}";
-    Path p = folder.newFile("FileWithoutLineEnding.java").toPath();
+    Path p = new File(folder, "FileWithoutLineEnding.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
     ImpSortException e = assertThrows(ImpSortException.class,
         () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.KEEP).parseFile(p));
@@ -79,7 +77,7 @@ public class LineEndingEdgeCasesTest {
   public void testFileAutoWithoutLineEnding() throws IOException {
     String s =
         "import java.lang.System;public class FileWithoutNewline{public static void main(String[] args){System.out.println(\"Hello, world!\");}}";
-    Path p = folder.newFile("FileWithoutLineEnding.java").toPath();
+    Path p = new File(folder, "FileWithoutLineEnding.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
     Result result = new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p);
     assertEquals(1, result.getImports().size());
@@ -97,7 +95,7 @@ public class LineEndingEdgeCasesTest {
   public void testPartiallyParsedFile() throws IOException {
     String s = "public class InvalidFile {\n" + "    public static void main(String[] args) {\n"
         + "        System.out.println(\"Hello, world!\")\n" + "    }\n" + "}\n";
-    Path p = folder.newFile("InvalidFile.java").toPath();
+    Path p = new File(folder, "InvalidFile.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
     ImpSortException e = assertThrows(ImpSortException.class,
         () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
@@ -111,7 +109,7 @@ public class LineEndingEdgeCasesTest {
   @Test
   public void testInvalidFile() throws IOException {
     String s = "\0\n\n";
-    Path p = folder.newFile("NoResult.java").toPath();
+    Path p = new File(folder, "NoResult.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
     ImpSortException e = assertThrows(ImpSortException.class,
         () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
@@ -125,7 +123,7 @@ public class LineEndingEdgeCasesTest {
    */
   @Test
   public void testMissingFile() throws IOException {
-    Path p = new File(folder.getRoot().getAbsolutePath(), "MissingFile.java").toPath();
+    Path p = new File(folder.getAbsolutePath(), "MissingFile.java").toPath();
     NoSuchFileException e = assertThrows(NoSuchFileException.class,
         () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
     assertEquals(p.toString(), e.getMessage());

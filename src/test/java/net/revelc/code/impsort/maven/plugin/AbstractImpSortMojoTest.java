@@ -15,10 +15,10 @@
 package net.revelc.code.impsort.maven.plugin;
 
 import static net.revelc.code.impsort.maven.plugin.AbstractImpSortMojo.getLanguageLevel;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.github.javaparser.ParserConfiguration.LanguageLevel;
 
