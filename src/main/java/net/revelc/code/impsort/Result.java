@@ -67,7 +67,7 @@ public class Result {
   }
 
   public Collection<Import> getImports() {
-    return allImports;
+    return Collections.unmodifiableCollection(allImports);
   }
 
   public void saveBackup(Path destination) throws IOException {
