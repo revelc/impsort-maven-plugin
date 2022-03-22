@@ -278,7 +278,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         try {
           byte[] buf = Files.readAllBytes(path);
           String newHash = getHash(buf);
-          String key = path.toAbsolutePath().normalize().toString();
+          String key = path.toFile().getCanonicalPath();
           String prvHash = hashCache.getProperty(key);
           if (prvHash != null && prvHash.equals(newHash)) {
             numAlreadySorted.getAndIncrement();
