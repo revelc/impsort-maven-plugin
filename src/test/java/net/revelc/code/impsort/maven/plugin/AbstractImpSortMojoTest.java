@@ -17,6 +17,11 @@ package net.revelc.code.impsort.maven.plugin;
 import static net.revelc.code.impsort.maven.plugin.AbstractImpSortMojo.getLanguageLevel;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,34 +33,29 @@ public class AbstractImpSortMojoTest {
   public void testLanguageLevel() {
     assertSame(LanguageLevel.POPULAR, getLanguageLevel(null));
     assertSame(LanguageLevel.POPULAR, getLanguageLevel(""));
-    assertSame(LanguageLevel.JAVA_1_0, getLanguageLevel("1.0"));
-    assertSame(LanguageLevel.JAVA_1_1, getLanguageLevel("1.1"));
-    assertSame(LanguageLevel.JAVA_1_2, getLanguageLevel("1.2"));
-    assertSame(LanguageLevel.JAVA_1_3, getLanguageLevel("1.3"));
-    assertSame(LanguageLevel.JAVA_1_4, getLanguageLevel("1.4"));
-    assertSame(LanguageLevel.JAVA_5, getLanguageLevel("1.5"));
-    assertSame(LanguageLevel.JAVA_5, getLanguageLevel("5"));
-    assertSame(LanguageLevel.JAVA_6, getLanguageLevel("1.6"));
-    assertSame(LanguageLevel.JAVA_6, getLanguageLevel("6"));
-    assertSame(LanguageLevel.JAVA_7, getLanguageLevel("1.7"));
-    assertSame(LanguageLevel.JAVA_7, getLanguageLevel("7"));
-    assertSame(LanguageLevel.JAVA_8, getLanguageLevel("1.8"));
-    assertSame(LanguageLevel.JAVA_8, getLanguageLevel("8"));
-    assertSame(LanguageLevel.JAVA_9, getLanguageLevel("1.9"));
-    assertSame(LanguageLevel.JAVA_9, getLanguageLevel("9"));
-    assertSame(LanguageLevel.JAVA_10, getLanguageLevel("10"));
-    assertSame(LanguageLevel.JAVA_11, getLanguageLevel("11"));
-    assertSame(LanguageLevel.JAVA_12, getLanguageLevel("12"));
-    assertSame(LanguageLevel.JAVA_13, getLanguageLevel("13"));
-    assertSame(LanguageLevel.JAVA_14, getLanguageLevel("14"));
-    assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.10"));
-    assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.11"));
-    assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.12"));
-    assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.13"));
-    assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1.14"));
-    // make sure preview works
-    assertSame(LanguageLevel.JAVA_14_PREVIEW, getLanguageLevel("14_PREVIEW"));
-    assertSame(LanguageLevel.JAVA_16_PREVIEW, getLanguageLevel("16_PREVIEW"));
+    var prefix = "JAVA_";
+    var previewSuffix = "_PREVIEW";
+    // only these can be represented using single digit or 1.<digit>, as in Java 5 or Java 1.5
+    var expectedOneDotOrSingle = new TreeSet<>(Set.of("5", "6", "7", "8", "9"));
+    Arrays.stream(LanguageLevel.values()).forEach(level -> {
+      assertTrue(level.name().startsWith(prefix));
+      String version = level.name().substring(prefix.length());
+      if (!version.endsWith(previewSuffix)) {
+        version = version.replace('_', '.');
+      }
+      if (version.length() == 1) {
+        // check that the versions that can be represented by either X or 1.X are the same
+        assertTrue(expectedOneDotOrSingle.remove(version), "Unexpectedly saw " + version);
+        assertSame(level, getLanguageLevel("1." + version));
+      } else if (!version.contains(".") && !version.contains(previewSuffix)) {
+        // make sure versions above Java 9 can't be represented as 1.X, as in 1.10
+        final var v = version;
+        assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1." + v));
+      }
+      // basic check to make sure our getter method returns the correct level
+      assertSame(level, getLanguageLevel(version));
+    });
+    assertTrue(expectedOneDotOrSingle.isEmpty(), "Did not encounter " + expectedOneDotOrSingle);
   }
 
 }
