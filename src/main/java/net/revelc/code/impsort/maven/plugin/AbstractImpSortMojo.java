@@ -267,7 +267,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     LanguageLevel langLevel = getLanguageLevel(compliance);
     getLog().debug("Using compiler compliance level: " + langLevel.toString());
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
-        lineEnding, langLevel);
+        lineEnding, langLevel, getLog());
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 

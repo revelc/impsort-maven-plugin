@@ -35,6 +35,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.plugin.logging.Log;
+
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.JavaToken;
 import com.github.javaparser.ParseResult;
@@ -68,22 +71,24 @@ public class ImpSort {
   private final boolean treatSamePackageAsUnused;
   private final LineEnding lineEnding;
   private final LanguageLevel languageLevel;
+  private final Log logger;
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
-      final boolean treatSamePackageAsUnused, final LineEnding lineEnding) {
+      final boolean treatSamePackageAsUnused, final LineEnding lineEnding, final Log logger) {
     this(sourceEncoding, grouper, removeUnused, treatSamePackageAsUnused, lineEnding,
-        LanguageLevel.POPULAR);
+        LanguageLevel.POPULAR, logger);
   }
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
       final boolean treatSamePackageAsUnused, final LineEnding lineEnding,
-      final LanguageLevel languageLevel) {
+      final LanguageLevel languageLevel, final Log logger) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
     this.treatSamePackageAsUnused = treatSamePackageAsUnused;
     this.lineEnding = lineEnding;
     this.languageLevel = languageLevel;
+    this.logger = logger;
   }
 
   private static List<String> readAllLines(String str) {
@@ -126,11 +131,15 @@ public class ImpSort {
     List<String> fileLines = readAllLines(file);
     ParseResult<CompilationUnit> parseResult =
         new JavaParser(new ParserConfiguration().setLanguageLevel(languageLevel)).parse(file);
-    CompilationUnit unit = parseResult.getResult()
-        .orElseThrow(() -> new ImpSortException(path, Reason.UNABLE_TO_PARSE));
+    CompilationUnit unit = parseResult.getResult().orElseThrow(() -> {
+      parseResult.getProblems().forEach(problem -> logger.error(problem.toString()));
+      return new ImpSortException(path, Reason.UNABLE_TO_PARSE,
+              StringUtils.join(parseResult.getProblems(), System.lineSeparator()));
+    });
     if (!parseResult.isSuccessful()) {
-      parseResult.getProblems().forEach(System.out::println);
-      throw new ImpSortException(path, Reason.PARTIAL_PARSE);
+      parseResult.getProblems().forEach(problem -> logger.error(problem.toString()));
+      throw new ImpSortException(path, Reason.PARTIAL_PARSE,
+              StringUtils.join(parseResult.getProblems(), System.lineSeparator()));
     }
     Position packagePosition =
         unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());

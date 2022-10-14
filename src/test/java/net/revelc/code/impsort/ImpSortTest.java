@@ -35,6 +35,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.jupiter.api.Test;
 
 import com.github.javaparser.ParserConfiguration.LanguageLevel;
@@ -81,16 +82,16 @@ public class ImpSortTest {
   public void testSort() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
         "BasicPluginTests.java");
-    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, true, LineEnding.AUTO).parseFile(p);
+    new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, true, LineEnding.AUTO,
+        new SystemStreamLog()).parseFile(p);
   }
 
   @Test
   public void testUnused() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "UnusedImports.java");
-    Result result =
-        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
-            .parseFile(p);
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
+        LineEnding.AUTO, new SystemStreamLog()).parseFile(p);
     Set<String> imports =
         result.getImports().stream().map(Import::getImport).collect(Collectors.toSet());
     assertEquals(22, imports.size());
@@ -130,9 +131,8 @@ public class ImpSortTest {
   public void testEmptyJavadoc() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "EmptyJavadoc.java");
-    Result result =
-        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
-            .parseFile(p);
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
+        LineEnding.AUTO, new SystemStreamLog()).parseFile(p);
     Set<String> imports = new HashSet<>();
     for (Import i : result.getImports()) {
       imports.add(i.getImport());
@@ -157,9 +157,8 @@ public class ImpSortTest {
   public void testIso8859ForIssue3() throws IOException {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Iso8859File.java");
-    Result result =
-        new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true, true, LineEnding.AUTO)
-            .parseFile(p);
+    Result result = new ImpSort(StandardCharsets.ISO_8859_1, eclipseDefaults, true, true,
+        LineEnding.AUTO, new SystemStreamLog()).parseFile(p);
     assertTrue(result.getImports().isEmpty());
     Path output = File.createTempFile("impSortIso8859", null, new File("target")).toPath();
     result.saveSorted(output);
@@ -208,9 +207,8 @@ public class ImpSortTest {
   public void testResultStartWithComment() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
         "FirstImportComment.java");
-    Result result =
-        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true, LineEnding.AUTO)
-            .parseFile(p);
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
+        LineEnding.AUTO, new SystemStreamLog()).parseFile(p);
 
     Path output = File.createTempFile("impSortComment", null, new File("target")).toPath();
     result.saveSorted(output);
@@ -224,7 +222,7 @@ public class ImpSortTest {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Java14Preview.java");
     Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
-        LineEnding.AUTO, LanguageLevel.JAVA_14_PREVIEW).parseFile(p);
+        LineEnding.AUTO, LanguageLevel.JAVA_14_PREVIEW, new SystemStreamLog()).parseFile(p);
 
     Path output = File.createTempFile("java14preview", null, new File("target")).toPath();
     result.saveSorted(output);

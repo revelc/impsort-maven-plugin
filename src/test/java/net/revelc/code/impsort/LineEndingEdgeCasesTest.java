@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
+import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -49,7 +50,9 @@ public class LineEndingEdgeCasesTest {
   public void testEmptyFile() throws IOException {
     Path p = new File(folder, "EmptyFile.java").toPath();
     Files.write(p, new byte[0]);
-    Result actual = new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p);
+    Result actual =
+        new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO, new SystemStreamLog())
+            .parseFile(p);
     assertEquals(Result.EMPTY_FILE, actual);
     assertTrue(actual.getImports().isEmpty());
     assertTrue(actual.isSorted());
@@ -64,8 +67,8 @@ public class LineEndingEdgeCasesTest {
         "import java.lang.System;public class FileWithoutNewline{public static void main(String[] args){System.out.println(\"Hello, world!\");}}";
     Path p = new File(folder, "FileWithoutLineEnding.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
-    ImpSortException e = assertThrows(ImpSortException.class,
-        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.KEEP).parseFile(p));
+    ImpSortException e = assertThrows(ImpSortException.class, () -> new ImpSort(UTF_8,
+        eclipseDefaults, true, true, LineEnding.KEEP, new SystemStreamLog()).parseFile(p));
     assertTrue(e.getReason() == Reason.UNKNOWN_LINE_ENDING);
     assertEquals("file: " + p + "; reason: unknown line ending", e.getMessage());
   }
@@ -79,7 +82,9 @@ public class LineEndingEdgeCasesTest {
         "import java.lang.System;public class FileWithoutNewline{public static void main(String[] args){System.out.println(\"Hello, world!\");}}";
     Path p = new File(folder, "FileWithoutLineEnding.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
-    Result result = new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p);
+    Result result =
+        new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO, new SystemStreamLog())
+            .parseFile(p);
     assertEquals(1, result.getImports().size());
     assertEquals("java.lang.System", result.getImports().iterator().next().getImport());
     assertTrue(result.getImports().iterator().next().getPrefix().isEmpty());
@@ -97,10 +102,10 @@ public class LineEndingEdgeCasesTest {
         + "        System.out.println(\"Hello, world!\")\n" + "    }\n" + "}\n";
     Path p = new File(folder, "InvalidFile.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
-    ImpSortException e = assertThrows(ImpSortException.class,
-        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
+    ImpSortException e = assertThrows(ImpSortException.class, () -> new ImpSort(UTF_8,
+        eclipseDefaults, true, true, LineEnding.AUTO, new SystemStreamLog()).parseFile(p));
     assertTrue(e.getReason() == Reason.PARTIAL_PARSE);
-    assertEquals("file: " + p + "; reason: the Java file contained parse errors", e.getMessage());
+    assertTrue(e.getMessage().contains("file: " + p + "; reason: the Java file contained parse errors"+System.lineSeparator()+"errorMessage: (line 3,col 43) Parse error. Found \"}\", expected one of  \"%=\" \"&=\" \"*=\" \"++\" \"+=\" \"--\" \"-=\" \"/=\" \";\" \"<<=\" \"=\" \">>=\" \">>>=\" \"^=\" \"|=\""));
   }
 
   /**
@@ -111,11 +116,11 @@ public class LineEndingEdgeCasesTest {
     String s = "\0\n\n";
     Path p = new File(folder, "NoResult.java").toPath();
     Files.write(p, s.getBytes(UTF_8));
-    ImpSortException e = assertThrows(ImpSortException.class,
-        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
+    ImpSortException e = assertThrows(ImpSortException.class, () -> new ImpSort(UTF_8,
+        eclipseDefaults, true, true, LineEnding.AUTO, new SystemStreamLog()).parseFile(p));
     assertTrue(e.getReason() == Reason.UNABLE_TO_PARSE);
-    assertEquals("file: " + p + "; reason: unable to successfully parse the Java file",
-        e.getMessage());
+    assertTrue(
+        e.getMessage().contains("file: " + p + "; reason: unable to successfully parse the Java file"+System.lineSeparator()+"errorMessage: Lexical error at line 1, column 1.  Encountered: \"\\u0000\" (0), after : \"\""));
   }
 
   /**
@@ -124,8 +129,8 @@ public class LineEndingEdgeCasesTest {
   @Test
   public void testMissingFile() throws IOException {
     Path p = new File(folder.getAbsolutePath(), "MissingFile.java").toPath();
-    NoSuchFileException e = assertThrows(NoSuchFileException.class,
-        () -> new ImpSort(UTF_8, eclipseDefaults, true, true, LineEnding.AUTO).parseFile(p));
+    NoSuchFileException e = assertThrows(NoSuchFileException.class, () -> new ImpSort(UTF_8,
+        eclipseDefaults, true, true, LineEnding.AUTO, new SystemStreamLog()).parseFile(p));
     assertEquals(p.toString(), e.getMessage());
   }
 }

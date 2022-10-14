@@ -55,6 +55,12 @@ public class ImpSortException extends IOException {
     this.reason = reason;
   }
 
+  public ImpSortException(Path path, Reason reason, String errorMsg) {
+    super("file: " + path + "; reason: " + reason + System.lineSeparator() +"errorMessage: " + errorMsg);
+    this.path = path;
+    this.reason = reason;
+  }
+
   /**
    * The path that caused this exception.
    *
