@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Date-Revision-yyyymmdd" content="20220524" />
+    <meta name="Date-Revision-yyyymmdd" content="20221123" />
     <meta http-equiv="Content-Language" content="en" />
     <title>ImpSort Maven Plugin &#x2013; impsort:check</title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.5.min.css" />
@@ -48,10 +48,10 @@
       <div id="breadcrumbs">
         <ul class="breadcrumb">
               
-                  <li id="publishDate">Last Published: 2022-05-24
+                  <li id="publishDate">Last Published: 2022-11-23
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 1.7.0
+                  <li id="projectVersion">Version: 1.8.0
                       </li>
                       
               
@@ -141,7 +141,7 @@
       
 <p><b>Full name</b>:</p>
       
-<p>net.revelc.code:impsort-maven-plugin:1.7.0:check</p>
+<p>net.revelc.code:impsort-maven-plugin:1.8.0:check</p>
       
 <p><b>Description</b>:</p>
       
@@ -181,9 +181,7 @@
             
 <td><code>1.3.0</code></td>
             
-<td>Configures whether to use a breadth first comparator for sorting
-static imports. This will ensure all static imports from one class
-are grouped together before any static imports from an inner-class.<br /><b>Default value is</b>: <code>true</code>.<br /><b>User property is</b>: <code>impsort.breadthFirstComparator</code>.<br /><b>Alias is</b>: <code>breadthFirstComparator</code>.</td>
+<td>Configures whether to use a breadth first comparator for sorting static imports. This will ensure all static imports from one class are grouped together before any static imports from an inner-class.<br /><b>Default value is</b>: <code>true</code>.<br /><b>User property is</b>: <code>impsort.breadthFirstComparator</code>.<br /><b>Alias is</b>: <code>breadthFirstComparator</code>.</td>
           </tr>
           
 <tr class="a">
@@ -196,15 +194,9 @@ are grouped together before any static imports from an inner-class.<br /><b>Defa
             
 <td>Projects cache directory. 
 
-<p>This file is a hash cache of the files in the project source. It
-can be preserved in source code such that it ensures builds are
-always fast by not unnecessarily writing files constantly. It can
-also be added to gitignore in case startup is not necessary. It
-further can be redirected to another location.</p>
+<p>This file is a hash cache of the files in the project source. It can be preserved in source code such that it ensures builds are always fast by not unnecessarily writing files constantly. It can also be added to gitignore in case startup is not necessary. It further can be redirected to another location.</p>
 
-<p>When stored in the repository, the cache if run on cross
-platforms will display the files multiple times due to line ending
-differences on the platform.</p><br /><b>Default value is</b>: <code>${project.build.directory}</code>.<br /><b>User property is</b>: <code>impsort.cachedir</code>.<br /></td>
+<p>When stored in the repository, the cache if run on cross platforms will display the files multiple times due to line ending differences on the platform.</p><br /><b>Default value is</b>: <code>${project.build.directory}</code>.<br /><b>User property is</b>: <code>impsort.cachedir</code>.<br /></td>
           </tr>
           
 <tr class="b">
@@ -215,13 +207,9 @@ differences on the platform.</p><br /><b>Default value is</b>: <code>${project.b
             
 <td><code>1.5.0</code></td>
             
-<td>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9,
-11, etc.) 
+<td>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9, 11, etc.) 
 
-<p>To enable support a specific Java version, set the version here.
-If you require the use of preview features, append
-<code>_PREVIEW</code> to the version. For example, to use Java 14,
-with preview features, set this to <code>14_PREVIEW</code>.</p><br /><b>Default value is</b>: <code>${maven.compiler.release}</code>.<br /><b>User property is</b>: <code>impsort.compliance</code>.<br /><b>Alias is</b>: <code>compliance</code>.</td>
+<p>To enable support a specific Java version, set the version here. If you require the use of preview features, append <code>_PREVIEW</code> to the version. For example, to use Java 14, with preview features, set this to <code>14_PREVIEW</code>.</p><br /><b>Default value is</b>: <code>${maven.compiler.release}</code>.<br /><b>User property is</b>: <code>impsort.compliance</code>.<br /><b>Alias is</b>: <code>compliance</code>.</td>
           </tr>
           
 <tr class="a">
@@ -232,8 +220,7 @@ with preview features, set this to <code>14_PREVIEW</code>.</p><br /><b>Default 
             
 <td><code>1.0.0</code></td>
             
-<td>Location of the Java source files to process. Defaults to source
-main and test directories if not set.<br /><b>User property is</b>: <code>impsort.directories</code>.<br /><b>Alias is</b>: <code>directories</code>.</td>
+<td>Location of the Java source files to process. Defaults to source main and test directories if not set.<br /><b>User property is</b>: <code>impsort.directories</code>.<br /><b>Alias is</b>: <code>directories</code>.</td>
           </tr>
           
 <tr class="b">
@@ -244,9 +231,7 @@ main and test directories if not set.<br /><b>User property is</b>: <code>impsor
             
 <td><code>1.0.0</code></td>
             
-<td>List of fileset patterns for Java source locations to exclude.
-Patterns are relative to the directories selected. When not
-specified, there is no default exclude.<br /><b>User property is</b>: <code>impsort.excludes</code>.<br /><b>Alias is</b>: <code>excludes</code>.</td>
+<td>List of fileset patterns for Java source locations to exclude. Patterns are relative to the directories selected. When not specified, there is no default exclude.<br /><b>User property is</b>: <code>impsort.excludes</code>.<br /><b>Alias is</b>: <code>excludes</code>.</td>
           </tr>
           
 <tr class="a">
@@ -257,11 +242,7 @@ specified, there is no default exclude.<br /><b>User property is</b>: <code>imps
             
 <td><code>1.0.0</code></td>
             
-<td>Configures the grouping of non-static imports. Groups are defined
-with comma-separated package name prefixes. The special &quot;*&quot; group
-refers to imports not matching any other group, and is implied
-after all other groups, if not specified. More specific groups are
-prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <code>*</code>.<br /><b>User property is</b>: <code>impsort.groups</code>.<br /><b>Alias is</b>: <code>groups</code>.</td>
+<td>Configures the grouping of non-static imports. Groups are defined with comma-separated package name prefixes. The special &quot;*&quot; group refers to imports not matching any other group, and is implied after all other groups, if not specified. More specific groups are prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <code>*</code>.<br /><b>User property is</b>: <code>impsort.groups</code>.<br /><b>Alias is</b>: <code>groups</code>.</td>
           </tr>
           
 <tr class="b">
@@ -272,9 +253,7 @@ prioritized over less specific ones. All groups are sorted.<br /><b>Default valu
             
 <td><code>1.0.0</code></td>
             
-<td>List of fileset patterns for Java source locations to include.
-Patterns are relative to the directories selected. When not
-specified, the default include is <code>**/*.java</code><br /><b>User property is</b>: <code>impsort.includes</code>.<br /><b>Alias is</b>: <code>includes</code>.</td>
+<td>List of fileset patterns for Java source locations to include. Patterns are relative to the directories selected. When not specified, the default include is <code>**/*.java</code><br /><b>User property is</b>: <code>impsort.includes</code>.<br /><b>Alias is</b>: <code>includes</code>.</td>
           </tr>
           
 <tr class="a">
@@ -285,8 +264,7 @@ specified, the default include is <code>**/*.java</code><br /><b>User property i
             
 <td><code>1.0.0</code></td>
             
-<td>Allows omitting the blank line between the static and non-static
-sections.<br /><b>Default value is</b>: <code>false</code>.<br /><b>User property is</b>: <code>impsort.joinStaticWithNonStatic</code>.<br /><b>Alias is</b>: <code>joinStaticWithNonStatic</code>.</td>
+<td>Allows omitting the blank line between the static and non-static sections.<br /><b>Default value is</b>: <code>false</code>.<br /><b>User property is</b>: <code>impsort.joinStaticWithNonStatic</code>.<br /><b>Alias is</b>: <code>joinStaticWithNonStatic</code>.</td>
           </tr>
           
 <tr class="b">
@@ -300,16 +278,15 @@ sections.<br /><b>Default value is</b>: <code>false</code>.<br /><b>User propert
 <td>Sets the line-ending of files after formatting. Valid values are: 
 
 <ul>
-
+ 
 <li><b>&quot;AUTO&quot;</b> - Use line endings of current system</li>
-
-<li><b>&quot;KEEP&quot;</b> - Preserve line endings of files, default to AUTO
-if ambiguous</li>
-
+ 
+<li><b>&quot;KEEP&quot;</b> - Preserve line endings of files, default to AUTO if ambiguous</li>
+ 
 <li><b>&quot;LF&quot;</b> - Use Unix and Mac style line endings</li>
-
+ 
 <li><b>&quot;CRLF&quot;</b> - Use DOS and Windows style line endings</li>
-
+ 
 <li><b>&quot;CR&quot;</b> - Use early Mac style line endings</li>
 </ul><br /><b>Default value is</b>: <code>AUTO</code>.<br /><b>User property is</b>: <code>impsort.lineEnding</code>.<br /><b>Alias is</b>: <code>lineEnding</code>.</td>
           </tr>
@@ -344,8 +321,7 @@ if ambiguous</li>
             
 <td><code>1.0.0</code></td>
             
-<td>Configures whether static groups will appear after non-static
-groups.<br /><b>Default value is</b>: <code>false</code>.<br /><b>User property is</b>: <code>impsort.staticAfter</code>.<br /><b>Alias is</b>: <code>staticAfter</code>.</td>
+<td>Configures whether static groups will appear after non-static groups.<br /><b>Default value is</b>: <code>false</code>.<br /><b>User property is</b>: <code>impsort.staticAfter</code>.<br /><b>Alias is</b>: <code>staticAfter</code>.</td>
           </tr>
           
 <tr class="b">
@@ -356,11 +332,7 @@ groups.<br /><b>Default value is</b>: <code>false</code>.<br /><b>User property 
             
 <td><code>1.0.0</code></td>
             
-<td>Configures the grouping of static imports. Groups are defined with
-comma-separated package name prefixes. The special &quot;*&quot; group refers
-to imports not matching any other group, and is implied after all
-other groups, if not specified. More specific groups are
-prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <code>*</code>.<br /><b>User property is</b>: <code>impsort.staticGroups</code>.<br /><b>Alias is</b>: <code>staticGroups</code>.</td>
+<td>Configures the grouping of static imports. Groups are defined with comma-separated package name prefixes. The special &quot;*&quot; group refers to imports not matching any other group, and is implied after all other groups, if not specified. More specific groups are prioritized over less specific ones. All groups are sorted.<br /><b>Default value is</b>: <code>*</code>.<br /><b>User property is</b>: <code>impsort.staticGroups</code>.<br /><b>Alias is</b>: <code>staticGroups</code>.</td>
           </tr>
           
 <tr class="a">
@@ -371,8 +343,7 @@ prioritized over less specific ones. All groups are sorted.<br /><b>Default valu
             
 <td><code>1.2.0</code></td>
             
-<td>Configures whether to treat imports in the current package as
-unused and subject to removal along with other unused imports.<br /><b>Default value is</b>: <code>true</code>.<br /><b>User property is</b>: <code>impsort.treatSamePackageAsUnused</code>.<br /><b>Alias is</b>: <code>treatSamePackageAsUnused</code>.</td>
+<td>Configures whether to treat imports in the current package as unused and subject to removal along with other unused imports.<br /><b>Default value is</b>: <code>true</code>.<br /><b>User property is</b>: <code>impsort.treatSamePackageAsUnused</code>.<br /><b>Alias is</b>: <code>treatSamePackageAsUnused</code>.</td>
           </tr>
         </table>
       </section>
@@ -381,9 +352,7 @@ unused and subject to removal along with other unused imports.<br /><b>Default v
         <section>
 <h4><a name="a.3CbreadthFirstComparator.3E"></a><b><a name="breadthFirstComparator">&lt;breadthFirstComparator&gt;</a></b></h4>
         
-<div>Configures whether to use a breadth first comparator for sorting
-static imports. This will ensure all static imports from one class
-are grouped together before any static imports from an inner-class.</div>
+<div>Configures whether to use a breadth first comparator for sorting static imports. This will ensure all static imports from one class are grouped together before any static imports from an inner-class.</div>
         
 <ul>
           
@@ -403,15 +372,9 @@ are grouped together before any static imports from an inner-class.</div>
         
 <div>Projects cache directory. 
 
-<p>This file is a hash cache of the files in the project source. It
-can be preserved in source code such that it ensures builds are
-always fast by not unnecessarily writing files constantly. It can
-also be added to gitignore in case startup is not necessary. It
-further can be redirected to another location.</p>
+<p>This file is a hash cache of the files in the project source. It can be preserved in source code such that it ensures builds are always fast by not unnecessarily writing files constantly. It can also be added to gitignore in case startup is not necessary. It further can be redirected to another location.</p>
 
-<p>When stored in the repository, the cache if run on cross
-platforms will display the files multiple times due to line ending
-differences on the platform.</p></div>
+<p>When stored in the repository, the cache if run on cross platforms will display the files multiple times due to line ending differences on the platform.</p></div>
         
 <ul>
           
@@ -427,13 +390,9 @@ differences on the platform.</p></div>
         </ul><hr /></section><section>
 <h4><a name="a.3Ccompliance.3E"></a><b><a name="compliance">&lt;compliance&gt;</a></b></h4>
         
-<div>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9,
-11, etc.) 
+<div>Sets the Java source compliance level (e.g. 1.0, 1.5, 1.7, 8, 9, 11, etc.) 
 
-<p>To enable support a specific Java version, set the version here.
-If you require the use of preview features, append
-<code>_PREVIEW</code> to the version. For example, to use Java 14,
-with preview features, set this to <code>14_PREVIEW</code>.</p></div>
+<p>To enable support a specific Java version, set the version here. If you require the use of preview features, append <code>_PREVIEW</code> to the version. For example, to use Java 14, with preview features, set this to <code>14_PREVIEW</code>.</p></div>
         
 <ul>
           
@@ -451,8 +410,7 @@ with preview features, set this to <code>14_PREVIEW</code>.</p></div>
         </ul><hr /></section><section>
 <h4><a name="a.3Cdirectories.3E"></a><b><a name="directories">&lt;directories&gt;</a></b></h4>
         
-<div>Location of the Java source files to process. Defaults to source
-main and test directories if not set.</div>
+<div>Location of the Java source files to process. Defaults to source main and test directories if not set.</div>
         
 <ul>
           
@@ -468,9 +426,7 @@ main and test directories if not set.</div>
         </ul><hr /></section><section>
 <h4><a name="a.3Cexcludes.3E"></a><b><a name="excludes">&lt;excludes&gt;</a></b></h4>
         
-<div>List of fileset patterns for Java source locations to exclude.
-Patterns are relative to the directories selected. When not
-specified, there is no default exclude.</div>
+<div>List of fileset patterns for Java source locations to exclude. Patterns are relative to the directories selected. When not specified, there is no default exclude.</div>
         
 <ul>
           
@@ -486,11 +442,7 @@ specified, there is no default exclude.</div>
         </ul><hr /></section><section>
 <h4><a name="a.3Cgroups.3E"></a><b><a name="groups">&lt;groups&gt;</a></b></h4>
         
-<div>Configures the grouping of non-static imports. Groups are defined
-with comma-separated package name prefixes. The special &quot;*&quot; group
-refers to imports not matching any other group, and is implied
-after all other groups, if not specified. More specific groups are
-prioritized over less specific ones. All groups are sorted.</div>
+<div>Configures the grouping of non-static imports. Groups are defined with comma-separated package name prefixes. The special &quot;*&quot; group refers to imports not matching any other group, and is implied after all other groups, if not specified. More specific groups are prioritized over less specific ones. All groups are sorted.</div>
         
 <ul>
           
@@ -508,9 +460,7 @@ prioritized over less specific ones. All groups are sorted.</div>
         </ul><hr /></section><section>
 <h4><a name="a.3Cincludes.3E"></a><b><a name="includes">&lt;includes&gt;</a></b></h4>
         
-<div>List of fileset patterns for Java source locations to include.
-Patterns are relative to the directories selected. When not
-specified, the default include is <code>**/*.java</code></div>
+<div>List of fileset patterns for Java source locations to include. Patterns are relative to the directories selected. When not specified, the default include is <code>**/*.java</code></div>
         
 <ul>
           
@@ -526,8 +476,7 @@ specified, the default include is <code>**/*.java</code></div>
         </ul><hr /></section><section>
 <h4><a name="a.3CjoinStaticWithNonStatic.3E"></a><b><a name="joinStaticWithNonStatic">&lt;joinStaticWithNonStatic&gt;</a></b></h4>
         
-<div>Allows omitting the blank line between the static and non-static
-sections.</div>
+<div>Allows omitting the blank line between the static and non-static sections.</div>
         
 <ul>
           
@@ -548,16 +497,15 @@ sections.</div>
 <div>Sets the line-ending of files after formatting. Valid values are: 
 
 <ul>
-
+ 
 <li><b>&quot;AUTO&quot;</b> - Use line endings of current system</li>
-
-<li><b>&quot;KEEP&quot;</b> - Preserve line endings of files, default to AUTO
-if ambiguous</li>
-
+ 
+<li><b>&quot;KEEP&quot;</b> - Preserve line endings of files, default to AUTO if ambiguous</li>
+ 
 <li><b>&quot;LF&quot;</b> - Use Unix and Mac style line endings</li>
-
+ 
 <li><b>&quot;CRLF&quot;</b> - Use DOS and Windows style line endings</li>
-
+ 
 <li><b>&quot;CR&quot;</b> - Use early Mac style line endings</li>
 </ul></div>
         
@@ -613,8 +561,7 @@ if ambiguous</li>
         </ul><hr /></section><section>
 <h4><a name="a.3CstaticAfter.3E"></a><b><a name="staticAfter">&lt;staticAfter&gt;</a></b></h4>
         
-<div>Configures whether static groups will appear after non-static
-groups.</div>
+<div>Configures whether static groups will appear after non-static groups.</div>
         
 <ul>
           
@@ -632,11 +579,7 @@ groups.</div>
         </ul><hr /></section><section>
 <h4><a name="a.3CstaticGroups.3E"></a><b><a name="staticGroups">&lt;staticGroups&gt;</a></b></h4>
         
-<div>Configures the grouping of static imports. Groups are defined with
-comma-separated package name prefixes. The special &quot;*&quot; group refers
-to imports not matching any other group, and is implied after all
-other groups, if not specified. More specific groups are
-prioritized over less specific ones. All groups are sorted.</div>
+<div>Configures the grouping of static imports. Groups are defined with comma-separated package name prefixes. The special &quot;*&quot; group refers to imports not matching any other group, and is implied after all other groups, if not specified. More specific groups are prioritized over less specific ones. All groups are sorted.</div>
         
 <ul>
           
@@ -654,8 +597,7 @@ prioritized over less specific ones. All groups are sorted.</div>
         </ul><hr /></section><section>
 <h4><a name="a.3CtreatSamePackageAsUnused.3E"></a><b><a name="treatSamePackageAsUnused">&lt;treatSamePackageAsUnused&gt;</a></b></h4>
         
-<div>Configures whether to treat imports in the current package as
-unused and subject to removal along with other unused imports.</div>
+<div>Configures whether to treat imports in the current package as unused and subject to removal along with other unused imports.</div>
         
 <ul>
           
