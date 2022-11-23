@@ -234,14 +234,14 @@ public class ImpSort {
       String eol) {
     boolean isStatic = false;
     String importItem = null;
-    String prefix = "";
-    String suffix = "";
+    StringBuilder prefixBuilder = new StringBuilder();
+    StringBuilder suffixBuilder = new StringBuilder();
     for (Node n : thisImport) {
       if (n instanceof Comment) {
         if (importItem == null) {
-          prefix += n.toString();
+          prefixBuilder.append(n.toString());
         } else {
-          suffix += n.toString();
+          suffixBuilder.append(n.toString());
         }
       }
       if (n instanceof ImportDeclaration) {
@@ -250,11 +250,11 @@ public class ImpSort {
         importItem = i.getName().asString() + (i.isAsterisk() ? ".*" : "");
       }
     }
-    suffix = suffix.trim();
+    String suffix = suffixBuilder.toString().trim();
     if (!suffix.isEmpty()) {
       suffix = " " + suffix;
     }
-    Import imp = new Import(isStatic, importItem, prefix.trim(), suffix, eol);
+    Import imp = new Import(isStatic, importItem, prefixBuilder.toString().trim(), suffix, eol);
     Iterator<Import> iter = allImports.iterator();
     // this de-duplication can probably be made more efficient by doing it all at the end
     while (iter.hasNext()) {
