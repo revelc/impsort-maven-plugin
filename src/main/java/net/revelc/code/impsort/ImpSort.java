@@ -126,8 +126,10 @@ public class ImpSort {
     List<String> fileLines = readAllLines(file);
     ParseResult<CompilationUnit> parseResult =
         new JavaParser(new ParserConfiguration().setLanguageLevel(languageLevel)).parse(file);
-    CompilationUnit unit = parseResult.getResult()
-        .orElseThrow(() -> new ImpSortException(path, Reason.UNABLE_TO_PARSE));
+    CompilationUnit unit = parseResult.getResult().orElseThrow(() -> {
+      parseResult.getProblems().forEach(System.out::println);
+      return new ImpSortException(path, Reason.UNABLE_TO_PARSE);
+    });
     if (!parseResult.isSuccessful()) {
       parseResult.getProblems().forEach(System.out::println);
       throw new ImpSortException(path, Reason.PARTIAL_PARSE);
