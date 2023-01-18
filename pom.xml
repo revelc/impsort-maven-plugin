@@ -17,7 +17,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>28</version>
+    <version>29</version>
     <relativePath />
   </parent>
   <groupId>net.revelc.code</groupId>
@@ -34,9 +34,8 @@
   </organization>
   <licenses>
     <license>
-      <name>Apache License, Version 2.0</name>
+      <name>Apache-2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-      <distribution>repo</distribution>
     </license>
   </licenses>
   <developers>
@@ -81,20 +80,20 @@
     <formatterConfigFile>src/tools/modified-google-style.xml</formatterConfigFile>
     <github.site.repositoryName>impsort-maven-plugin</github.site.repositoryName>
     <github.site.repositoryOwner>revelc</github.site.repositoryOwner>
-    <javaparser.version>3.24.8</javaparser.version>
+    <javaparser.version>3.24.10</javaparser.version>
     <maven.compiler.release>11</maven.compiler.release>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <!-- skip standard site deployment, because site is deployed using github plugin instead -->
     <maven.site.deploy.skip>true</maven.site.deploy.skip>
-    <maven.tools-version>3.8.6</maven.tools-version>
-    <mavenPluginToolsVersion>3.7.0</mavenPluginToolsVersion>
+    <maven.tools-version>3.8.7</maven.tools-version>
+    <mavenPluginToolsVersion>3.7.1</mavenPluginToolsVersion>
     <minimalJavaBuildVersion>11</minimalJavaBuildVersion>
     <minimalMavenBuildVersion>3.5.0</minimalMavenBuildVersion>
     <project.build.outputTimestamp>2022-11-23T16:28:41Z</project.build.outputTimestamp>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <projectInfoReportsVersion>3.4.1</projectInfoReportsVersion>
+    <projectInfoReportsVersion>3.4.2</projectInfoReportsVersion>
     <sourceReleaseAssemblyDescriptor>source-release-tar</sourceReleaseAssemblyDescriptor>
     <surefire.version>3.0.0-M5</surefire.version>
   </properties>
@@ -126,6 +125,12 @@
         <version>${mavenPluginToolsVersion}</version>
       </dependency>
       <dependency>
+        <!-- Fluido is listed here for version update checking only -->
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>2.0.0-M2</version>
+      </dependency>
+      <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>3.5.0</version>
@@ -133,7 +138,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.9.1</version>
+        <version>5.9.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -178,7 +183,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
-          <version>2.13.0</version>
+          <version>2.14.2</version>
         </plugin>
         <plugin>
           <groupId>org.gaul</groupId>
@@ -269,7 +274,7 @@
         <plugin>
           <groupId>net.revelc.code</groupId>
           <artifactId>impsort-maven-plugin</artifactId>
-          <version>1.7.0</version>
+          <version>1.8.0</version>
           <configuration>
             <groups>java.,javax.,org.,com.</groups>
           </configuration>
@@ -277,12 +282,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.1</version>
           <dependencies>
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>10.4</version>
+              <version>10.6.0</version>
             </dependency>
           </dependencies>
         </plugin>
