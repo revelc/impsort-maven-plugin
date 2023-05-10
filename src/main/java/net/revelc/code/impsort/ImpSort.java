@@ -60,7 +60,8 @@ import net.revelc.code.impsort.ex.ImpSortException.Reason;
 
 public class ImpSort {
 
-  private static final Comparator<Node> BY_POSITION = Comparator.comparing(a -> a.getBegin().get());
+  private static final Comparator<Node> BY_POSITION =
+      Comparator.comparing(a -> a.getBegin().orElseThrow());
 
   private final Charset sourceEncoding;
   private final Grouper grouper;
@@ -134,8 +135,8 @@ public class ImpSort {
       parseResult.getProblems().forEach(System.out::println);
       throw new ImpSortException(path, Reason.PARTIAL_PARSE);
     }
-    Position packagePosition =
-        unit.getPackageDeclaration().map(p -> p.getEnd().get()).orElse(unit.getBegin().get());
+    Position packagePosition = unit.getPackageDeclaration().map(p -> p.getEnd().orElseThrow())
+        .orElse(unit.getBegin().orElseThrow());
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
     if (importDeclarations.isEmpty()) {
       return new Result(path, sourceEncoding, fileLines, 0, fileLines.size(), "", "",
@@ -144,9 +145,9 @@ public class ImpSort {
 
     // find orphaned comments before between package and last import
     Position lastImportPosition =
-        importDeclarations.stream().max(BY_POSITION).get().getBegin().get();
+        importDeclarations.stream().max(BY_POSITION).orElseThrow().getBegin().orElseThrow();
     Stream<Comment> orphanedComments = unit.getOrphanComments().parallelStream().filter(c -> {
-      Position p = c.getBegin().get();
+      Position p = c.getBegin().orElseThrow();
       return p.isAfter(packagePosition) && p.isBefore(lastImportPosition);
     });
 
@@ -156,9 +157,9 @@ public class ImpSort {
     importSectionNodes.sort(BY_POSITION);
     // position line numbers start at 1, not 0
     Node firstImport = importSectionNodes.get(0);
-    int start = firstImport.getComment().map(c -> c.getBegin().get())
-        .orElse(firstImport.getBegin().get()).line - 1;
-    int stop = importSectionNodes.get(importSectionNodes.size() - 1).getEnd().get().line;
+    int start = firstImport.getComment().map(c -> c.getBegin().orElseThrow())
+        .orElse(firstImport.getBegin().orElseThrow()).line - 1;
+    int stop = importSectionNodes.get(importSectionNodes.size() - 1).getEnd().orElseThrow().line;
     // get the original import section lines from the file
     // include surrounding whitespace
     while (start > 0 && fileLines.get(start - 1).trim().isEmpty()) {
@@ -207,8 +208,8 @@ public class ImpSort {
 
         Optional<Comment> impComment = impDecl.getComment();
         if (impComment.isPresent()) {
-          Comment c = impComment.get();
-          if (c.getBegin().get().isBefore(impDecl.getBegin().get())) {
+          Comment c = impComment.orElseThrow();
+          if (c.getBegin().orElseThrow().isBefore(impDecl.getBegin().orElseThrow())) {
             thisImport.add(c);
             thisImport.add(impDecl);
           } else {
@@ -278,13 +279,12 @@ public class ImpSort {
   private static Set<String> tokensInUse(CompilationUnit unit) {
 
     // Extract tokens from the java code:
-    Stream<Node> packageDecl =
-        unit.getPackageDeclaration().isPresent()
-            ? Stream.of(unit.getPackageDeclaration().get()).map(PackageDeclaration::getAnnotations)
-                .flatMap(NodeList::stream)
-            : Stream.empty();
+    Stream<Node> packageDecl = unit.getPackageDeclaration().isPresent()
+        ? Stream.of(unit.getPackageDeclaration().orElseThrow())
+            .map(PackageDeclaration::getAnnotations).flatMap(NodeList::stream)
+        : Stream.empty();
     Stream<String> typesInCode = Stream.concat(packageDecl, unit.getTypes().stream())
-        .map(Node::getTokenRange).filter(Optional::isPresent).map(Optional::get)
+        .map(Node::getTokenRange).filter(Optional::isPresent).map(Optional::orElseThrow)
         .filter(r -> r != TokenRange.INVALID).flatMap(r -> {
           // get all JavaTokens as strings from each range
           return StreamSupport.stream(r.spliterator(), false);
@@ -311,7 +311,7 @@ public class ImpSort {
       EnumSet<JavadocBlockTag.Type> blockTagTypesWithImportableNames =
           EnumSet.of(THROWS, EXCEPTION);
       Stream<String> importableTagNames = blockTagTypesWithImportableNames.contains(tag.getType())
-          ? Stream.of(tag.getName()).filter(Optional::isPresent).map(Optional::get)
+          ? Stream.of(tag.getName()).filter(Optional::isPresent).map(Optional::orElseThrow)
           : Stream.empty();
       Stream<String> tagDescriptions =
           Stream.of(tag.getContent()).flatMap(ImpSort::parseJavadocDescription);
