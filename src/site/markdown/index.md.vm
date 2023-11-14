@@ -60,4 +60,6 @@ Getting Started
 mvn package
 ```
 
+See the "Goals" page for more details about the supported configuration parameters.
+
 [1]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
