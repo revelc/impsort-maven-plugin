@@ -61,32 +61,3 @@ mvn package
 ```
 
 [1]: https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
-
-Configuration
--------------
-
-  This plugin supports the following configuration parameters:
-
-  * `skip` (boolean, default: `false`): to disable the execution of this plugin.
-  * `staticGroups` (string, default: `*`): the list of import groups for `import static` statements. Groups are defined with comma-separated package name prefixes. The special `*` group refers to imports not matching any other group, and is implied after
-  * all other groups if not specified. More specific groups are prioritized over less specific ones. All groups are sorted.
-  * `groups` (string, default: `*`): the list of import groups for `import` statements, similar to `staticGroups`.
-  * `staticAfter` (boolean, default: `false`): whether static groups will appear after non-static groups.
-  * `joinStaticWithNonStatic` (boolean, default: `false`): allows omoitting the blank line between the static and non-static sections.
-  * `sourceDirectory` (file, default: `${project.build.sourceDirectory}`): project's main source directory as specified in the POM. Used by default if `directories` is not set.
-  * `testSourceDirectory` (file, default: `${project.build.testSourceDirectory}`): project's test source directory as specified in the POM. Used by default if `directories` is not set.
-  * `directories` (files): location of the Java source files to process. Defaults to source main and test directories if not sets.
-  * `includes` (strings, default: `*.java`): list of fileset patterns for Java source locations to include.
-  * `excludes` (strings): list of fileset patterns for Java source locations to exclude (by default, none).
-  * `removeUnused` (boolean, default: `false`): whether to remove unused imports.
-  * `treatSamePackageAsUnused` (boolean, default: `true`): whether to treat imports in the current package as unused and subject to removal along with other unused imports.
-  * `breadthFirstComparator` (boolean, default: `true`): whether to use a breadth first comparator for soroting static imports. This will ensure all static imports from one class are grouped together before any static imports from an inner-class.
-  * `lineEnding`: sets the line-ending of files after formatting. Valid values are:
-     * `AUTO`: use line endings of current system
-     * `KEEP`: preserve line endings of files, default to AUTO if ambiguous
-     * `LF`: use Unix and Mac style line endings
-     * `CRLF` use DOS and Windows style line endings
-     * `CR` use early Mac style line endings
-  * `compliance` (string, default: `${maven.compiler.release}`): sets the Java source compliance level (such as `1.0`, `1.5`, `1.7`, `8`, `9`, `11`, etc)
-  * `cacheDir` (String, default: `${project.build.directory}`): project's cache directory. This file is a hash cache of the files in the project source, to speed up builds.
-
