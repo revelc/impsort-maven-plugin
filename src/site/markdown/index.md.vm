@@ -35,6 +35,7 @@ Getting Started
         <configuration>
           <groups>java.,javax.,org.,com.</groups>
           <staticGroups>java,*</staticGroups>
+          <removeUnused>true</removeUnused>
           <excludes>
             <exclude>**/thrift/*.java</exclude>
           </excludes>
