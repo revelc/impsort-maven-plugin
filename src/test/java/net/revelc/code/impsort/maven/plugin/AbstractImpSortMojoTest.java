@@ -31,8 +31,13 @@ public class AbstractImpSortMojoTest {
 
   @Test
   public void testLanguageLevel() {
-    assertSame(LanguageLevel.POPULAR, getLanguageLevel(null));
-    assertSame(LanguageLevel.POPULAR, getLanguageLevel(""));
+    assertSame(LanguageLevel.POPULAR, getLanguageLevel(null, false));
+    assertSame(LanguageLevel.POPULAR, getLanguageLevel("", false));
+
+    assertSame(LanguageLevel.POPULAR, getLanguageLevel(null, true));
+    assertSame(LanguageLevel.POPULAR, getLanguageLevel("", true));
+    assertSame(LanguageLevel.POPULAR, getLanguageLevel("JAVA_11", true));
+
     var prefix = "JAVA_";
     var previewSuffix = "_PREVIEW";
     // only these can be represented using single digit or 1.<digit>, as in Java 5 or Java 1.5
@@ -46,14 +51,14 @@ public class AbstractImpSortMojoTest {
       if (version.length() == 1) {
         // check that the versions that can be represented by either X or 1.X are the same
         assertTrue(expectedOneDotOrSingle.remove(version), "Unexpectedly saw " + version);
-        assertSame(level, getLanguageLevel("1." + version));
+        assertSame(level, getLanguageLevel("1." + version, false));
       } else if (!version.contains(".") && !version.contains(previewSuffix)) {
         // make sure versions above Java 9 can't be represented as 1.X, as in 1.10
         final var v = version;
-        assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1." + v));
+        assertThrows(IllegalArgumentException.class, () -> getLanguageLevel("1." + v, false));
       }
       // basic check to make sure our getter method returns the correct level
-      assertSame(level, getLanguageLevel(version));
+      assertSame(level, getLanguageLevel(version, false));
     });
     assertTrue(expectedOneDotOrSingle.isEmpty(), "Did not encounter " + expectedOneDotOrSingle);
   }

@@ -41,6 +41,7 @@ import com.github.javaparser.ParseResult;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.github.javaparser.Position;
+import com.github.javaparser.Problem;
 import com.github.javaparser.TokenRange;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -69,22 +70,24 @@ public class ImpSort {
   private final boolean treatSamePackageAsUnused;
   private final LineEnding lineEnding;
   private final LanguageLevel languageLevel;
+  private final boolean ignoreIrrelevantParseErrors;
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
       final boolean treatSamePackageAsUnused, final LineEnding lineEnding) {
     this(sourceEncoding, grouper, removeUnused, treatSamePackageAsUnused, lineEnding,
-        LanguageLevel.POPULAR);
+        LanguageLevel.POPULAR, false);
   }
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
       final boolean treatSamePackageAsUnused, final LineEnding lineEnding,
-      final LanguageLevel languageLevel) {
+      final LanguageLevel languageLevel, final boolean ignoreIrrelevantParseErrors) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
     this.treatSamePackageAsUnused = treatSamePackageAsUnused;
     this.lineEnding = lineEnding;
     this.languageLevel = languageLevel;
+    this.ignoreIrrelevantParseErrors = ignoreIrrelevantParseErrors;
   }
 
   private static List<String> readAllLines(String str) {
@@ -131,8 +134,11 @@ public class ImpSort {
       parseResult.getProblems().forEach(System.out::println);
       return new ImpSortException(path, Reason.UNABLE_TO_PARSE);
     });
-    if (!parseResult.isSuccessful()) {
-      parseResult.getProblems().forEach(System.out::println);
+    List<Problem> relevantProblems = ignoreIrrelevantParseErrors
+        ? ParseProblemFilter.getImportRelevantProblems(unit, parseResult.getProblems())
+        : parseResult.getProblems();
+    if (!parseResult.isSuccessful() && !relevantProblems.isEmpty()) {
+      relevantProblems.forEach(System.out::println);
       throw new ImpSortException(path, Reason.PARTIAL_PARSE);
     }
     Position packagePosition = unit.getPackageDeclaration().map(p -> p.getEnd().orElseThrow())

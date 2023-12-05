@@ -236,6 +236,20 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}", property = "impsort.cachedir")
   private File cachedir;
 
+  /**
+   * Allows to ignore irrelevant parse errors
+   *
+   * <p>
+   * Whilst parsing all Java files completely only the parts before the first top level decleration
+   * are relevant for sorting the imports. This property allows to ignore all parse errors with a
+   * location under the first top level decleration. This allows import sorting in future Java
+   * versions that are not (yet) supported by the used Java parser.
+   *
+   * @since 1.10.0
+   */
+  @Parameter(property = "impsort.ignoreIrrelevantParseErrors", defaultValue = "false")
+  private boolean ignoreIrrelevantParseErrors;
+
   abstract byte[] processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
@@ -264,10 +278,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
 
-    LanguageLevel langLevel = getLanguageLevel(compliance);
+    LanguageLevel langLevel = getLanguageLevel(compliance, ignoreIrrelevantParseErrors);
     getLog().debug("Using compiler compliance level: " + langLevel.toString());
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
-        lineEnding, langLevel);
+        lineEnding, langLevel, ignoreIrrelevantParseErrors);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 
@@ -365,8 +379,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         : new MojoFailureException(message, cause);
   }
 
-  static LanguageLevel getLanguageLevel(String compliance) {
-    if (compliance == null || compliance.trim().isEmpty()) {
+  static LanguageLevel getLanguageLevel(String compliance, boolean ignoreIrrelevantParseErrors) {
+    if (compliance == null || compliance.trim().isEmpty() || ignoreIrrelevantParseErrors) {
       return LanguageLevel.POPULAR;
     }
     String langLevel = "";
