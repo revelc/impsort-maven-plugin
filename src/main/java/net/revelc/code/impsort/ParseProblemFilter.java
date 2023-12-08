@@ -17,31 +17,34 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.github.javaparser.JavaToken;
-import com.github.javaparser.Position;
-import com.github.javaparser.Problem;
-import com.github.javaparser.TokenRange;
+import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.TypeDeclaration;
 
 public class ParseProblemFilter {
 
   /**
-   * Only return problems before the first top level decleration. All other problems might for
-   * example be caused be a newer Java version but should have no impact on import sorting.
+   * Only return problems above the first top level declaration (if any, otherwise return all). All
+   * other problems might for example be caused be a newer Java version with not yet known syntax
+   * but should have no impact on import parsing.
    */
-  public static List<Problem> getImportRelevantProblems(CompilationUnit unit,
+  public static List<Problem> getProblemsAboveFirstTopLevelDeclaration(CompilationUnit unit,
       List<Problem> problems) {
     Optional<Position> firstTopLevelBegin = unit.getTypes().stream().map(TypeDeclaration::getBegin)
         .filter(Optional::isPresent).map(Optional::get).sorted().findFirst();
+    // in case of no top level declaration per definition all problems are above ;-)
     if (firstTopLevelBegin.isEmpty()) {
-      // should not happen but let's simply give up and return the problems as they are
       return problems;
-    } else {
-      return problems.stream()
-          .filter(p -> p.getLocation().map(TokenRange::getBegin).flatMap(JavaToken::getRange)
-              .map(r -> r.isBefore(firstTopLevelBegin.orElseThrow())).orElse(Boolean.FALSE))
-          .collect(Collectors.toList());
     }
+
+    return problems.stream()
+        .filter(problem -> toRange(problem)
+            .map(problemRange -> problemRange.isBefore(firstTopLevelBegin.orElseThrow()))
+            .orElse(Boolean.TRUE))
+        .collect(Collectors.toList());
+  }
+
+  public static Optional<Range> toRange(Problem problem) {
+    return problem.getLocation().map(TokenRange::getBegin).flatMap(JavaToken::getRange);
   }
 }

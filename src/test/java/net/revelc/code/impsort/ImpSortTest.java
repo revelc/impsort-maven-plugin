@@ -238,25 +238,25 @@ public class ImpSortTest {
   }
 
   @Test
-  public void testJava21RecordDeconstruction() throws IOException {
+  public void testIgnoreParseErrorsBelowImports() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
         "Java21RecordDeconstruction.java");
 
-    // unfortunately Java 17 Preview is the most recently supported level
     Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
-        LineEnding.AUTO, LanguageLevel.JAVA_17_PREVIEW, true).parseFile(p);
+        LineEnding.AUTO, LanguageLevel.JAVA_18, true).parseFile(p);
+
+    assertTrue(result.getReportableProblems().isEmpty());
+    assertEquals(1,
+        result.getProblems().stream().map(ParseProblemFilter::toRange)
+            .filter(problemRange -> problemRange.orElseThrow()
+                .isAfter(result.getFirstLineContaining("public record Java21RecordDeconstruction")))
+            .count());
 
     Path output =
         File.createTempFile("java21record-deconstruction", null, new File("target")).toPath();
     result.saveSorted(output);
 
     List<String> lines = Files.readAllLines(output);
-    // check that record text was parsed and hasn't been mangled
-    assertEquals(1,
-        lines.stream()
-            .filter(
-                line -> line.contains("public record Java21RecordDeconstruction(Point point) {"))
-            .count());
     // check that the deconstruction hasn't been mangled (even if not parsable)
     assertEquals(1,
         lines.stream()

@@ -17,11 +17,11 @@ import java.awt.Point;
 
 public record Java21RecordDeconstruction(Point point) {
 
-	public static int getX(Object obj) {
-		if (obj instanceof Java21RecordDeconstruction(Point point)) {
-			return point.x;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
+  public static int getX(Object obj) {
+    if (obj instanceof Java21RecordDeconstruction(Point point)) {
+      return point.x;
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
 }

@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -237,23 +238,32 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   private File cachedir;
 
   /**
-   * Allows to ignore irrelevant parse errors
+   * Allows to ignore parse errors below the imports
    *
    * <p>
-   * Whilst parsing all Java files completely only the parts before the first top level decleration
-   * are relevant for sorting the imports. This property allows to ignore all parse errors with a
-   * location under the first top level decleration. This allows import sorting in future Java
-   * versions that are not (yet) supported by the used Java parser.
+   * Whilst parsing all Java files completely only the parts above the first top level decleration
+   * are relevant for sorting the imports. This property allows to ignore all parse errors which are
+   * located under the first top level decleration. This allows import sorting with future Java
+   * versions that allow syntax not (yet) supported by the used Java parser.
+   *
+   * <b>Warning:</b> This is incompatible with <code>removeUnused=true</code> because parse errors
+   * might cause false positives and actually used imports would be removed.
    *
    * @since 1.10.0
    */
-  @Parameter(property = "impsort.ignoreIrrelevantParseErrors", defaultValue = "false")
-  private boolean ignoreIrrelevantParseErrors;
+  @Parameter(property = "impsort.ignoreParseErrorsBelowImports", defaultValue = "false")
+  private boolean ignoreParseErrorsBelowImports;
 
   abstract byte[] processResult(Path path, Result results) throws MojoFailureException;
 
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
+    if (removeUnused && ignoreParseErrorsBelowImports) {
+      fail(
+          "ignoreParseErrorsBelowImports=true can't be used together with removeUnused=true because parse errors might "
+              + "cause false positives and actually used imports would be removed!");
+    }
+
     if (skip) {
       getLog().info("Skipping execution of impsort-maven-plugin");
       return;
@@ -278,10 +288,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
 
-    LanguageLevel langLevel = getLanguageLevel(compliance, ignoreIrrelevantParseErrors);
+    LanguageLevel langLevel = getLanguageLevel(compliance, ignoreParseErrorsBelowImports);
     getLog().debug("Using compiler compliance level: " + langLevel.toString());
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
-        lineEnding, langLevel, ignoreIrrelevantParseErrors);
+        lineEnding, langLevel, ignoreParseErrorsBelowImports);
     AtomicLong numAlreadySorted = new AtomicLong(0);
     AtomicLong numProcessed = new AtomicLong(0);
 
@@ -379,8 +389,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         : new MojoFailureException(message, cause);
   }
 
-  static LanguageLevel getLanguageLevel(String compliance, boolean ignoreIrrelevantParseErrors) {
-    if (compliance == null || compliance.trim().isEmpty() || ignoreIrrelevantParseErrors) {
+  static LanguageLevel getLanguageLevel(String compliance, boolean ignoreParseErrorsBelowImports) {
+    if (compliance == null || compliance.trim().isEmpty()) {
       return LanguageLevel.POPULAR;
     }
     String langLevel = "";
@@ -392,7 +402,17 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     } else {
       langLevel = "JAVA_" + v;
     }
-    return LanguageLevel.valueOf(langLevel);
+
+    return parseLanguageLevel(langLevel, ignoreParseErrorsBelowImports);
+  }
+
+  private static LanguageLevel parseLanguageLevel(String langLevel,
+      boolean ignoreParseErrorsBelowImports) {
+    return Stream.of(LanguageLevel.values()).filter(ll -> ll.name().equals(langLevel)).findFirst()
+        .or(() -> ignoreParseErrorsBelowImports ? Optional.of(LanguageLevel.POPULAR)
+            : Optional.empty())
+        .orElseThrow(() -> new IllegalArgumentException("No enum constant "
+            + LanguageLevel.class.getName().replace('$', '.') + "." + langLevel));
   }
 
   /**

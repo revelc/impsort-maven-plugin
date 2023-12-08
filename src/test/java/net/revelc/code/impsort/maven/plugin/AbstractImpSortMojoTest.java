@@ -36,7 +36,9 @@ public class AbstractImpSortMojoTest {
 
     assertSame(LanguageLevel.POPULAR, getLanguageLevel(null, true));
     assertSame(LanguageLevel.POPULAR, getLanguageLevel("", true));
-    assertSame(LanguageLevel.POPULAR, getLanguageLevel("JAVA_11", true));
+    assertSame(LanguageLevel.POPULAR, getLanguageLevel("42", true));
+
+    assertSame(LanguageLevel.JAVA_12, getLanguageLevel("12", true));
 
     var prefix = "JAVA_";
     var previewSuffix = "_PREVIEW";
