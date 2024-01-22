@@ -42,7 +42,7 @@
   </scm>
   <properties>
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
-    <javaparser.version>3.25.5</javaparser.version>
+    <javaparser.version>3.25.8</javaparser.version>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.outputTimestamp>2023-05-10T00:07:12Z</project.build.outputTimestamp>
   </properties>
@@ -56,7 +56,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>32.1.3-jre</version>
+        <version>33.0.0-jre</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
@@ -66,7 +66,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-xml</artifactId>
-        <version>3.0.0</version>
+        <version>4.0.3</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -94,7 +94,7 @@
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>10.12.4</version>
+              <version>10.12.7</version>
             </dependency>
           </dependencies>
         </plugin>
