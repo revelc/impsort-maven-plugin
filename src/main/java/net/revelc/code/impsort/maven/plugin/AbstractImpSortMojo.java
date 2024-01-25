@@ -16,6 +16,7 @@ package net.revelc.code.impsort.maven.plugin;
 
 import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.google.common.hash.Hashing;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,7 +27,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -275,7 +279,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         try {
           byte[] buf = Files.readAllBytes(path);
           String newHash = getHash(buf);
-          String key = path.toFile().getCanonicalPath();
+          String key = path.toFile().getCanonicalPath()
+              .substring(project.getBasedir().getCanonicalPath().length());
           String prvHash = hashCache.getProperty(key);
           if (prvHash != null && prvHash.equals(newHash)) {
             numAlreadySorted.getAndIncrement();
@@ -383,12 +388,44 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    *
    * @param props the props
    */
-  private void storeFileHashCache(Properties props) {
+  private void storeFileHashCache(final Properties props) {
     File cacheFile = new File(this.cachedir, CACHE_PROPERTIES_FILENAME);
-    try (OutputStream out = new FileOutputStream(cacheFile)) {
+    try (OutputStream out = new BufferedOutputStream(new FileOutputStream(cacheFile))) {
+      this.getLog().debug("Storing property file cache");
       props.store(out, null);
+    } catch (final IOException e) {
+      this.getLog().warn("Cannot store file hash cache properties file", e);
+      return;
+    }
+
+    // Run update on cache file to make sure its sorted and we remove the property
+    // timestamp
+    final List<String> existing;
+    try {
+      // Read in existing file
+      this.getLog().debug("Reading property file cache");
+      existing = Files.readAllLines(cacheFile.toPath());
+    } catch (final IOException e) {
+      this.getLog().warn("Cannot read the hash cache properties file", e);
+      return;
+    }
+
+    // Sort the properties
+    this.getLog().debug("Sorting property file cache");
+    Collections.sort(existing);
+
+    // Remove properties timestamp
+    this.getLog().debug("Removing timestamp from property file cache");
+    existing.remove(0);
+
+    // Write file back
+    try {
+      this.getLog().debug("Writing sorted cache file with no timestamp");
+      this.getLog().debug("Files in cache are:\n\n" + existing);
+      Files.deleteIfExists(cacheFile.toPath());
+      Files.write(cacheFile.toPath(), existing, StandardOpenOption.CREATE);
     } catch (IOException e) {
-      getLog().warn("Cannot store file hash cache properties file", e);
+      this.getLog().warn("Cannot write the hash cache properties file", e);
     }
   }
 
