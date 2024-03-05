@@ -18,14 +18,14 @@ import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.google.common.hash.Hashing;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -275,7 +275,8 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         try {
           byte[] buf = Files.readAllBytes(path);
           String newHash = getHash(buf);
-          String key = path.toFile().getCanonicalPath();
+          String key = path.toFile().getCanonicalPath()
+              .substring(project.getBasedir().getCanonicalPath().length());
           String prvHash = hashCache.getProperty(key);
           if (prvHash != null && prvHash.equals(newHash)) {
             numAlreadySorted.getAndIncrement();
@@ -384,9 +385,12 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    * @param props the props
    */
   private void storeFileHashCache(Properties props) {
-    File cacheFile = new File(this.cachedir, CACHE_PROPERTIES_FILENAME);
-    try (OutputStream out = new FileOutputStream(cacheFile)) {
-      props.store(out, null);
+    Path cacheFile = Path.of(this.cachedir.getAbsolutePath(), CACHE_PROPERTIES_FILENAME);
+    try (StringWriter sw = new StringWriter()) {
+      props.store(sw, null);
+      getLog().debug("Writing sorted files to cache without timestamp:\n\n" + props);
+      Files.write(cacheFile, (Iterable<String>) sw.toString().lines().skip(1).sorted()::iterator,
+          StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     } catch (IOException e) {
       getLog().warn("Cannot store file hash cache properties file", e);
     }
