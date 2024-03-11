@@ -42,7 +42,7 @@
   </scm>
   <properties>
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
-    <javaparser.version>3.25.8</javaparser.version>
+    <javaparser.version>3.25.9</javaparser.version>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.outputTimestamp>2023-05-10T00:07:12Z</project.build.outputTimestamp>
   </properties>
@@ -94,7 +94,7 @@
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>10.14.0</version>
+              <version>10.14.1</version>
             </dependency>
           </dependencies>
         </plugin>
