@@ -23,6 +23,7 @@ import com.github.javaparser.ParseResult;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ParserConfiguration.LanguageLevel;
 import com.github.javaparser.Position;
+import com.github.javaparser.Problem;
 import com.github.javaparser.TokenRange;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -67,22 +68,24 @@ public class ImpSort {
   private final boolean treatSamePackageAsUnused;
   private final LineEnding lineEnding;
   private final LanguageLevel languageLevel;
+  private final boolean ignoreParseErrorsBelowImports;
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
       final boolean treatSamePackageAsUnused, final LineEnding lineEnding) {
     this(sourceEncoding, grouper, removeUnused, treatSamePackageAsUnused, lineEnding,
-        LanguageLevel.POPULAR);
+        LanguageLevel.POPULAR, false);
   }
 
   public ImpSort(final Charset sourceEncoding, final Grouper grouper, final boolean removeUnused,
       final boolean treatSamePackageAsUnused, final LineEnding lineEnding,
-      final LanguageLevel languageLevel) {
+      final LanguageLevel languageLevel, final boolean ignoreParseErrorsBelowImports) {
     this.sourceEncoding = sourceEncoding;
     this.grouper = grouper;
     this.removeUnused = removeUnused;
     this.treatSamePackageAsUnused = treatSamePackageAsUnused;
     this.lineEnding = lineEnding;
     this.languageLevel = languageLevel;
+    this.ignoreParseErrorsBelowImports = ignoreParseErrorsBelowImports;
   }
 
   private static List<String> readAllLines(String str) {
@@ -129,8 +132,12 @@ public class ImpSort {
       parseResult.getProblems().forEach(System.out::println);
       return new ImpSortException(path, Reason.UNABLE_TO_PARSE);
     });
-    if (!parseResult.isSuccessful()) {
-      parseResult.getProblems().forEach(System.out::println);
+    List<Problem> reportableProblems = ignoreParseErrorsBelowImports
+        ? ParseProblemFilter.getProblemsAboveFirstTopLevelDeclaration(unit,
+            parseResult.getProblems())
+        : parseResult.getProblems();
+    if (!parseResult.isSuccessful() && !reportableProblems.isEmpty()) {
+      reportableProblems.forEach(System.out::println);
       throw new ImpSortException(path, Reason.PARTIAL_PARSE);
     }
     Position packagePosition = unit.getPackageDeclaration().map(p -> p.getEnd().orElseThrow())
@@ -138,7 +145,7 @@ public class ImpSort {
     NodeList<ImportDeclaration> importDeclarations = unit.getImports();
     if (importDeclarations.isEmpty()) {
       return new Result(path, sourceEncoding, fileLines, 0, fileLines.size(), "", "",
-          Collections.emptyList(), impLineEnding);
+          Collections.emptyList(), impLineEnding, parseResult.getProblems(), reportableProblems);
     }
 
     // find orphaned comments before between package and last import
@@ -189,7 +196,7 @@ public class ImpSort {
     }
 
     return new Result(path, sourceEncoding, fileLines, start, stop, originalSection, newSection,
-        allImports, impLineEnding);
+        allImports, impLineEnding, parseResult.getProblems(), reportableProblems);
   }
 
   // return imports, with associated comments, in order found in the file

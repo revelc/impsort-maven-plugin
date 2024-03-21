@@ -222,7 +222,7 @@ public class ImpSortTest {
     Path p =
         Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "Java14Preview.java");
     Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
-        LineEnding.AUTO, LanguageLevel.JAVA_14_PREVIEW).parseFile(p);
+        LineEnding.AUTO, LanguageLevel.JAVA_14_PREVIEW, false).parseFile(p);
 
     Path output = File.createTempFile("java14preview", null, new File("target")).toPath();
     result.saveSorted(output);
@@ -235,5 +235,31 @@ public class ImpSortTest {
         lines.stream().filter(line -> line.contains("public record Java14Preview")).count());
   }
 
+  @Test
+  public void testIgnoreParseErrorsBelowImports() throws IOException {
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
+        "Java21RecordDeconstruction.java");
+
+    Result result = new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, true, true,
+        LineEnding.AUTO, LanguageLevel.JAVA_18, true).parseFile(p);
+
+    assertTrue(result.getReportableProblems().isEmpty());
+    assertEquals(1,
+        result.getProblems().stream().map(ParseProblemFilter::toRange)
+            .filter(problemRange -> problemRange.orElseThrow()
+                .isAfter(result.getFirstLineContaining("public record Java21RecordDeconstruction")))
+            .count());
+
+    Path output =
+        File.createTempFile("java21record-deconstruction", null, new File("target")).toPath();
+    result.saveSorted(output);
+
+    List<String> lines = Files.readAllLines(output);
+    // check that the deconstruction hasn't been mangled (even if not parsable)
+    assertEquals(1,
+        lines.stream()
+            .filter(line -> line.contains("obj instanceof Java21RecordDeconstruction(Point point)"))
+            .count());
+  }
 }
 

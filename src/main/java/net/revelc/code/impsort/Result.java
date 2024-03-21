@@ -28,6 +28,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.javaparser.Position;
+import com.github.javaparser.Problem;
+
 public class Result {
 
   private Boolean isSorted;
@@ -41,13 +44,15 @@ public class Result {
   private final int start;
   private final int stop;
   private final LineEnding lineEnding;
+  private List<Problem> problems;
+  private List<Problem> reportableProblems;
 
   public static final Result EMPTY_FILE =
-      new Result(null, null, null, 0, 0, "", "", Collections.emptyList(), null);
+      new Result(null, null, null, 0, 0, "", "", Collections.emptyList(), null, null, null);
 
   Result(Path path, Charset sourceEncoding, List<String> fileLines, int start, int stop,
       String originalSection, String newSection, Collection<Import> allImports,
-      LineEnding lineEnding) {
+      LineEnding lineEnding, List<Problem> problems, List<Problem> reportableProblems) {
     this.path = path;
     this.sourceEncoding = sourceEncoding;
     this.originalSection = originalSection;
@@ -57,6 +62,8 @@ public class Result {
     this.start = start;
     this.stop = stop;
     this.lineEnding = lineEnding;
+    this.problems = problems;
+    this.reportableProblems = reportableProblems;
   }
 
   public boolean isSorted() {
@@ -109,4 +116,21 @@ public class Result {
     return buf;
   }
 
+  public Position getFirstLineContaining(String string) {
+    for (int i = 0; i < fileLines.size(); i++) {
+      if (fileLines.get(i).contains(string)) {
+        return new Position(i, 0);
+      }
+    }
+
+    throw new IllegalStateException("Can't find '" + string + "'!");
+  }
+
+  public List<Problem> getProblems() {
+    return Collections.unmodifiableList(problems);
+  }
+
+  public List<Problem> getReportableProblems() {
+    return Collections.unmodifiableList(reportableProblems);
+  }
 }
