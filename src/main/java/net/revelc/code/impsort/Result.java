@@ -14,6 +14,8 @@
 
 package net.revelc.code.impsort;
 
+import com.github.javaparser.Position;
+import com.github.javaparser.Problem;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -27,9 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import com.github.javaparser.Position;
-import com.github.javaparser.Problem;
 
 public class Result {
 
