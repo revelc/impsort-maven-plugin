@@ -42,7 +42,7 @@
   </scm>
   <properties>
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
-    <javaparser.version>3.26.0</javaparser.version>
+    <javaparser.version>3.26.1</javaparser.version>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.outputTimestamp>2024-05-27T19:27:05Z</project.build.outputTimestamp>
   </properties>
