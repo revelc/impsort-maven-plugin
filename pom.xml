@@ -23,7 +23,7 @@
     <relativePath />
   </parent>
   <artifactId>impsort-maven-plugin</artifactId>
-  <version>1.10.1-SNAPSHOT</version>
+  <version>1.11.0</version>
   <packaging>maven-plugin</packaging>
   <name>ImpSort Maven Plugin</name>
   <description>Sort your imps! A Maven plugin to sort the import statements in your Java source files.</description>
@@ -38,13 +38,13 @@
     <maven>3.6.3</maven>
   </prerequisites>
   <scm>
-    <tag>HEAD</tag>
+    <tag>impsort-maven-plugin-1.11.0</tag>
   </scm>
   <properties>
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
     <javaparser.version>3.26.1</javaparser.version>
     <maven.compiler.release>17</maven.compiler.release>
-    <project.build.outputTimestamp>2024-05-27T19:27:05Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-06-27T12:59:00Z</project.build.outputTimestamp>
   </properties>
   <dependencyManagement>
     <dependencies>
