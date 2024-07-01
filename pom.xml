@@ -19,7 +19,7 @@
   <parent>
     <groupId>net.revelc.code</groupId>
     <artifactId>revelc</artifactId>
-    <version>5</version>
+    <version>6</version>
     <relativePath />
   </parent>
   <artifactId>impsort-maven-plugin</artifactId>
