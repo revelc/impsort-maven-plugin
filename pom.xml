@@ -19,7 +19,7 @@
   <parent>
     <groupId>net.revelc.code</groupId>
     <artifactId>revelc</artifactId>
-    <version>5</version>
+    <version>6</version>
     <relativePath />
   </parent>
   <artifactId>impsort-maven-plugin</artifactId>
@@ -38,20 +38,23 @@
     <maven>3.6.3</maven>
   </prerequisites>
   <scm>
+    <connection>scm:git:https://github.com/revelc/${github.site.repositoryName}.git</connection>
+    <developerConnection>scm:git:git@github.com:revelc/${github.site.repositoryName}.git</developerConnection>
     <tag>HEAD</tag>
+    <url>https://github.com/revelc/${github.site.repositoryName}</url>
   </scm>
   <properties>
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
-    <javaparser.version>3.26.1</javaparser.version>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.outputTimestamp>2024-06-27T12:59:18Z</project.build.outputTimestamp>
+    <version.javaparser>3.26.1</version.javaparser>
   </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.github.javaparser</groupId>
         <artifactId>javaparser-core</artifactId>
-        <version>${javaparser.version}</version>
+        <version>${version.javaparser}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -62,11 +65,6 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>4.0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-xml</artifactId>
-        <version>3.0.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -88,6 +86,20 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <configuration>
+            <licenseSets>
+              <licenseSet>
+                <excludes>
+                  <!-- char encoding prevents this file from being read by the plugin -->
+                  <exclude>src/test/resources/Iso8859File.java</exclude>
+                </excludes>
+              </licenseSet>
+            </licenseSets>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <dependencies>
@@ -101,6 +113,24 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dependency-convergence</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <rules>
+                <dependencyConvergence />
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
