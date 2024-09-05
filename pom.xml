@@ -23,7 +23,7 @@
     <relativePath />
   </parent>
   <artifactId>impsort-maven-plugin</artifactId>
-  <version>1.12.0</version>
+  <version>1.13.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>ImpSort Maven Plugin</name>
   <description>Sort your imps! A Maven plugin to sort the import statements in your Java source files.</description>
@@ -40,13 +40,13 @@
   <scm>
     <connection>scm:git:https://github.com/revelc/${github.site.repositoryName}.git</connection>
     <developerConnection>scm:git:git@github.com:revelc/${github.site.repositoryName}.git</developerConnection>
-    <tag>impsort-maven-plugin-1.12.0</tag>
+    <tag>HEAD</tag>
     <url>https://github.com/revelc/${github.site.repositoryName}</url>
   </scm>
   <properties>
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
     <maven.compiler.release>17</maven.compiler.release>
-    <project.build.outputTimestamp>2024-09-05T00:10:41Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-09-05T00:11:05Z</project.build.outputTimestamp>
     <version.javaparser>3.26.2</version.javaparser>
   </properties>
   <dependencyManagement>
