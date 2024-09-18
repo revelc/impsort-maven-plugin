@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="FORMAT" timestamp="1726619628246">
+    <module artifactId="impsort-maven-plugin" groupId="net.revelc.code" version="1.12.0"/>
+    <files>
+        <file path="pom.xml" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/Group.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/Grouper.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/ImpSort.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/Import.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/LineEnding.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/ParseProblemFilter.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/Result.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/ex/ImpSortException.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/maven/plugin/AbstractImpSortMojo.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/maven/plugin/CheckMojo.java" result="NOOP"/>
+        <file path="src/main/java/net/revelc/code/impsort/maven/plugin/SortMojo.java" result="NOOP"/>
+        <file path="src/main/resources/META-INF/m2e/lifecycle-mapping-metadata.xml" result="NOOP"/>
+        <file path="src/main/resources/META-INF/revelc/revelc-maven-plugin" result="NOOP"/>
+        <file path="src/site/markdown/index.md.vm" result="NOOP"/>
+        <file path="src/site/site.xml" result="NOOP"/>
+        <file path="src/test/java/net/revelc/code/impsort/ImpSortTest.java" result="NOOP"/>
+        <file path="src/test/java/net/revelc/code/impsort/LineEndingEdgeCasesTest.java" result="NOOP"/>
+        <file path="src/test/java/net/revelc/code/impsort/LineEndingTest.java" result="NOOP"/>
+        <file path="src/test/java/net/revelc/code/impsort/maven/plugin/AbstractImpSortMojoTest.java" result="NOOP"/>
+        <file path="src/test/resources/BasicPluginTests.java" result="NOOP"/>
+        <file path="src/test/resources/EmptyJavadoc.java" result="NOOP"/>
+        <file path="src/test/resources/FirstImportComment.java" result="NOOP"/>
+        <file path="src/test/resources/Java14Preview.java" result="NOOP"/>
+        <file path="src/test/resources/Java21RecordDeconstruction.java" result="NOOP"/>
+        <file path="src/test/resources/UnusedImports.java" result="NOOP"/>
+        <file path="src/tools/modified-google-style.xml" result="NOOP"/>
+    </files>
+</licensePluginReport>
