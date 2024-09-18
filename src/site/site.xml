@@ -18,7 +18,7 @@
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-fluido-skin</artifactId>
-    <version>${fluido.skin.version}</version>
+    <version>${version.maven-fluido-skin}</version>
   </skin>
   <custom>
     <fluidoSkin>
