@@ -59,12 +59,12 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>33.3.0-jre</version>
+        <version>33.3.1-jre</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
-        <version>4.0.1</version>
+        <version>4.0.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -106,7 +106,7 @@
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>10.18.1</version>
+              <version>10.18.2</version>
             </dependency>
           </dependencies>
         </plugin>
