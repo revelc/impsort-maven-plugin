@@ -47,7 +47,7 @@
     <formatter.configFile>src/tools/modified-google-style.xml</formatter.configFile>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.outputTimestamp>2024-09-05T00:11:05Z</project.build.outputTimestamp>
-    <version.javaparser>3.26.2</version.javaparser>
+    <version.javaparser>3.26.3</version.javaparser>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -59,7 +59,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>33.3.1-jre</version>
+        <version>33.4.0-jre</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
