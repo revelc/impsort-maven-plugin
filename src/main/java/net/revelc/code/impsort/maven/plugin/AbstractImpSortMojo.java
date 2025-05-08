@@ -208,7 +208,10 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
    * <p>
    * To enable support a specific Java version, set the version here. If you require the use of
    * preview features, append <code>_PREVIEW</code> to the version. For example, to use Java 14,
-   * with preview features, set this to <code>14_PREVIEW</code>.
+   * with preview features, set this to <code>14_PREVIEW</code>. Other possible values are
+   * <code>RAW</code>, <code>POPULAR</code>, <code>CURRENT</code>, or <code>BLEEDING_EDGE</code>.
+   * One of these values may be helpful if you use a newer version of Java than this plugin's
+   * parsing library recognizes.
    *
    * @since 1.5.0
    */
@@ -388,11 +391,21 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   }
 
   static LanguageLevel getLanguageLevel(String compliance, boolean ignoreParseErrorsBelowImports) {
-    if (compliance == null || compliance.trim().isEmpty()) {
+    String langLevel = "";
+    // need upper-case for enum versions that end in _PREVIEW
+    String v = compliance == null ? "" : compliance.toUpperCase().trim();
+    if (v.isEmpty() || v.equals("POPULAR")) {
       return LanguageLevel.POPULAR;
     }
-    String langLevel = "";
-    String v = compliance.toUpperCase().trim(); // upper case for "PREVIEW" language levels
+    if (v.equals("RAW")) {
+      return LanguageLevel.RAW;
+    }
+    if (v.equals("CURRENT")) {
+      return LanguageLevel.CURRENT;
+    }
+    if (v.equals("BLEEDING_EDGE")) {
+      return LanguageLevel.BLEEDING_EDGE;
+    }
     if (v.matches("^1[.][01234]$")) {
       langLevel = "JAVA_" + v.replace(".", "_");
     } else if (v.matches("^1[.][56789]$")) {
