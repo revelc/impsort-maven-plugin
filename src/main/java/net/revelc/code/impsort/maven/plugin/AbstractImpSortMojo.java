@@ -289,7 +289,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
     Charset encoding = Charset.forName(sourceEncoding);
 
     LanguageLevel langLevel = getLanguageLevel(compliance, ignoreParseErrorsBelowImports);
-    getLog().debug("Using compiler compliance level: " + langLevel.toString());
+    getLog().debug("Using compiler compliance level: " + langLevel);
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
         lineEnding, langLevel, ignoreParseErrorsBelowImports);
     AtomicLong numAlreadySorted = new AtomicLong(0);
