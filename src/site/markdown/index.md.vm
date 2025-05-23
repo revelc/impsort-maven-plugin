@@ -16,12 +16,16 @@
 
 #set ($d = "$")
 
-# ${project.name}
+${project.name}
+===============
 
-This `impsort-maven-plugin` allows you to sort your Java source file's import
+${project.description}
+
+This `${project.artifactId}` allows you to sort your Java source file's import
 statements according to the rules you specify.
 
-<h2>Getting Started</h2>
+Getting Started
+---------------
 
 To add this plugin to your project, configure the plugin similarly to:
 

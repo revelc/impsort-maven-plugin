@@ -27,7 +27,7 @@
   <packaging>maven-plugin</packaging>
   <name>ImpSort Maven Plugin</name>
   <description>Sort your imps! A Maven plugin to sort the import statements in your Java source files.</description>
-  <url>http://code.revelc.net/impsort-maven-plugin</url>
+  <url>https://code.revelc.net/impsort-maven-plugin</url>
   <inceptionYear>2017</inceptionYear>
   <developers>
     <developer>
