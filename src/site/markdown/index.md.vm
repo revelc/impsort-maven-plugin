@@ -16,16 +16,14 @@
 
 #set ($d = "$")
 
-Description
------------
+# ${project.name}
 
-  This `impsort-maven-plugin` allows you to sort your Java source file's import
-  statements according to the rules you specify.
+This `impsort-maven-plugin` allows you to sort your Java source file's import
+statements according to the rules you specify.
 
-Getting Started
----------------
+<h2>Getting Started</h2>
 
-  To add this plugin to your project, configure the plugin similarly to:
+To add this plugin to your project, configure the plugin similarly to:
 
 ```xml
   <build>
@@ -55,8 +53,8 @@ Getting Started
   </build>
 ```
 
-  and build your project, similarly to (it runs at the [process-sources][1]
-  phase by default):
+and build your project, similarly to (it runs at the [process-sources][1]
+phase by default):
 
 ```
 mvn package

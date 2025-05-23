@@ -14,7 +14,8 @@
     limitations under the License.
 
 -->
-<project>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd">
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-fluido-skin</artifactId>
@@ -22,30 +23,17 @@
   </skin>
   <custom>
     <fluidoSkin>
-      <facebookLike />
-      <gitHub>
-        <projectId>revelc/impsort-maven-plugin</projectId>
-        <ribbonOrientation>right</ribbonOrientation>
-      </gitHub>
-      <googlePlusOne />
-      <googleSearch>
-        <sitesearch />
-      </googleSearch>
+      <topBarEnabled>true</topBarEnabled>
+      <sideBarEnabled>true</sideBarEnabled>
       <skipGenerationDate>true</skipGenerationDate>
       <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
     </fluidoSkin>
   </custom>
   <body>
     <menu name="Overview">
-      <item name="Introduction" href="index.html"/>
-      <item name="Goals" href="plugin-info.html"/>
+      <item name="About" href="index.html" />
+      <item name="Goals" href="plugin-info.html" />
     </menu>
     <menu ref="reports" />
-<!--
-    <menu name="Examples">
-      <item name="description1" href="examples/example-one.html"/>
-      <item name="description2" href="examples/example-two.html"/>
-    </menu>
--->
   </body>
-</project>
+</site>

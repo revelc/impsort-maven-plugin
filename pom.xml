@@ -19,7 +19,7 @@
   <parent>
     <groupId>net.revelc.code</groupId>
     <artifactId>revelc</artifactId>
-    <version>7</version>
+    <version>8</version>
     <relativePath />
   </parent>
   <artifactId>impsort-maven-plugin</artifactId>
@@ -106,7 +106,7 @@
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>10.23.1</version>
+              <version>10.24.0</version>
             </dependency>
           </dependencies>
         </plugin>
