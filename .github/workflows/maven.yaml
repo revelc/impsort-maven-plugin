@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         cache: [maven]
-        java: [17, 21]
+        java: [21]
         os: [ubuntu-latest, windows-latest, macOS-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -25,7 +25,7 @@ jobs:
     - name: Download Maven Wrapper
       run: mvn wrapper:wrapper "-Dmaven=3.9.7"
     - name: Build with Maven
-      run: ./mvnw -B -V -e "-Dstyle.color=always" verify -DskipFormat -DverifyFormat
+      run: ./mvnw --batch-mode --show-version -e "-Dstyle.color=always" verify -DskipFormat -DverifyFormat
       env:
         MAVEN_OPTS: -Djansi.force=true
 
