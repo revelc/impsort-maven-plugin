@@ -23,7 +23,7 @@ jobs:
         distribution: temurin
         cache: ${{ matrix.cache }}
     - name: Download Maven Wrapper
-      run: mvn wrapper:wrapper "-Dmaven=3.9.7"
+      run: mvn wrapper:wrapper "-Dmaven=3.9.12"
     - name: Build with Maven
       run: ./mvnw --batch-mode --show-version -e "-Dstyle.color=always" verify -DskipFormat -DverifyFormat
       env:
