@@ -67,6 +67,28 @@ public class ImpSortTest {
   }
 
   @Test
+  public void testJoinStaticGroups() {
+    String eol = "\n";
+    List<Import> imports =
+        List.of(new Import(true, "java.util.Objects.requireNonNull", "", "", eol),
+            new Import(true, "com.google.common.base.Preconditions.checkArgument", "", "", eol),
+            new Import(false, "java.util.List", "", "", eol),
+            new Import(false, "com.google.common.collect.ImmutableList", "", "", eol));
+
+    Grouper separated = new Grouper("java.,com.", "java.,com.", false, false, false, false);
+    assertEquals("import static java.util.Objects.requireNonNull;\n" + "\n"
+        + "import static com.google.common.base.Preconditions.checkArgument;\n" + "\n"
+        + "import java.util.List;\n" + "\n" + "import com.google.common.collect.ImmutableList;\n",
+        separated.groupedImports(imports, eol));
+
+    Grouper joined = new Grouper("java.,com.", "java.,com.", false, false, true, false);
+    assertEquals("import static java.util.Objects.requireNonNull;\n"
+        + "import static com.google.common.base.Preconditions.checkArgument;\n" + "\n"
+        + "import java.util.List;\n" + "\n" + "import com.google.common.collect.ImmutableList;\n",
+        joined.groupedImports(imports, eol));
+  }
+
+  @Test
   public void testBreadthFirstComparator() {
     TreeSet<Import> set = addTestImportsForSort(Grouper.breadthFirstComparator);
     assertArrayEquals(

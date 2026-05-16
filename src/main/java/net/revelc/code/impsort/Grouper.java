@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -34,14 +33,21 @@ public final class Grouper {
   private final List<Group> staticGroups;
   private final boolean staticAfter;
   private final boolean joinStaticWithNonStatic;
+  private final boolean joinStaticGroups;
   private final boolean breadthFirstStatic;
 
   public Grouper(String groups, String staticGroups, boolean staticAfter,
       boolean joinStaticWithNonStatic, boolean breadthFirstStatic) {
+    this(groups, staticGroups, staticAfter, joinStaticWithNonStatic, false, breadthFirstStatic);
+  }
+
+  public Grouper(String groups, String staticGroups, boolean staticAfter,
+      boolean joinStaticWithNonStatic, boolean joinStaticGroups, boolean breadthFirstStatic) {
     this.groups = Collections.unmodifiableList(parse(groups));
     this.staticGroups = parse(staticGroups);
     this.staticAfter = staticAfter;
     this.joinStaticWithNonStatic = joinStaticWithNonStatic;
+    this.joinStaticGroups = joinStaticGroups;
     this.breadthFirstStatic = breadthFirstStatic;
   }
 
@@ -132,22 +138,26 @@ public final class Grouper {
     Map<Integer, ArrayList<Import>> first = getStaticAfter() ? nonStaticImports : staticImports;
     Map<Integer, ArrayList<Import>> second = getStaticAfter() ? staticImports : nonStaticImports;
 
-    AtomicBoolean firstGroup = new AtomicBoolean(true);
-    Consumer<ArrayList<Import>> consumer = grouping -> {
-      if (!firstGroup.getAndSet(false)) {
-        sb.append(eol);
-      }
-      grouping.forEach(imp -> sb.append(imp).append(eol));
-    };
-    first.values().forEach(consumer);
+    emitSection(sb, first, first == staticImports, eol);
     if (!getJoinStaticWithNonStatic() && !first.isEmpty() && !second.isEmpty()) {
       sb.append(eol);
     }
-    firstGroup.set(true);
-    second.values().forEach(consumer);
+    emitSection(sb, second, second == staticImports, eol);
 
     // allImports.forEach(x -> System.out.print("-----\n" + x + "\n-----"));
     return sb.toString();
+  }
+
+  private void emitSection(StringBuilder sb, Map<Integer, ArrayList<Import>> section,
+      boolean isStaticSection, String eol) {
+    boolean separateGroups = !(isStaticSection && joinStaticGroups);
+    AtomicBoolean firstGroup = new AtomicBoolean(true);
+    section.values().forEach(grouping -> {
+      if (!firstGroup.getAndSet(false) && separateGroups) {
+        sb.append(eol);
+      }
+      grouping.forEach(imp -> sb.append(imp).append(eol));
+    });
   }
 
 }

@@ -112,6 +112,20 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   protected boolean joinStaticWithNonStatic;
 
   /**
+   * Allows omitting the blank lines between static-import sub-groups defined by
+   * <code>staticGroups</code>. When <code>true</code>, static imports are still ordered by their
+   * group prefixes but the resulting block is contiguous (no blank lines between sub-groups).
+   * Useful when an external linter (e.g. Checkstyle's <code>ImportOrder</code> with
+   * <code>option=top</code>) treats all static imports as a single group and rejects intra-group
+   * blank lines.
+   *
+   * @since 1.14.0
+   */
+  @Parameter(alias = "joinStaticGroups", property = "impsort.joinStaticGroups",
+      defaultValue = "false")
+  protected boolean joinStaticGroups;
+
+  /**
    * Project's main source directory as specified in the POM. Used by default if
    * <code>directories</code> is not set.
    *
@@ -285,7 +299,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
 
     // process all found files, and aggregate any failures
     Grouper grouper = new Grouper(groups, staticGroups, staticAfter, joinStaticWithNonStatic,
-        breadthFirstComparator);
+        joinStaticGroups, breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
 
     LanguageLevel langLevel = getLanguageLevel(compliance, ignoreParseErrorsBelowImports);
