@@ -14,9 +14,9 @@
 
 package net.revelc.code.impsort;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
-public class Import {
+public final class Import {
 
   private final boolean isStatic;
   private final String imp;
@@ -27,9 +27,9 @@ public class Import {
   Import(final boolean isStatic, final String imp, final String prefix, final String suffix,
       final String eol) {
     this.isStatic = isStatic;
-    this.imp = Objects.requireNonNull(imp);
-    this.prefix = Objects.requireNonNull(prefix);
-    this.suffix = Objects.requireNonNull(suffix);
+    this.imp = requireNonNull(imp);
+    this.prefix = requireNonNull(prefix);
+    this.suffix = requireNonNull(suffix);
     this.eol = eol;
   }
 

@@ -40,7 +40,7 @@ public class ImpSortException extends IOException {
   }
 
   private static final long serialVersionUID = 1L;
-  private final Path path;
+  private final String path;
   private final Reason reason;
 
   /**
@@ -51,7 +51,7 @@ public class ImpSortException extends IOException {
    */
   public ImpSortException(Path path, Reason reason) {
     super("file: " + path + "; reason: " + reason);
-    this.path = path;
+    this.path = path.toString();
     this.reason = reason;
   }
 
@@ -61,7 +61,7 @@ public class ImpSortException extends IOException {
    * @return the path
    */
   public Path getPath() {
-    return path;
+    return Path.of(path);
   }
 
   /**
