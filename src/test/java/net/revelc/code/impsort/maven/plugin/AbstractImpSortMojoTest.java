@@ -35,6 +35,9 @@ public class AbstractImpSortMojoTest {
     assertSame(LanguageLevel.POPULAR, getLanguageLevel(null, true));
     assertSame(LanguageLevel.POPULAR, getLanguageLevel("", true));
     assertSame(LanguageLevel.POPULAR, getLanguageLevel("42", true));
+    // unknown future Java versions (e.g., 26, 27, ...) fall back to BLEEDING_EDGE instead of
+    // crashing the build (issue #166)
+    assertSame(LanguageLevel.BLEEDING_EDGE, getLanguageLevel("42", false));
 
     assertSame(LanguageLevel.JAVA_12, getLanguageLevel("12", true));
 
