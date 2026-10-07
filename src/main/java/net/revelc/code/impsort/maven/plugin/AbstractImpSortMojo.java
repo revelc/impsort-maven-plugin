@@ -288,7 +288,7 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
         breadthFirstComparator);
     Charset encoding = Charset.forName(sourceEncoding);
 
-    LanguageLevel langLevel = getLanguageLevel(compliance, ignoreParseErrorsBelowImports);
+    LanguageLevel langLevel = getLanguageLevel(compliance, ignoreParseErrorsBelowImports, getLog());
     getLog().debug("Using compiler compliance level: " + langLevel);
     ImpSort impSort = new ImpSort(encoding, grouper, removeUnused, treatSamePackageAsUnused,
         lineEnding, langLevel, ignoreParseErrorsBelowImports);
@@ -391,6 +391,11 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
   }
 
   static LanguageLevel getLanguageLevel(String compliance, boolean ignoreParseErrorsBelowImports) {
+    return getLanguageLevel(compliance, ignoreParseErrorsBelowImports, null);
+  }
+
+  static LanguageLevel getLanguageLevel(String compliance, boolean ignoreParseErrorsBelowImports,
+      Log log) {
     String langLevel = "";
     // need upper-case for enum versions that end in _PREVIEW
     String v = compliance == null ? "" : compliance.toUpperCase().trim();
@@ -414,15 +419,27 @@ abstract class AbstractImpSortMojo extends AbstractMojo {
       langLevel = "JAVA_" + v;
     }
 
-    return parseLanguageLevel(langLevel, ignoreParseErrorsBelowImports);
+    return parseLanguageLevel(langLevel, ignoreParseErrorsBelowImports, log);
   }
 
   private static LanguageLevel parseLanguageLevel(String langLevel,
-      boolean ignoreParseErrorsBelowImports) {
+      boolean ignoreParseErrorsBelowImports, Log log) {
     return Stream.of(LanguageLevel.values()).filter(ll -> ll.name().equals(langLevel)).findFirst()
-        .or(() -> ignoreParseErrorsBelowImports ? Optional.of(LanguageLevel.POPULAR)
-            : Optional.empty())
-        .orElseThrow(() -> new IllegalArgumentException("No enum constant "
+        .or(() -> {
+          if (ignoreParseErrorsBelowImports) {
+            return Optional.of(LanguageLevel.POPULAR);
+          }
+          // For Java versions not yet supported by the parser, fall back to BLEEDING_EDGE so the
+          // plugin can still sort imports rather than failing the build
+          if (langLevel.matches("^JAVA_\\d+(_PREVIEW)?$")) {
+            if (log != null) {
+              log.warn("Java version not yet supported by parser: " + langLevel
+                  + "; using BLEEDING_EDGE as a best approximation");
+            }
+            return Optional.of(LanguageLevel.BLEEDING_EDGE);
+          }
+          return Optional.empty();
+        }).orElseThrow(() -> new IllegalArgumentException("No enum constant "
             + LanguageLevel.class.getName().replace('$', '.') + "." + langLevel));
   }
 
