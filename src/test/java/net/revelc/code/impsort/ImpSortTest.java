@@ -236,6 +236,26 @@ public class ImpSortTest {
   }
 
   @Test
+  public void testTrailingMultilineComment() throws IOException {
+    Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
+        "TrailingMultilineComment.java");
+    Result result =
+        new ImpSort(StandardCharsets.UTF_8, eclipseDefaults, false, false, LineEnding.AUTO)
+            .parseFile(p);
+
+    Path output =
+        File.createTempFile("impSortTrailingMultilineComment", null, new File("target")).toPath();
+    result.saveSorted(output);
+
+    List<String> lines = Files.readAllLines(output);
+    // The multiline comment after the import should be preserved in the output
+    assertTrue(lines.stream().anyMatch(line -> line.contains("test for compile")));
+    // The class declaration should be intact (no compile error caused by dropped comment)
+    assertEquals(1,
+        lines.stream().filter(line -> line.contains("class TrailingMultilineComment")).count());
+  }
+
+  @Test
   public void testIgnoreParseErrorsBelowImports() throws IOException {
     Path p = Paths.get(System.getProperty("user.dir"), "src", "test", "resources",
         "Java21RecordDeconstruction.java");

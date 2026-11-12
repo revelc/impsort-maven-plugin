@@ -149,11 +149,14 @@ public class ImpSort {
     }
 
     // find orphaned comments before between package and last import
+    // also include orphaned comments that start on the same line as the last import
+    // (e.g., a multiline comment immediately after the last import's semicolon)
     Position lastImportPosition =
         importDeclarations.stream().max(BY_POSITION).orElseThrow().getBegin().orElseThrow();
     Stream<Comment> orphanedComments = unit.getOrphanComments().parallelStream().filter(c -> {
       Position p = c.getBegin().orElseThrow();
-      return p.isAfter(packagePosition) && p.isBefore(lastImportPosition);
+      return p.isAfter(packagePosition)
+          && (p.isBefore(lastImportPosition) || p.line == lastImportPosition.line);
     });
 
     // create entire import section (with interspersed comments)
@@ -232,8 +235,22 @@ public class ImpSort {
       }
     }
     if (!recentComments.isEmpty()) {
-      throw new IllegalStateException(
-          "Unexpectedly found more orphaned comments: " + recentComments);
+      // Trailing orphaned comments (e.g., a multiline comment starting on the same line as the
+      // last import); attach to the last import as a suffix
+      Import lastImport = allImports.stream().reduce((first, second) -> second)
+          .orElseThrow(() -> new IllegalStateException(
+              "Unexpectedly found orphaned comments with no preceding imports: " + recentComments));
+      allImports.remove(lastImport);
+      StringBuilder trailingSuffix = new StringBuilder(lastImport.getSuffix());
+      for (Comment c : recentComments) {
+        trailingSuffix.append(c.toString());
+      }
+      String newSuffix = trailingSuffix.toString().trim();
+      if (!newSuffix.isEmpty()) {
+        newSuffix = " " + newSuffix;
+      }
+      allImports.add(new Import(lastImport.isStatic(), lastImport.getImport(),
+          lastImport.getPrefix(), newSuffix, eol));
     }
     return allImports;
   }
